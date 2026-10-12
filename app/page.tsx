@@ -1,35 +1,33 @@
-
-'use client'
-
 import {
+  ArrowRight,
   BookOpen,
-  CheckCircle,
+  CheckCircle2,
   Droplets,
   Flame,
-  Leaf,
   Recycle,
   Sun,
 } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
-import {
-  FadeInLeft,
-  FadeInRight,
-  FadeInUp,
-  PageTransition,
-  ScaleIn,
-  StaggerContainer,
-  StaggerItem,
-} from '@/components/animations'
-import { Badge } from '@/components/ui/badge'
-import { buttonVariants } from '@/components/ui/button'
+import { Reveal, Stagger, StaggerItem } from '@/components/animations'
+import { CtaBand } from '@/components/sections/cta-band'
+import { HomeHero } from '@/components/sections/home-hero'
+import { SectionHeading } from '@/components/sections/section-heading'
+import { Button } from '@/components/ui/button'
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+
+const stats = [
+  { value: '500+', label: 'Farmers empowered' },
+  { value: '50+', label: 'Projects delivered' },
+  { value: '10+', label: 'Years of experience' },
+  { value: '5', label: 'States reached' },
+]
 
 const coreImpactAreas = [
   {
@@ -66,7 +64,7 @@ const coreImpactAreas = [
 
 const whyChooseUs = [
   'Proven track record in agricultural transformation and project delivery.',
-  'Deep understanding of Nigeria&#39;s agro-industrial challenges—and solutions that work.',
+  'Deep understanding of Nigeria’s agro-industrial challenges—and solutions that work.',
   'Hands-on experience with renewable energy and hydrogen systems.',
   'Commitment to empowering women and youth in green value chains.',
   'Partnerships with leading universities, technical partners, and government agencies.',
@@ -74,78 +72,16 @@ const whyChooseUs = [
 
 export default function Home() {
   return (
-    <PageTransition>
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-blue-50 to-yellow-50 dark:from-green-950 dark:via-blue-950 dark:to-yellow-950">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwNTk2NjkiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iNCIvPjwvZz48L2c+PC9zdmc+')] opacity-40"></div>
+    <>
+      <HomeHero />
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-5xl mx-auto">
-            <FadeInUp delay={0.2}>
-              <Badge variant="secondary" className="mb-6 text-sm px-4 py-2">
-                🌿 Transforming Agriculture and Industry through Clean
-                Technologies
-              </Badge>
-            </FadeInUp>
-
-            <FadeInUp delay={0.4}>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-tight">
-                Empowering Africa&#39;s{' '}
-                <span className="text-green-600">Agro-Industry</span> with{' '}
-                <span className="text-blue-600">Clean Solutions</span>
-              </h1>
-            </FadeInUp>
-
-            <FadeInUp delay={0.6}>
-              <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-4xl mx-auto leading-relaxed">
-                At Dara-Manihot Industries & Farms, we&apos;re transforming
-                agriculture and industry—creating resilient communities,
-                competitive businesses, and a greener future for Nigeria and
-                beyond.
-              </p>
-            </FadeInUp>
-
-            <FadeInUp delay={0.8}>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/services"
-                  className={cn(
-                    buttonVariants({ variant: 'default', size: 'lg' }),
-                    'bg-green-600 hover:bg-green-700 text-lg px-8 py-6',
-                  )}
-                >
-                  Explore Our Services
-                </Link>
-                <Link
-                  href="/projects"
-                  className={cn(
-                    buttonVariants({ variant: 'outline', size: 'lg' }),
-                    'text-lg px-8 py-6 border-green-600 text-green-600 hover:bg-green-50',
-                  )}
-                >
-                  View Our Projects
-                </Link>
-              </div>
-            </FadeInUp>
-          </div>
-        </div>
-      </section>
-
-      {/* Who We Are Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <FadeInUp>
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                  Who We Are
-                </h2>
-                <div className="w-24 h-1 bg-green-600 mx-auto mb-8"></div>
-              </div>
-            </FadeInUp>
-
-            <FadeInUp delay={0.2}>
-              <p className="text-lg text-muted-foreground leading-relaxed text-center">
+      {/* Who we are */}
+      <section className="section-y">
+        <div className="page-container grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
+          <div>
+            <SectionHeading title="Who we are" className="mb-6" />
+            <Reveal delay={0.1}>
+              <p className="text-lg leading-relaxed text-muted-foreground">
                 Dara-Manihot Industries &amp; Farms is a leading Nigerian
                 enterprise redefining sustainable agriculture and industry
                 through advanced clean technologies. We combine decades of
@@ -153,186 +89,124 @@ export default function Home() {
                 hydrogen systems, and circular economy practices to unlock new
                 opportunities for farmers, processors, and industries.
               </p>
-            </FadeInUp>
+            </Reveal>
           </div>
+
+          <Stagger>
+            <dl className="grid grid-cols-2 gap-x-8 gap-y-10 border-t border-border pt-8">
+              {stats.map((stat) => (
+                <StaggerItem key={stat.label} className="flex flex-col">
+                  <dt className="order-2 mt-1 text-sm text-muted-foreground">
+                    {stat.label}
+                  </dt>
+                  <dd className="order-1 font-display text-5xl text-primary">
+                    {stat.value}
+                  </dd>
+                </StaggerItem>
+              ))}
+            </dl>
+          </Stagger>
         </div>
       </section>
 
-      {/* Core Impact Areas */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeInUp>
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                Our Core Impact Areas
-              </h2>
-              <div className="w-24 h-1 bg-green-600 mx-auto mb-8"></div>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                We focus on five key areas that drive sustainable transformation
-                across agriculture and industry
-              </p>
-            </div>
-          </FadeInUp>
-
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {coreImpactAreas.map((area, index) => (
-              <StaggerItem key={index}>
-                <Card className="h-full hover:shadow-lg transition-shadow duration-300 border-l-4 border-l-green-600">
+      {/* Core impact areas */}
+      <section className="section-y bg-muted">
+        <div className="page-container">
+          <SectionHeading
+            title="Our core impact areas"
+            description="We focus on five key areas that drive sustainable transformation across agriculture and industry."
+          />
+          <Stagger className="grid gap-6 md:grid-cols-6">
+            {coreImpactAreas.map((area, i) => (
+              <StaggerItem
+                key={area.title}
+                // Two wide cards on top, three across below: no orphan card.
+                className={cn('md:col-span-3', i >= 2 && 'lg:col-span-2')}
+              >
+                <Card className="h-full gap-4 transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift">
                   <CardHeader>
-                    <div className="flex items-center space-x-3 mb-4">
-                      <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
-                        <area.icon className="h-6 w-6 text-green-600" />
-                      </div>
-                      <CardTitle className="text-xl">{area.title}</CardTitle>
-                    </div>
+                    <span className="mb-3 flex size-12 items-center justify-center rounded-xl bg-accent text-primary">
+                      <area.icon className="size-6" aria-hidden />
+                    </span>
+                    <CardTitle className="font-display text-xl font-normal">
+                      {area.title}
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base leading-relaxed">
-                      {area.description}
-                    </CardDescription>
-                  </CardContent>
+                  <CardDescription className="px-6 text-base leading-relaxed">
+                    {area.description}
+                  </CardDescription>
                 </Card>
               </StaggerItem>
             ))}
-          </StaggerContainer>
+          </Stagger>
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <FadeInLeft>
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                  Why Choose Dara-Manihot?
-                </h2>
-                <div className="w-24 h-1 bg-green-600 mb-8"></div>
-                <div className="space-y-4">
-                  {whyChooseUs.map((reason, index) => (
-                    <div key={index} className="flex items-start space-x-3">
-                      <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
-                      <p className="text-muted-foreground leading-relaxed">
-                        {reason}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </FadeInLeft>
-
-            <FadeInRight>
-              <div className="grid grid-cols-2 gap-6">
-                <ScaleIn delay={0.2}>
-                  <Card className="text-center p-6 bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800">
-                    <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-foreground mb-2">
-                      500+
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Farmers Empowered
-                    </p>
-                  </Card>
-                </ScaleIn>
-
-                <ScaleIn delay={0.4}>
-                  <Card className="text-center p-6 bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
-                    <CheckCircle className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-foreground mb-2">
-                      50+
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Projects Delivered
-                    </p>
-                  </Card>
-                </ScaleIn>
-
-                <ScaleIn delay={0.6}>
-                  <Card className="text-center p-6 bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800">
-                    <CheckCircle className="h-12 w-12 text-yellow-600 mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-foreground mb-2">
-                      10+
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Years Experience
-                    </p>
-                  </Card>
-                </ScaleIn>
-
-                <ScaleIn delay={0.8}>
-                  <Card className="text-center p-6 bg-purple-50 dark:bg-purple-950 border-purple-200 dark:border-purple-800">
-                    <Leaf className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-foreground mb-2">
-                      5
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      States Reached
-                    </p>
-                  </Card>
-                </ScaleIn>
-              </div>
-            </FadeInRight>
+      {/* Why choose us */}
+      <section className="section-y">
+        <div className="page-container grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+          <div>
+            <SectionHeading title="Why choose Dara-Manihot?" className="mb-8" />
+            <Stagger className="space-y-5">
+              {whyChooseUs.map((reason) => (
+                <StaggerItem key={reason} className="flex gap-3">
+                  <CheckCircle2
+                    className="mt-0.5 size-6 shrink-0 text-primary"
+                    aria-hidden
+                  />
+                  <p className="leading-relaxed text-muted-foreground">
+                    {reason}
+                  </p>
+                </StaggerItem>
+              ))}
+            </Stagger>
           </div>
+
+          <Reveal className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lift">
+            <Image
+              src="/images/hero/solar.jpg"
+              alt="Rows of solar panels across a green field"
+              fill
+              sizes="(min-width: 1024px) 560px, 100vw"
+              className="object-cover"
+            />
+          </Reveal>
         </div>
       </section>
 
-      {/* Vision Section */}
-      <section className="py-20 bg-gradient-to-r from-green-600 to-blue-600 text-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <FadeInUp>
-              <Leaf className="h-16 w-16 mx-auto mb-8 opacity-80" />
-              <h2 className="text-3xl md:text-4xl font-bold mb-8">
-                Our Vision for the Future
-              </h2>
-              <p className="text-xl leading-relaxed mb-8 opacity-90">
-                We envision an Africa where farms and factories thrive with
-                clean, affordable energy; agricultural waste becomes a resource,
-                not a burden; and farmers and entrepreneurs gain the tools to
-                lead in a climate-smart economy. At Dara-Manihot, we are proud
-                to stand at the forefront of this transformation.
-              </p>
-            </FadeInUp>
-          </div>
+      {/* Vision */}
+      <section className="bg-band-gradient section-y text-canopy-foreground">
+        <div className="page-container">
+          <Reveal className="max-w-4xl">
+            <h2 className="text-title">Our vision for the future</h2>
+            <p className="mt-6 font-display text-2xl leading-snug text-canopy-foreground/95 sm:text-3xl">
+              An Africa where farms and factories thrive on clean, affordable
+              energy, agricultural waste becomes a resource, not a burden, and
+              farmers and entrepreneurs gain the tools to lead in a
+              climate-smart economy.
+            </p>
+            <p className="mt-6 max-w-2xl text-lead text-canopy-foreground/80">
+              At Dara-Manihot, we are proud to stand at the forefront of this
+              transformation.
+            </p>
+          </Reveal>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeInUp>
-            <div className="text-center max-w-3xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                Ready to Learn More?
-              </h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                Join us in transforming agriculture and industry through
-                sustainable, innovative solutions.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/services"
-                  className={cn(
-                    buttonVariants({ variant: 'default', size: 'lg' }),
-                    'bg-green-600 hover:bg-green-700 text-lg px-8 py-6',
-                  )}
-                >
-                  Explore Our Services
-                </Link>
-                <Link
-                  href="/contact"
-                  className={cn(
-                    buttonVariants({ variant: 'outline', size: 'lg' }),
-                    'text-lg px-8 py-6 border-green-600 text-green-600 hover:bg-green-50',
-                  )}
-                >
-                  Contact Us Today
-                </Link>
-              </div>
-            </div>
-          </FadeInUp>
-        </div>
-      </section>
-    </PageTransition>
+      <CtaBand
+        title="Ready to learn more?"
+        description="Join us in transforming agriculture and industry through sustainable, innovative solutions."
+      >
+        <Button asChild variant="cta" size="lg">
+          <Link href="/services">
+            Explore our services
+            <ArrowRight className="transition-transform group-hover/button:translate-x-1" />
+          </Link>
+        </Button>
+        <Button asChild variant="onDark" size="lg">
+          <Link href="/contact">Contact us today</Link>
+        </Button>
+      </CtaBand>
+    </>
   )
 }

@@ -1,26 +1,18 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  // Configure for Replit environment
-  
-  experimental: {
-    // Disable features that might conflict with Replit's filesystem
-    optimizePackageImports: ["lucide-react"]
-  },
-  // Handle cross-origin requests in development
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          {
-            key: "Access-Control-Allow-Origin",
-            value: "*",
-          },
-        ],
-      },
-    ];
-  },
-};
+  // Stable in Next 16. Turns links to routes that don't exist (like the old
+  // /privacy and /terms footer links) into compile-time type errors.
+  typedRoutes: true,
 
-export default nextConfig;
+  // Next 16 only allows `images.qualities: [75]` by default; the hero uses 85.
+  images: {
+    qualities: [75, 85],
+  },
+
+  // Next 16 replaces the old wildcard CORS header with an allow-list for the
+  // dev server. These cover the Replit preview domains used by this project.
+  allowedDevOrigins: ['*.replit.dev', '*.repl.co', '*.replit.app'],
+}
+
+export default nextConfig

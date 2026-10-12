@@ -1,111 +1,128 @@
-
-'use client'
-
+import { Facebook, Linkedin, Mail, MapPin, Phone, Twitter } from 'lucide-react'
 import Link from 'next/link'
-import Image from 'next/image'
+import { Logo } from '@/components/logo'
 import { Separator } from '@/components/ui/separator'
-import { MapPin, Phone, Mail, Linkedin, Twitter, Facebook } from 'lucide-react'
-import { COMPANY_INFO, NAVIGATION_LINKS, SOCIAL_LINKS } from '@/lib/constants'
+import {
+  COMPANY_INFO,
+  LEGAL_LINKS,
+  NAVIGATION_LINKS,
+  SOCIAL_LINKS,
+} from '@/lib/constants'
+import { SERVICES } from '@/lib/services'
+
+const SOCIALS = [
+  { label: 'LinkedIn', href: SOCIAL_LINKS.linkedin, Icon: Linkedin },
+  { label: 'X (Twitter)', href: SOCIAL_LINKS.twitter, Icon: Twitter },
+  { label: 'Facebook', href: SOCIAL_LINKS.facebook, Icon: Facebook },
+]
+
+const linkClass =
+  'text-sm text-canopy-muted underline-offset-4 transition-colors duration-200 hover:text-canopy-foreground hover:underline'
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-muted/30 border-t">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <Image 
-                src="/logo1.svg" 
-                alt={`${COMPANY_INFO.name} Logo`} 
-                width={200} 
-                height={200}
-                className="h-40 w-40 md:h-32 md:w-32 sm:h-20 sm:w-20" // 160px desktop, 128px tablet, 80px mobile
-                priority
-              />
-              <span className="font-bold text-xl">{COMPANY_INFO.shortName}</span>
+    <footer className="bg-canopy text-canopy-foreground">
+      <div className="page-container py-14">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr_1.3fr]">
+          <div className="space-y-5">
+            {/* The logo has dark lettering, so it sits on a light plate. */}
+            <div className="inline-block rounded-xl bg-background p-3">
+              <Logo className="h-14" />
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="max-w-xs text-sm leading-relaxed text-canopy-muted">
               {COMPANY_INFO.description}
             </p>
-            <div className="flex space-x-4">
-              <Link href={SOCIAL_LINKS.linkedin} className="text-muted-foreground hover:text-foreground">
-                <Linkedin className="h-5 w-5" />
-              </Link>
-              <Link href={SOCIAL_LINKS.twitter} className="text-muted-foreground hover:text-foreground">
-                <Twitter className="h-5 w-5" />
-              </Link>
-              <Link href={SOCIAL_LINKS.facebook} className="text-muted-foreground hover:text-foreground">
-                <Facebook className="h-5 w-5" />
-              </Link>
-            </div>
+            <ul className="flex gap-2">
+              {SOCIALS.map(({ label, href, Icon }) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${COMPANY_INFO.shortName} on ${label}`}
+                    className="flex size-10 items-center justify-center rounded-full bg-white/10 text-canopy-foreground transition-[background-color,transform] duration-300 ease-bounce hover:-translate-y-0.5 hover:bg-secondary focus-visible:ring-[3px] focus-visible:ring-white/50 focus-visible:outline-none"
+                  >
+                    <Icon className="size-4.5" />
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-semibold text-foreground mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+          <nav aria-label="Footer">
+            <h2 className="mb-4 font-display text-lg">Quick links</h2>
+            <ul className="space-y-2.5">
               {NAVIGATION_LINKS.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
-                  >
+                <li key={link.href}>
+                  <Link href={link.href} className={linkClass}>
                     {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div>
+            <h2 className="mb-4 font-display text-lg">Our services</h2>
+            <ul className="space-y-2.5">
+              {SERVICES.map((service) => (
+                <li key={service.id}>
+                  <Link href={`/services#${service.id}`} className={linkClass}>
+                    {service.shortTitle}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Services */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Our Services</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Renewable Energy Systems</li>
-              <li>Circular Economy Solutions</li>
-              <li>Green Hydrogen Production</li>
-              <li>Capacity Building</li>
-              <li>Biomass Gasification</li>
+            <h2 className="mb-4 font-display text-lg">Contact us</h2>
+            <ul className="space-y-3 text-sm text-canopy-muted">
+              <li className="flex gap-2.5">
+                <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden />
+                <span>{COMPANY_INFO.address}</span>
+              </li>
+              {COMPANY_INFO.phones.map((phone) => (
+                <li key={phone.tel} className="flex gap-2.5">
+                  <Phone className="mt-0.5 size-4 shrink-0" aria-hidden />
+                  <a
+                    href={`tel:${phone.tel}`}
+                    className="underline-offset-4 hover:text-canopy-foreground hover:underline"
+                  >
+                    {phone.display}
+                  </a>
+                </li>
+              ))}
+              <li className="flex gap-2.5">
+                <Mail className="mt-0.5 size-4 shrink-0" aria-hidden />
+                <a
+                  href={`mailto:${COMPANY_INFO.email}`}
+                  className="break-all underline-offset-4 hover:text-canopy-foreground hover:underline"
+                >
+                  {COMPANY_INFO.email}
+                </a>
+              </li>
             </ul>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h3 className="font-semibold text-foreground mb-4">Contact Us</h3>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-sm">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">{COMPANY_INFO.address}</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm">
-                <Phone className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">{COMPANY_INFO.phone}</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">{COMPANY_INFO.email}</span>
-              </div>
-            </div>
           </div>
         </div>
 
-        <Separator className="my-8" />
+        <Separator className="my-8 bg-white/15" />
 
-        <div className="flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-sm text-muted-foreground">
+        <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-canopy-muted sm:flex-row sm:text-left">
+          <p>
             © {currentYear} {COMPANY_INFO.name}. All rights reserved.
           </p>
-          <div className="flex space-x-6 mt-4 sm:mt-0">
-            <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground">
-              Terms of Service
-            </Link>
-          </div>
+          <ul className="flex gap-6">
+            {LEGAL_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className={linkClass}>
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </footer>
