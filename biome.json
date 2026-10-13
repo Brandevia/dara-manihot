@@ -1,7 +1,17 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
-    "ignoreUnknown": false
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!**/.next",
+      "!**/public",
+      "!**/attached_assets",
+      "!**/node_modules",
+      "!**/next-env.d.ts",
+      "!**/test-results",
+      "!**/playwright-report"
+    ]
   },
   "linter": {
     "enabled": true,
@@ -42,6 +52,11 @@
     "formatter": {
       "quoteStyle": "single",
       "semicolons": "asNeeded"
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
     }
   }
 }

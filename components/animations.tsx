@@ -1,105 +1,118 @@
-"use client"
+'use client'
 
-import { motion } from "motion/react"
-import { ReactNode } from "react"
+import {
+  type HTMLMotionProps,
+  MotionConfig,
+  motion,
+  type Variants,
+} from 'motion/react'
+import type { ReactNode } from 'react'
+import {
+  EASE_OUT_EXPO,
+  REVEAL_DURATION,
+  REVEAL_OFFSET_Y,
+  REVEAL_VIEWPORT,
+  STAGGER_GAP,
+} from '@/lib/motion'
 
-interface AnimationWrapperProps {
+/** Wraps the app so every animation honours prefers-reduced-motion. */
+export function MotionProvider({ children }: { children: ReactNode }) {
+  return <MotionConfig reducedMotion="user">{children}</MotionConfig>
+}
+
+interface RevealProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   children: ReactNode
-  className?: string
   delay?: number
 }
 
-// Fade in from bottom animation
-export const FadeInUp = ({ children, className = "", delay = 0 }: AnimationWrapperProps) => (
-  <motion.div
-    initial={{ opacity: 0, y: 60 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, delay, ease: "easeOut" }}
-    className={className}
-  >
-    {children}
-  </motion.div>
-)
+/**
+ * Fades and lifts content in once, when it scrolls into view. (The previous
+ * helpers animated on mount, so everything below the fold finished animating
+ * before anyone scrolled to it.)
+ */
+export function Reveal({ children, delay = 0, ...props }: RevealProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: REVEAL_OFFSET_Y }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={REVEAL_VIEWPORT}
+      transition={{ duration: REVEAL_DURATION, delay, ease: EASE_OUT_EXPO }}
+      data-reveal
+      {...props}
+    >
+      {children}
+    </motion.div>
+  )
+}
 
-// Fade in from left animation
-export const FadeInLeft = ({ children, className = "", delay = 0 }: AnimationWrapperProps) => (
-  <motion.div
-    initial={{ opacity: 0, x: -60 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.6, delay, ease: "easeOut" }}
-    className={className}
-  >
-    {children}
-  </motion.div>
-)
+const container: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: STAGGER_GAP } },
+}
 
-// Fade in from right animation
-export const FadeInRight = ({ children, className = "", delay = 0 }: AnimationWrapperProps) => (
-  <motion.div
-    initial={{ opacity: 0, x: 60 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.6, delay, ease: "easeOut" }}
-    className={className}
-  >
-    {children}
-  </motion.div>
-)
+const item: Variants = {
+  hidden: { opacity: 0, y: REVEAL_OFFSET_Y },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: REVEAL_DURATION, ease: EASE_OUT_EXPO },
+  },
+}
 
-// Scale in animation
-export const ScaleIn = ({ children, className = "", delay = 0 }: AnimationWrapperProps) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.8 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.5, delay, ease: "easeOut" }}
-    className={className}
-  >
-    {children}
-  </motion.div>
-)
+/** Reveals its `StaggerItem` children one after another. */
+export function Stagger({
+  children,
+  ...props
+}: Omit<HTMLMotionProps<'div'>, 'children'> & { children: ReactNode }) {
+  return (
+    <motion.div
+      variants={container}
+      initial="hidden"
+      whileInView="visible"
+      viewport={REVEAL_VIEWPORT}
+      {...props}
+    >
+      {children}
+    </motion.div>
+  )
+}
 
-// Stagger container for animating children
-export const StaggerContainer = ({ children, className = "" }: AnimationWrapperProps) => (
-  <motion.div
-    initial="hidden"
-    animate="visible"
-    variants={{
-      hidden: { opacity: 0 },
-      visible: {
-        opacity: 1,
-        transition: {
-          staggerChildren: 0.1,
-        },
-      },
-    }}
-    className={className}
-  >
-    {children}
-  </motion.div>
-)
+export function StaggerItem({
+  children,
+  ...props
+}: Omit<HTMLMotionProps<'div'>, 'children'> & { children: ReactNode }) {
+  return (
+    <motion.div variants={item} data-reveal {...props}>
+      {children}
+    </motion.div>
+  )
+}
 
-// Stagger item for use within StaggerContainer
-export const StaggerItem = ({ children, className = "" }: AnimationWrapperProps) => (
-  <motion.div
-    variants={{
-      hidden: { opacity: 0, y: 20 },
-      visible: { opacity: 1, y: 0 },
-    }}
-    transition={{ duration: 0.5, ease: "easeOut" }}
-    className={className}
-  >
-    {children}
-  </motion.div>
-)
+/** `ul` flavour of `Stagger`, so list markup stays valid. */
+export function StaggerList({
+  children,
+  ...props
+}: Omit<HTMLMotionProps<'ul'>, 'children'> & { children: ReactNode }) {
+  return (
+    <motion.ul
+      variants={container}
+      initial="hidden"
+      whileInView="visible"
+      viewport={REVEAL_VIEWPORT}
+      {...props}
+    >
+      {children}
+    </motion.ul>
+  )
+}
 
-// Page transition wrapper
-export const PageTransition = ({ children, className = "" }: AnimationWrapperProps) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -20 }}
-    transition={{ duration: 0.4, ease: "easeInOut" }}
-    className={className}
-  >
-    {children}
-  </motion.div>
-)
+export function StaggerListItem({
+  children,
+  ...props
+}: Omit<HTMLMotionProps<'li'>, 'children'> & { children: ReactNode }) {
+  return (
+    <motion.li variants={item} data-reveal {...props}>
+      {children}
+    </motion.li>
+  )
+}

@@ -1,0 +1,18 @@
+/* humanstxt.org - the people behind this website */
+
+/* TEAM */
+  Developer: Sodeke Pamilerin
+  Role: Software Engineer
+  Contact: https://pamilerin.dev
+  GitHub: https://github.com/PRAIZZZ-08
+  LinkedIn: https://www.linkedin.com/in/pamilerin-sodeke-10b66138b
+  From: Abuja, Nigeria
+
+/* SITE */
+  Built for: Dara-Manihot Industries & Farms
+  Last update: 2026/10/11
+  Language: English
+  Doctype: HTML5
+  Standards: HTML5, CSS3, WAI-ARIA, WCAG 2.2 (AA target)
+  Components: Next.js 16 (App Router), React, Tailwind CSS 4, shadcn/ui, Radix UI, Motion
+  Fonts: Young Serif, Figtree (SIL Open Font License)

@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dara-Manihot Industries & Farms
 
-## Getting Started
+Marketing site for Dara-Manihot Industries & Farms: sustainable agriculture,
+renewable energy, biomass gasification and green hydrogen in Nigeria.
 
-First, run the development server:
+**Stack:** Next.js 16 (App Router, Turbopack) · React 19 · Tailwind CSS 4 ·
+shadcn/ui + Radix · Motion · TypeScript · Biome + ESLint · Vitest + Playwright.
+
+## Getting started
+
+Requires Node.js **20.9+** (a Next.js 16 requirement).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev            # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Script | What it does |
+| --- | --- |
+| `pnpm dev` / `build` / `start` | Next.js dev server, production build, serve the build |
+| `pnpm lint` | ESLint (Next 16 removed `next lint`, so this is the plain ESLint CLI) |
+| `pnpm format` | Biome: format + organise imports + safe fixes |
+| `pnpm typecheck` | Generates typed-route definitions, then `tsc --noEmit` |
+| `pnpm test` | Unit/component tests (Vitest + Testing Library) |
+| `pnpm test:e2e` | Browser tests (Playwright). Needs a build first; first run: `pnpm exec playwright install chromium` |
+| `pnpm check` | lint + typecheck + unit tests |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> Next 16 no longer lints during `next build`. Run `pnpm check` in CI.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project structure
 
-## Learn More
+```
+app/
+  layout.tsx            fonts, metadata, header/footer, skip link, back-to-top
+  globals.css           ALL design tokens (see below)
+  page.tsx              home
+  (pages)/              about, services, projects, contact, privacy, terms
+  fonts/                self-hosted Young Serif + Figtree (woff2)
+components/
+  ui/                   shadcn/ui primitives (button, badge, card, sheet, navigation-menu, separator)
+  sections/             page-level building blocks (home-hero, page-hero, section-heading, cta-band, legal-document)
+  site-header.tsx       sticky header + desktop navigation
+  mobile-nav.tsx        right-hand app drawer (bounce in/out)
+  hero-carousel.tsx     background image carousel
+  back-to-top.tsx, copy-button.tsx, animations.tsx, footer.tsx, logo.tsx
+lib/
+  constants.ts          company info, nav, hero slides: the single source of truth
+  services.ts, legal.ts content for the services and the Privacy/Terms pages
+tests/                  unit + component tests
+e2e/                    Playwright tests
+public/                 logo.png, hero images, humans.txt
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Design tokens
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Everything visual is defined in **`app/globals.css`**; components never use a
+raw colour. A test (`tests/design-tokens.test.ts`) fails the build if a
+component uses a Tailwind palette class (`bg-green-600`) or a hex/rgb value.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* **Palette** is sampled from the logo: leaf green (`--primary`) and wordmark
+  purple (`--secondary`).
+* **Every call-to-action is the secondary colour**: use
+  `<Button variant="cta">`. To re-colour all CTAs, change `--secondary`
+  (and `--secondary-hover`).
+* **Gradients**: `--hero-gradient` (laid over the carousel), `--band-gradient`,
+  `--page-hero-gradient`.
+* **Type**: `font-display` (Young Serif, headings) and `font-sans` (Figtree).
+  Fluid sizes: `text-display`, `text-title`, `text-lead`.
+* **Layout**: `--header-h`, `--container-max`, `--section-y`; utilities
+  `page-container`, `section-y`, `scroll-mt-header`.
+* **Motion**: `--ease-bounce`, drawer and hero durations, keyframes. Contrast
+  of the key colour pairs is asserted at WCAG AA in the token test.
 
-## Deploy on Vercel
+## Common tasks
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Replace the hero images.** Put your photos in `public/images/hero/` and edit
+`HERO_SLIDES` in `lib/constants.ts` (path, alt text, caption, and an optional
+`position` to tune the crop). Keep the subject near the horizontal centre:
+phones show only the middle third. The four images shipped are placeholder
+illustrations.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Update contact details.** Edit `COMPANY_INFO` in `lib/constants.ts`. The
+header, footer, contact page and legal pages all read from it.
+
+**Update legal text.** Edit `lib/legal.ts` and bump `LEGAL_LAST_UPDATED` in
+`lib/constants.ts`.
+
+**Add a page.** Create `app/(pages)/<name>/page.tsx` with a `metadata` export,
+add it to `NAVIGATION_LINKS`, and (for the mobile drawer) an icon in
+`components/mobile-nav.tsx`. TypeScript flags the missing icon, and
+`typedRoutes` flags any link to a route that doesn't exist.
+
+## Accessibility and motion
+
+Skip link, visible focus rings, `aria-current` on the active page, a focus-
+trapped dialog for the drawer, a pause button on the carousel, and
+`prefers-reduced-motion` support everywhere (no autoplay, no push-in, no
+bounce). Scroll reveals fall back to visible content when JS is off.

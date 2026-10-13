@@ -3,120 +3,423 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ==========================================================================
+   DESIGN TOKENS
+   Every colour, size, radius, shadow and timing used by the site is defined
+   here. Components reference semantic tokens (bg-primary, text-secondary,
+   --header-h ...) and never hard-code a hex value or a raw palette colour.
+
+   1. Brand palette   raw values, sampled from the Dara-Manihot logo
+   2. Semantic tokens what components use (shadcn naming + a few additions)
+   3. Layout / motion non-colour tokens
+   4. @theme          exposes the tokens as Tailwind utilities
+   5. Base, utilities and keyframes
+   ========================================================================== */
+
+/* 1 + 2 + 3 ---------------------------------------------------------------- */
+:root {
+  /* Brand palette. Green = the leaf, purple = the wordmark. */
+  --brand-green-950: #08280d;
+  --brand-green-900: #0d3a16;
+  --brand-green-800: #11501d;
+  --brand-green-700: #176827;
+  --brand-green-600: #1f7f31;
+  --brand-green-200: #c7e4cb;
+  --brand-green-100: #e1f1e4;
+  --brand-green-50: #f1f8f2;
+  --brand-purple-900: #46094f;
+  --brand-purple-700: #6c1b7d;
+  --brand-purple-600: #84289a;
+  --brand-purple-300: #d7a8e4;
+  --brand-purple-100: #f3e6f7;
+  --brand-ink: #16211a;
+  --brand-ivory: #fbfcfa;
+  --brand-mist: #f0f5ee;
+  --brand-line: #d9e3d8;
+  --brand-slate: #4f5f54;
+  --brand-white: #ffffff;
+  --brand-danger: #b42318;
+
+  /* Semantic tokens (light) */
+  --background: var(--brand-ivory);
+  --foreground: var(--brand-ink);
+  --card: var(--brand-white);
+  --card-foreground: var(--brand-ink);
+  --popover: var(--brand-white);
+  --popover-foreground: var(--brand-ink);
+  --primary: var(--brand-green-700);
+  --primary-foreground: var(--brand-white);
+  /* Secondary = the CTA colour. Every call-to-action button uses it. */
+  --secondary: var(--brand-purple-600);
+  --secondary-foreground: var(--brand-white);
+  --secondary-hover: var(--brand-purple-700);
+  --muted: var(--brand-mist);
+  --muted-foreground: var(--brand-slate);
+  --accent: var(--brand-green-100);
+  --accent-foreground: var(--brand-green-900);
+  --destructive: var(--brand-danger);
+  --border: var(--brand-line);
+  --input: var(--brand-line);
+  --ring: var(--brand-green-600);
+
+  /* Deep brand surfaces: hero overlay, CTA bands, footer */
+  --canopy: var(--brand-green-950);
+  --canopy-foreground: var(--brand-white);
+  --canopy-muted: var(--brand-green-200);
+
+  /* Chart + sidebar tokens kept for shadcn compatibility */
+  --chart-1: var(--brand-green-700);
+  --chart-2: var(--brand-purple-600);
+  --chart-3: var(--brand-green-600);
+  --chart-4: var(--brand-purple-300);
+  --chart-5: var(--brand-green-200);
+  --sidebar: var(--brand-mist);
+  --sidebar-foreground: var(--brand-ink);
+  --sidebar-primary: var(--brand-green-700);
+  --sidebar-primary-foreground: var(--brand-white);
+  --sidebar-accent: var(--brand-green-100);
+  --sidebar-accent-foreground: var(--brand-green-900);
+  --sidebar-border: var(--brand-line);
+  --sidebar-ring: var(--brand-green-600);
+
+  /* Gradients: the site colour (green) laid over photography and bands */
+  --hero-gradient: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--brand-green-950) 94%, transparent) 0%,
+    color-mix(in srgb, var(--brand-green-900) 78%, transparent) 38%,
+    color-mix(in srgb, var(--brand-green-800) 28%, transparent) 72%,
+    color-mix(in srgb, var(--brand-green-800) 8%, transparent) 100%
+  );
+  --hero-gradient-bottom: linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--brand-green-950) 88%, transparent) 0%,
+    transparent 38%
+  );
+  --band-gradient: linear-gradient(
+    120deg,
+    var(--brand-green-950) 0%,
+    var(--brand-green-800) 70%,
+    var(--brand-green-700) 100%
+  );
+  --page-hero-gradient: linear-gradient(
+    115deg,
+    var(--brand-green-950) 0%,
+    var(--brand-green-900) 55%,
+    var(--brand-green-800) 100%
+  );
+
+  /* Shape + depth */
+  --radius: 0.75rem;
+  --shadow-lift: 0 18px 36px -18px
+    color-mix(in srgb, var(--brand-green-950) 45%, transparent);
+  --shadow-float: 0 10px 28px -8px
+    color-mix(in srgb, var(--brand-green-950) 55%, transparent);
+
+  /* Layout */
+  --header-h: 4.5rem;
+  --container-max: 76rem;
+  --container-pad: clamp(1rem, 4vw, 2rem);
+  --section-y: clamp(4rem, 8vw, 7rem);
+  --drawer-w: min(88vw, 22rem);
+
+  /* Motion */
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-drawer-in: 620ms;
+  --duration-drawer-out: 380ms;
+  --hero-interval: 6500ms;
+  --hero-fade: 1100ms;
+}
+
+/* On narrow screens the photo is cropped to its middle, so a left-to-right
+   gradient would bury it. Use a top-to-bottom wash instead. */
+@media (max-width: 47.99rem) {
+  :root {
+    --hero-gradient: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--brand-green-950) 84%, transparent) 0%,
+      color-mix(in srgb, var(--brand-green-900) 58%, transparent) 45%,
+      color-mix(in srgb, var(--brand-green-950) 80%, transparent) 100%
+    );
+  }
+}
+
+/* Dark-mode overrides. No toggle ships yet; the tokens keep one a drop-in. */
+.dark {
+  --background: #0c1710;
+  --foreground: #eef4ee;
+  --card: #122019;
+  --card-foreground: #eef4ee;
+  --popover: #122019;
+  --popover-foreground: #eef4ee;
+  --primary: #3aa74e;
+  --primary-foreground: #08280d;
+  --secondary: #a24bb8;
+  --secondary-foreground: #ffffff;
+  --secondary-hover: #b560c9;
+  --muted: #16271c;
+  --muted-foreground: #a9b9ad;
+  --accent: #1a3323;
+  --accent-foreground: #e1f1e4;
+  --border: #25382b;
+  --input: #25382b;
+  --ring: #3aa74e;
+}
+
+/* 4. Tailwind theme ------------------------------------------------------- */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-canopy: var(--canopy);
+  --color-canopy-foreground: var(--canopy-foreground);
+  --color-canopy-muted: var(--canopy-muted);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-young-serif), ui-serif, Georgia, serif;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 10px);
+
+  --shadow-lift: var(--shadow-lift);
+  --shadow-float: var(--shadow-float);
+
+  --ease-bounce: var(--ease-bounce);
+  --ease-out-expo: var(--ease-out-expo);
+
+  /* Fluid type scale */
+  --text-display: clamp(2.25rem, 1.35rem + 3.4vw, 4.25rem);
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.015em;
+  --text-title: clamp(1.875rem, 1.35rem + 2.1vw, 3rem);
+  --text-title--line-height: 1.12;
+  --text-title--letter-spacing: -0.01em;
+  --text-lead: clamp(1.125rem, 1.02rem + 0.45vw, 1.375rem);
+  --text-lead--line-height: 1.6;
 }
 
-:root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+/* Animation tokens + keyframes. Kept outside `inline` so they stay var-based. */
+@theme {
+  --animate-drawer-in: drawer-in var(--duration-drawer-in) linear both;
+  --animate-drawer-out: drawer-out var(--duration-drawer-out) linear both;
+  --animate-overlay-in: overlay-in 320ms ease-out both;
+  --animate-overlay-out: overlay-out 320ms ease-in both;
+  --animate-rise: rise 760ms var(--ease-out-expo) both;
+  --animate-hero-progress: hero-progress var(--hero-interval) linear forwards;
+
+  /* Bounce in: slide past the edge, settle back with decaying overshoot. */
+  @keyframes drawer-in {
+    0% {
+      transform: translateX(100%);
+      animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+    }
+    58% {
+      transform: translateX(-4%);
+      animation-timing-function: ease-in-out;
+    }
+    76% {
+      transform: translateX(1.8%);
+      animation-timing-function: ease-in-out;
+    }
+    90% {
+      transform: translateX(-0.7%);
+      animation-timing-function: ease-in-out;
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  /* Bounce out: small anticipation back into the screen, then away. */
+  @keyframes drawer-out {
+    0% {
+      transform: translateX(0);
+      animation-timing-function: ease-out;
+    }
+    24% {
+      transform: translateX(-3.5%);
+      animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.4);
+    }
+    100% {
+      transform: translateX(106%);
+    }
+  }
+  @keyframes overlay-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes overlay-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(1.25rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes hero-progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-}
-
+/* 5. Base ------------------------------------------------------------------ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-sans text-foreground antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display font-normal text-balance;
+  }
+  p {
+    @apply text-pretty;
+  }
+  /* Display faces ship a single weight: stop browsers faking a bold. */
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-display {
+    font-synthesis: none;
+  }
+  ::selection {
+    background: var(--brand-purple-300);
+    color: var(--brand-green-950);
+  }
+}
+
+/* Utilities ---------------------------------------------------------------- */
+@utility page-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+@utility section-y {
+  padding-block: var(--section-y);
+}
+
+@utility scroll-mt-header {
+  scroll-margin-top: calc(var(--header-h) + 1.25rem);
+}
+
+@utility bg-hero-gradient {
+  background-image: var(--hero-gradient);
+}
+
+@utility bg-hero-gradient-bottom {
+  background-image: var(--hero-gradient-bottom);
+}
+
+@utility bg-band-gradient {
+  background-image: var(--band-gradient);
+}
+
+@utility bg-page-hero-gradient {
+  background-image: var(--page-hero-gradient);
+}
+
+/* Staggered entrance delay for the hero's CSS-only load-in sequence. */
+@utility animation-delay-* {
+  animation-delay: calc(--value(integer) * 1ms);
+}
+
+/* Drawer: extends the panel's background past its right edge so the bounce
+   overshoot never exposes a gap between the panel and the screen edge. */
+@utility drawer-panel {
+  width: var(--drawer-w);
+  &::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: 100%;
+    width: 6rem;
+    background: inherit;
+  }
+}
+
+/* Hero carousel: crossfade + slow push-in. Both are driven by the
+   `data-active` attribute so there is no JS animation loop. */
+@utility hero-slide {
+  opacity: 0;
+  transform: scale(1);
+  transition:
+    opacity var(--hero-fade) ease-in-out,
+    transform 0s linear var(--hero-fade);
+  &[data-active="true"] {
+    opacity: 1;
+    transform: scale(1.07);
+    transition:
+      opacity var(--hero-fade) ease-in-out,
+      transform calc(var(--hero-interval) + var(--hero-fade)) linear;
+  }
+}
+
+/* Reduced motion: no push-in, no entrance rise, no autoplay progress. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide[data-active="true"] {
+    transform: scale(1);
+    transition: opacity 200ms linear;
+  }
+  .hero-slide {
+    transition: opacity 200ms linear;
   }
 }
