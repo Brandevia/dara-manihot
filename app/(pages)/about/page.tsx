@@ -8,6 +8,7 @@ import {
   StaggerList,
   StaggerListItem,
 } from '@/components/animations'
+import { PhotoSlot } from '@/components/photo-slot'
 import { CtaBand } from '@/components/sections/cta-band'
 import { PageHero } from '@/components/sections/page-hero'
 import { SectionHeading } from '@/components/sections/section-heading'
@@ -118,6 +119,24 @@ export default function AboutPage() {
                 </li>
               ))}
             </ul>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Leadership and field photography */}
+      <section aria-label="Our people" className="pb-[var(--section-y)]">
+        <div className="page-container grid gap-6 sm:grid-cols-2">
+          <Reveal>
+            <PhotoSlot
+              id="about-leadership"
+              sizes="(min-width: 1216px) 592px, 50vw"
+            />
+          </Reveal>
+          <Reveal delay={0.1}>
+            <PhotoSlot
+              id="about-field"
+              sizes="(min-width: 1216px) 592px, 50vw"
+            />
           </Reveal>
         </div>
       </section>

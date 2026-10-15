@@ -8,10 +8,13 @@ import ServicesPage from '@/app/(pages)/services/page'
 import TermsPage from '@/app/(pages)/terms/page'
 import Home from '@/app/page'
 import { Footer } from '@/components/footer'
-import { SERVICES } from '@/lib/services'
+import { PILLARS, SERVICES } from '@/lib/services'
 import { discoverRoutes } from './helpers'
 
-vi.mock('next/navigation', () => ({ usePathname: () => '/' }))
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/',
+  useSearchParams: () => new URLSearchParams(),
+}))
 
 const pages = [
   ['/', Home],
@@ -25,6 +28,12 @@ const pages = [
 
 const routes = discoverRoutes()
 const serviceIds = new Set<string>(SERVICES.map((s) => s.id))
+// Hashes that exist on each page. /services has a section per pillar and a
+// card per service; /contact has the enquiry form.
+const anchorsByPath: Record<string, Set<string>> = {
+  '/services': new Set([...serviceIds, ...PILLARS.map((p) => p.id)]),
+  '/contact': new Set(['enquiry']),
+}
 
 describe.each(pages)('%s', (_path, Page) => {
   it('has exactly one h1', () => {
@@ -40,17 +49,30 @@ describe.each(pages)('%s', (_path, Page) => {
     expect(text).not.toMatch(/\bundefined\b|\bnull\b|\[object Object\]/)
   })
 
-  it('every internal link resolves to a real route (and service anchor)', () => {
+  it('every internal link resolves to a real route, anchor and service', () => {
     const { container } = render(<Page />)
     for (const a of container.querySelectorAll<HTMLAnchorElement>('a[href]')) {
       const href = a.getAttribute('href') ?? ''
       if (/^(mailto:|tel:|https?:)/.test(href)) continue
-      const [pathname, hash] = href.split('#')
-      if (pathname) expect(routes, `dead link ${href}`).toContain(pathname)
-      if (pathname === '/services' && hash)
-        expect(serviceIds.has(hash), `unknown service anchor ${href}`).toBe(
-          true,
-        )
+      const url = new URL(href, 'http://site.test')
+      const hash = url.hash.slice(1)
+      if (href.startsWith('#')) {
+        // In-page link: its target must exist on this page.
+        expect(
+          container.querySelector(href),
+          `dead anchor ${href}`,
+        ).not.toBeNull()
+        continue
+      }
+      expect(routes, `dead link ${href}`).toContain(url.pathname)
+      if (hash) {
+        const known = anchorsByPath[url.pathname]
+        expect(known?.has(hash), `unknown anchor ${href}`).toBe(true)
+      }
+      // ?service= deep links must name a real service.
+      const service = url.searchParams.get('service')
+      if (service)
+        expect(serviceIds.has(service), `bad service in ${href}`).toBe(true)
     }
   })
 

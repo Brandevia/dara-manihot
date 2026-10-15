@@ -11,6 +11,7 @@ import {
   Zap,
 } from 'lucide-react'
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import {
   Stagger,
@@ -18,6 +19,7 @@ import {
   StaggerList,
   StaggerListItem,
 } from '@/components/animations'
+import { PhotoSlot } from '@/components/photo-slot'
 import { CtaBand } from '@/components/sections/cta-band'
 import { PageHero } from '@/components/sections/page-hero'
 import { SectionHeading } from '@/components/sections/section-heading'
@@ -25,6 +27,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { COMPANY_INFO } from '@/lib/constants'
+import type { PhotoSlotId } from '@/lib/imagery'
+import { TEAM } from '@/lib/team'
 
 export const metadata: Metadata = {
   title: 'Projects & impact',
@@ -42,6 +46,7 @@ const keyProjects = [
     details:
       'Our role includes designing circular business models for green ammonia production, developing training programs, and supporting regulatory compliance to make sustainable energy a reality for farmers and agro-processors.',
     status: 'Active',
+    photo: 'projects-green-energy-hub' as PhotoSlotId,
     impact: undefined as string | undefined,
   },
   {
@@ -53,6 +58,7 @@ const keyProjects = [
     details:
       'These projects aim to reduce reliance on imported fertilizers, improve soil health, and make farming more profitable and sustainable for smallholders.',
     status: 'Development',
+    photo: 'projects-circular-fertilizer' as PhotoSlotId,
     impact: '30% cost reduction target' as string | undefined,
   },
 ]
@@ -111,37 +117,6 @@ const impactGoals = [
   },
 ]
 
-// NOTE: placeholder names and titles from the original site. Replace with
-// real team members before launch.
-const teamMembers = [
-  {
-    name: 'Dr. Agricultural Expert',
-    role: 'Lead Agricultural Specialist',
-    description: '20+ years in sustainable agriculture and crop management',
-    expertise: 'Circular Economy, Crop Science',
-  },
-  {
-    name: 'Eng. Energy Systems',
-    role: 'Renewable Energy Director',
-    description: 'Expert in solar PV systems and green hydrogen technologies',
-    expertise: 'Solar Energy, Green Hydrogen',
-  },
-  {
-    name: 'Prof. Research Lead',
-    role: 'Research & Development Head',
-    description:
-      'Leading researcher in biomass gasification and biochar production',
-    expertise: 'Biomass Technology, R&D',
-  },
-  {
-    name: 'Ms. Community Engagement',
-    role: 'Capacity Building Manager',
-    description:
-      'Specialist in community training and gender inclusion programs',
-    expertise: 'Training, Gender Inclusion',
-  },
-]
-
 export default function ProjectsPage() {
   return (
     <>
@@ -160,7 +135,12 @@ export default function ProjectsPage() {
           <Stagger className="space-y-6">
             {keyProjects.map((project) => (
               <StaggerItem key={project.title}>
-                <Card className="overflow-hidden p-0 transition-shadow duration-300 hover:shadow-lift">
+                <Card className="gap-0 overflow-hidden p-0 transition-shadow duration-300 hover:shadow-lift">
+                  <PhotoSlot
+                    id={project.photo}
+                    sizes="(min-width: 1280px) 1216px, 100vw"
+                    className="aspect-[16/7] rounded-none"
+                  />
                   <div className="grid lg:grid-cols-[1fr_17rem]">
                     <div className="space-y-4 p-7 sm:p-9">
                       <div className="flex items-center gap-4">
@@ -257,6 +237,11 @@ export default function ProjectsPage() {
               transforms communities and drives Nigeria’s green transition
               forward.
             </p>
+            <PhotoSlot
+              id="projects-community"
+              sizes="(min-width: 1024px) 440px, 100vw"
+              className="mt-8"
+            />
           </div>
           <StaggerList className="grid gap-6 sm:grid-cols-2">
             {impactGoals.map((goal) => (
@@ -283,14 +268,24 @@ export default function ProjectsPage() {
             description="Our diverse team brings together decades of experience in agriculture, renewable energy, and sustainable development."
           />
           <StaggerList className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {teamMembers.map((member) => (
+            {TEAM.map((member) => (
               <StaggerListItem
                 key={member.name}
                 className="rounded-xl border border-border bg-card p-6 text-center"
               >
-                <span className="mx-auto mb-4 flex size-20 items-center justify-center rounded-full bg-accent text-primary">
-                  <Users className="size-9" aria-hidden />
-                </span>
+                {member.photo ? (
+                  <Image
+                    src={member.photo}
+                    alt={`Portrait of ${member.name}`}
+                    width={160}
+                    height={160}
+                    className="mx-auto mb-4 size-20 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="mx-auto mb-4 flex size-20 items-center justify-center rounded-full bg-accent text-primary">
+                    <Users className="size-9" aria-hidden />
+                  </span>
+                )}
                 <h3 className="text-lg">{member.name}</h3>
                 <p className="mt-1 text-sm font-medium text-primary">
                   {member.role}

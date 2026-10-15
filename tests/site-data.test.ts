@@ -120,7 +120,6 @@ describe('humans.txt', () => {
     expect(txt).toContain('Sodeke Pamilerin')
     expect(txt).toContain('github.com/PRAIZZZ-08')
     expect(txt).toContain('linkedin.com/in/pamilerin-sodeke-10b66138b')
-    expect(txt).toContain('olubiyisodekepamilerin@gmail.com')
     expect(txt).toContain('Abuja, Nigeria')
   })
 })

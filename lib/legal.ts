@@ -28,13 +28,16 @@ export const PRIVACY_SECTIONS: readonly LegalSection[] = [
     title: 'Information we collect',
     blocks: [
       p(
-        'This website has no accounts, sign-up forms or payment features. We collect personal data in two ways only.',
+        'This website has no accounts or payment features. We collect personal data in three ways only.',
       ),
       p(
         'Information you give us. If you email or call us, we receive the details you choose to share, such as your name, email address, phone number, organisation and the content of your message.',
       ),
       p(
-        'Technical information. Like most websites, our hosting provider automatically records standard server logs when you visit: your IP address, browser and device type, the pages requested, and the date and time of the request.',
+        'Our enquiry form. When you submit the enquiry form on our Contact page, we receive your name, email address, phone number (optional), the service you are interested in and your message. We email these details to our team and send an automatic acknowledgement to the address you gave us. Each enquiry is given a reference number.',
+      ),
+      p(
+        'Technical information. Like most websites, our hosting provider automatically records standard server logs when you visit: your IP address, browser and device type, the pages requested, and the date and time of the request. To protect the enquiry form from automated spam, we also check how quickly it was completed and keep a short lived count of submissions per IP address in the memory of the web server. That count is not stored permanently.',
       ),
       p(
         'At the time of writing, this website does not set cookies and does not use third-party analytics or advertising trackers. Fonts and images are served from our own domain.',
@@ -47,6 +50,7 @@ export const PRIVACY_SECTIONS: readonly LegalSection[] = [
     blocks: [
       ul(
         'To respond to your enquiries and discuss projects, partnerships or training.',
+        'To send you an automatic acknowledgement and reference number when you submit the enquiry form.',
         'To keep the website secure, diagnose faults and prevent abuse.',
         'To meet our legal and regulatory obligations.',
       ),
@@ -76,6 +80,7 @@ export const PRIVACY_SECTIONS: readonly LegalSection[] = [
       p('We share personal data only where necessary, with:'),
       ul(
         'Service providers who host and deliver the website, and who process data on our instructions.',
+        'Our email service provider, which delivers enquiry notifications to our team and acknowledgements to you.',
         'Professional advisers, such as lawyers and accountants, under duties of confidentiality.',
         'Courts, regulators or law-enforcement bodies when we are legally required to.',
       ),
@@ -95,7 +100,7 @@ export const PRIVACY_SECTIONS: readonly LegalSection[] = [
     title: 'How long we keep it',
     blocks: [
       p(
-        'We keep correspondence for as long as needed to deal with your enquiry and any resulting relationship, and for a reasonable period afterwards. Server logs are retained by our hosting provider for a short, limited period. We delete or anonymise personal data we no longer need.',
+        'We keep correspondence for as long as needed to deal with your enquiry and any resulting relationship, and for a reasonable period afterwards. Enquiry form submissions are not kept in a separate database; they are held as emails in our mailbox. Server logs are retained by our hosting provider for a short, limited period. We delete or anonymise personal data we no longer need.',
       ),
     ],
   },

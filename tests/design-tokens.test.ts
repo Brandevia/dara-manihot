@@ -1,5 +1,6 @@
+import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { listFiles, readSource } from './helpers'
+import { listFiles, ROOT, readSource } from './helpers'
 
 const css = readSource('app/globals.css')
 
@@ -43,6 +44,8 @@ describe('WCAG AA contrast of token pairs', () => {
     ['canopy-muted', 'canopy'],
     ['primary', 'background'], // primary used as link/text colour
     ['secondary', 'background'], // secondary used as text (tonal buttons)
+    ['destructive', 'background'], // form error text
+    ['destructive', 'card'], // form error text inside the contact card
   ]
   it.each(pairs)('%s on %s is >= 4.5:1', (fg, bg) => {
     expect(contrast(tokenHex(fg), tokenHex(bg))).toBeGreaterThanOrEqual(4.5)
@@ -69,10 +72,11 @@ describe('all styling goes through tokens', () => {
   const RAW_COLOUR = /#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(|\boklch\(/
   const ALLOWED_RAW = new Set(['app/layout.tsx']) // <meta theme-color> cannot read CSS vars
 
-  it.each(files.map((f) => [f.split('/site/')[1] ?? f, f]))(
+  // Paths relative to the repo root, so the test works in any checkout folder.
+  it.each(files.map((f) => [path.relative(ROOT, f), f]))(
     '%s has no palette classes or raw colours',
-    (rel, full) => {
-      const src = readSource(full.slice(full.indexOf('/site/') + 6))
+    (rel) => {
+      const src = readSource(rel)
       expect(src).not.toMatch(PALETTE)
       if (!ALLOWED_RAW.has(rel)) expect(src).not.toMatch(RAW_COLOUR)
     },

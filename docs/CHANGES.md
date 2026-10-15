@@ -1,3 +1,41 @@
+# Scope alignment: sustainable energy, enquiry form, email workflow
+
+Brings the site in line with the Scope of Work (14 Sept 2026) and the Project
+Plan. Item by item mapping: [SCOPE-TRACEABILITY.md](SCOPE-TRACEABILITY.md).
+
+## Added
+
+- **Two pillar positioning.** Sustainable Agriculture and Sustainable Energy at equal weight: hero badges, two cards under the hero, Services split into a section per pillar with jump links. Existing service write-ups are untouched, only tagged with a pillar.
+- **Enquiry form** on Contact (name, email, phone, service, message): shared client and server validation, accessible errors and confirmation, mobile friendly inputs, deep links from every service card (`/contact?service=...#enquiry`).
+- **Spam protection** without CAPTCHA: honeypot, timing trap, per IP and overall rate limits.
+- **Email workflow** over SMTP (`nodemailer`): branded notification to Dara-Manihot with Reply-To set to the visitor, branded acknowledgement to the visitor, shared reference number, HTML plus plain text, all visitor input escaped.
+- **Imagery system**: one manifest (`lib/imagery.ts`) for twelve photo slots across the five pages, branded fallback panels, optional on-screen photo briefs for staging.
+- **Webmail provisioning** script for the five mailboxes (cPanel UAPI, dry run by default) and `pnpm launch:check`.
+- **Docs**: email setup, photo request, UAT checklist, scope traceability.
+
+## Changed
+
+- Privacy Policy now describes the enquiry form, the spam checks and the email service (it previously said the site had no forms). `LEGAL_LAST_UPDATED` bumped.
+- Projects team data moved to `lib/team.ts`; entries from the original site flagged `placeholder: true` and block launch until replaced.
+- `SectionHeading` accepts an optional `id` so a section can be named by its heading.
+
+## Fixed
+
+- 28 tests only passed in a checkout folder named `site` (a hardcoded path in `design-tokens.test.ts`). They now pass anywhere.
+- `tests/site-data.test.ts` required a personal email in `humans.txt` that the public file deliberately does not contain.
+
+## Verification
+
+| Check | Result |
+| --- | --- |
+| `pnpm build` | pass, `/api/enquiry` dynamic, 8 pages static |
+| `tsc`, ESLint, Biome | 0 errors |
+| Unit and component tests (Vitest) | **307 pass** |
+| Browser tests (Playwright, desktop and mobile) | **113 pass**, 0 fail (7 skipped, as before) |
+| Mutation check: 5 security and reliability behaviours broken on purpose | **5/5 caught** |
+
+---
+
 # Redesign + Next.js 16 migration
 
 ## To-do (all verified)
