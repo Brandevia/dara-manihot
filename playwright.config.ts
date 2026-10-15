@@ -27,6 +27,9 @@ export default defineConfig({
         command: 'pnpm start',
         url: baseURL,
         reuseExistingServer: true,
+        // Builds both enquiry emails but sends none, so the full flow runs
+        // without an SMTP server.
+        env: { MAIL_DRIVER: 'json' },
         timeout: 60_000,
       },
 })

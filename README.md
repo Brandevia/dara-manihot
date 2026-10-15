@@ -24,8 +24,17 @@ pnpm dev            # http://localhost:3000
 | `pnpm test` | Unit/component tests (Vitest + Testing Library) |
 | `pnpm test:e2e` | Browser tests (Playwright). Needs a build first; first run: `pnpm exec playwright install chromium` |
 | `pnpm check` | lint + typecheck + unit tests |
+| `pnpm launch:check` | Lists everything still blocking a production launch (missing SMTP settings, placeholder team, photos). Exits 1 on blockers |
+| `pnpm webmail:provision` | Creates the five business mailboxes through cPanel. Dry run unless given `-- --apply`. See `docs/EMAIL-SETUP.md` |
 
 > Next 16 no longer lints during `next build`. Run `pnpm check` in CI.
+
+## Environment
+
+The enquiry form needs SMTP settings to send email. Copy `.env.example` to
+`.env.local` and fill it in; production sets the same variables in the host's
+environment. Without them the form shows a friendly error and nothing is lost
+silently. Full guide: [`docs/EMAIL-SETUP.md`](docs/EMAIL-SETUP.md).
 
 ## Project structure
 
@@ -78,6 +87,18 @@ component uses a Tailwind palette class (`bg-green-600`) or a hex/rgb value.
 `position` to tune the crop). Keep the subject near the horizontal centre:
 phones show only the middle third. The four images shipped are placeholder
 illustrations.
+
+**Add the client's photos.** Every image on the site is a named slot in
+`lib/imagery.ts`. Drop a file in `public/images/`, set the slot's `src` and
+`alt`. The full shot list for the client is in
+[`docs/PHOTO-REQUEST.md`](docs/PHOTO-REQUEST.md).
+
+**Add or change a service.** Edit `SERVICES` in `lib/services.ts` and give it a
+`pillar` (`sustainable-agriculture`, `sustainable-energy` or `supporting`). It
+then appears in the right Services section, the enquiry form's service list
+and the footer, with no other change.
+
+**Replace the placeholder team.** Edit `lib/team.ts`, set `placeholder: false`.
 
 **Update contact details.** Edit `COMPANY_INFO` in `lib/constants.ts`. The
 header, footer, contact page and legal pages all read from it.

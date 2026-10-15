@@ -1,7 +1,10 @@
 import { CheckCircle2, Clock, Mail, MapPin, Phone, Send } from 'lucide-react'
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { Reveal, Stagger, StaggerItem } from '@/components/animations'
 import { CopyButton } from '@/components/copy-button'
+import { EnquiryForm } from '@/components/enquiry-form'
+import { PhotoSlot } from '@/components/photo-slot'
 import { PageHero } from '@/components/sections/page-hero'
 import { SectionHeading } from '@/components/sections/section-heading'
 import { Button } from '@/components/ui/button'
@@ -32,6 +35,63 @@ export default function ContactPage() {
         title="Contact Dara-Manihot"
         description="Ready to transform your agricultural operations with sustainable solutions? Let’s discuss how we can work together to create lasting impact."
       />
+
+      {/* The enquiry form: the primary way to reach us. #enquiry is the
+          target of "Enquire about this service" links on /services. */}
+      <section
+        id="enquiry"
+        aria-labelledby="enquiry-title"
+        className="scroll-mt-header section-y"
+      >
+        <div className="page-container grid items-start gap-12 lg:grid-cols-[1.25fr_1fr] lg:gap-16">
+          <Reveal>
+            <h2 id="enquiry-title" className="text-title">
+              Send us an enquiry
+            </h2>
+            <p className="mt-4 mb-8 text-lead text-muted-foreground">
+              Tell us a little about what you need. You will get an email
+              confirmation straight away and a reply from our team soon after.
+            </p>
+            <Card className="gap-0 p-6 sm:p-8">
+              <Suspense
+                fallback={
+                  <p className="text-muted-foreground" aria-live="polite">
+                    Loading the form…
+                  </p>
+                }
+              >
+                <EnquiryForm />
+              </Suspense>
+            </Card>
+          </Reveal>
+          <Reveal
+            delay={0.1}
+            className="space-y-6 lg:sticky lg:top-[calc(var(--header-h)+2rem)]"
+          >
+            <PhotoSlot
+              id="contact-office"
+              sizes="(min-width: 1024px) 440px, 100vw"
+            />
+            <p className="text-muted-foreground">
+              Prefer to talk? Call us on{' '}
+              <a
+                href={`tel:${COMPANY_INFO.phones[0].tel}`}
+                className={linkClass}
+              >
+                {COMPANY_INFO.phones[0].display}
+              </a>{' '}
+              during business hours, or write to{' '}
+              <a
+                href={`mailto:${COMPANY_INFO.email}`}
+                className={`${linkClass} break-all`}
+              >
+                {COMPANY_INFO.email}
+              </a>
+              .
+            </p>
+          </Reveal>
+        </div>
+      </section>
 
       <section className="section-y">
         <div className="page-container">

@@ -2,11 +2,14 @@ import { Reveal } from '@/components/animations'
 import { cn } from '@/lib/utils'
 
 export function SectionHeading({
+  id,
   title,
   description,
   align = 'left',
   className,
 }: {
+  /** Set when a parent <section> names itself with aria-labelledby. */
+  id?: string
   title: string
   description?: string
   align?: 'left' | 'center'
@@ -20,7 +23,9 @@ export function SectionHeading({
         className,
       )}
     >
-      <h2 className="text-title text-foreground">{title}</h2>
+      <h2 id={id} className="text-title text-foreground">
+        {title}
+      </h2>
       {description && (
         <p className="mt-4 text-lead text-muted-foreground">{description}</p>
       )}

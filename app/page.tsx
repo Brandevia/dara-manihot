@@ -7,11 +7,12 @@ import {
   Recycle,
   Sun,
 } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Reveal, Stagger, StaggerItem } from '@/components/animations'
+import { PhotoSlot } from '@/components/photo-slot'
 import { CtaBand } from '@/components/sections/cta-band'
 import { HomeHero } from '@/components/sections/home-hero'
+import { PillarsSection } from '@/components/sections/pillars'
 import { SectionHeading } from '@/components/sections/section-heading'
 import { Button } from '@/components/ui/button'
 import {
@@ -74,6 +75,8 @@ export default function Home() {
   return (
     <>
       <HomeHero />
+
+      <PillarsSection />
 
       {/* Who we are */}
       <section className="section-y">
@@ -162,14 +165,8 @@ export default function Home() {
             </Stagger>
           </div>
 
-          <Reveal className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lift">
-            <Image
-              src="/images/hero/solar.jpg"
-              alt="Rows of solar panels across a green field"
-              fill
-              sizes="(min-width: 1024px) 560px, 100vw"
-              className="object-cover"
-            />
+          <Reveal>
+            <PhotoSlot id="home-people" className="shadow-lift" />
           </Reveal>
         </div>
       </section>

@@ -15,6 +15,11 @@ export const COMPANY_INFO = {
   hours: 'Mon - Fri: 8:00 AM - 6:00 PM',
 } as const
 
+/** Absolute site address, used where a relative URL cannot work (emails). */
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.daramanihot.com.ng'
+).replace(/\/+$/, '')
+
 // `as const` keeps each href a literal type, so `typedRoutes` checks every
 // link here against the real routes at compile time.
 export const NAVIGATION_LINKS = [
@@ -84,4 +89,4 @@ export const HERO_SLIDES = [
   },
 ] as const
 
-export const LEGAL_LAST_UPDATED = '11 October 2026'
+export const LEGAL_LAST_UPDATED = '14 October 2026'

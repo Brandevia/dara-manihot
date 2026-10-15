@@ -1,8 +1,10 @@
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { HeroCarousel } from '@/components/hero-carousel'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { HERO_SLIDES } from '@/lib/constants'
+import { PILLARS } from '@/lib/services'
 
 /**
  * The page-load moment: headline, lead and CTAs rise in on a short CSS
@@ -18,6 +20,20 @@ export function HomeHero() {
 
       <div className="page-container relative z-10 pt-12 pb-36 sm:pb-32">
         <div className="max-w-3xl text-canopy-foreground">
+          {/* Both headline offerings, visible before any scrolling. */}
+          <ul
+            aria-label="What we do"
+            className="animate-rise mb-5 flex flex-wrap gap-2 motion-reduce:animate-none"
+          >
+            {PILLARS.filter((p) => p.id !== 'supporting').map((pillar) => (
+              <li key={pillar.id}>
+                <Badge variant="soft" className="gap-1.5 px-3 py-1 text-sm">
+                  <pillar.icon aria-hidden />
+                  {pillar.title}
+                </Badge>
+              </li>
+            ))}
+          </ul>
           <h1
             id="home-hero-title"
             className="animate-rise text-display motion-reduce:animate-none"

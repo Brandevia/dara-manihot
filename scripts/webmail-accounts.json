@@ -1,0 +1,27 @@
+{
+  "domain": "daramanihot.com.ng",
+  "_note": "PROPOSED addresses. Confirm the five names with the client before running with --apply.",
+  "accounts": [
+    { "local": "sales", "purpose": "Sales and quotations", "quotaMb": 2048 },
+    {
+      "local": "projects",
+      "purpose": "Project coordination and delivery",
+      "quotaMb": 2048
+    },
+    {
+      "local": "partnerships",
+      "purpose": "Partners, universities and agencies",
+      "quotaMb": 2048
+    },
+    {
+      "local": "accounts",
+      "purpose": "Invoices and payments",
+      "quotaMb": 2048
+    },
+    {
+      "local": "noreply",
+      "purpose": "Sender for website enquiry emails (SMTP_USER)",
+      "quotaMb": 1024
+    }
+  ]
+}
