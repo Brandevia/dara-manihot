@@ -1,0 +1,28 @@
+{
+  "output": {
+    "filePath": "repomix-output.md",
+    "style": "markdown",
+    "removeComments": false,
+    "showLineNumbers": false,
+    "topFilesLength": 5
+  },
+  "include": ["**/*"],
+  "exclude": [
+    "node_modules/**",
+    ".next/**",
+    "out/**",
+    "dist/**",
+    "package-lock.json",
+    
+    "tsconfig.tsbuildinfo",
+    "repomix-output.xml",
+    "repomix-output.md",
+    
+    "public/images/**",
+    "app/**/*.jpg",
+    "app/**/*.png",
+    
+    "tests/**",
+    "vitest.config.ts"
+  ]
+}
