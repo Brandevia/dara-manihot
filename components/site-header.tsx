@@ -40,7 +40,7 @@ export function SiteHeader() {
         >
           {/* app/icon.png is served at /icon.png by Next's metadata routes. */}
           <Image src="/icon.png" alt="" width={24} height={24} priority className="size-6 object-contain" />
-          <span className="font-bold text-foreground text-xl">Daramanihot</span>
+          <span className="font-bold text-foreground text-xl">Dara-Manihot</span>
         </Link>
 
         {/* `contents`: links and CTA become direct children of the pill, so one even gap spaces all three groups. */}
