@@ -49,44 +49,33 @@ export const CORE_VALUES = [
   'Excellence',
 ]
 
-export const SDG_GOALS = [
-  { number: 1, title: 'No Poverty' },
-  { number: 7, title: 'Affordable and Clean Energy' },
-  { number: 9, title: 'Industry, Innovation and Infrastructure' },
-  { number: 13, title: 'Climate Action' },
-]
+export interface SdgGoal { number: number; title: string; icon: string; contribution: string }
 
-/**
- * Hero carousel slides. To use real photography, drop the files in
- * `public/images/hero/` and change `src` (and `alt`). Keep the focal point
- * of each photo near the horizontal centre: on phones the image is cropped
- * to the middle third. `position` tunes that crop per slide.
- */
+export const SDG_GOALS = [
+  { number: 1,  title: 'No Poverty', icon: '/images/sdg/sdg-01.png', contribution: 'Lower-cost clean energy and locally made fertilizer make farming more profitable for smallholders.' },
+  { number: 2,  title: 'Zero Hunger', icon: '/images/sdg/sdg-02.png', contribution: 'Climate-smart farming and green ammonia fertilizer to raise yields and cut input costs.' },
+  { number: 4,  title: 'Quality Education', icon: '/images/sdg/sdg-04.png', contribution: 'Training for farmers, cooperatives and enterprises in renewable energy and sustainable practice.' },
+  { number: 7,  title: 'Affordable and Clean Energy', icon: '/images/sdg/sdg-07.png', contribution: 'Solar PV, biomass gasification and green hydrogen for farms, agro-processors and rural industry.' },
+  { number: 8,  title: 'Decent Work and Economic Growth', icon: '/images/sdg/sdg-08.png', contribution: 'Green jobs and enterprise opportunities, with a strong focus on women and youth.' },
+  { number: 9,  title: 'Industry, Innovation and Infrastructure', icon: '/images/sdg/sdg-09.png', contribution: 'Agro-industrial hubs and clean-technology infrastructure across Nigeria and West Africa.' },
+  { number: 12, title: 'Responsible Consumption and Production', icon: '/images/sdg/sdg-12.png', contribution: 'Circular, waste-to-value models that turn crop residue into energy, biochar and fertilizer.' },
+  { number: 13, title: 'Climate Action', icon: '/images/sdg/sdg-13.png', contribution: 'Replacing fossil fuels in agricultural operations and cutting emissions along value chains.' },
+  { number: 17, title: 'Partnerships for the Goals', icon: '/images/sdg/sdg-17.png', contribution: 'Working with universities, technical partners, industry and government agencies.' },
+] as const satisfies readonly SdgGoal[]
+
+export const SDG_WHEEL = { src: '/images/sdg/wheel.png', alt: 'The Sustainable Development Goals colour wheel' } as const
+
+export function formatSdgNumbers(goals: readonly { number: number }[] = SDG_GOALS): string {
+  const n = goals.map((g) => String(g.number))
+  if (n.length < 3) return n.join(' and ')
+  return `${n.slice(0, -1).join(', ')}, and ${n[n.length - 1]}`
+}
+
 export const HERO_SLIDES = [
-  {
-    src: '/images/hero/dawn.jpg',
-    alt: 'Rows of cassava plants stretching toward a sunrise over rolling hills',
-    caption: 'Cassava fields at first light',
-    position: '55% 50%',
-  },
-  {
-    src: '/images/hero/solar.jpg',
-    alt: 'Rows of solar panels across a green field under a bright sky',
-    caption: 'Solar power for farms and agro-processors',
-    position: '50% 50%',
-  },
-  {
-    src: '/images/hero/biomass.jpg',
-    alt: 'A biomass gasification plant at dusk surrounded by piles of crop residue',
-    caption: 'Turning crop residue into clean energy',
-    position: '52% 50%',
-  },
-  {
-    src: '/images/hero/hydrogen.jpg',
-    alt: 'Wind turbines and green hydrogen storage tanks on green hills',
-    caption: 'Green hydrogen for fertilizer and industry',
-    position: '60% 50%',
-  },
+  { src: '/images/hero/image5.png', alt: 'A tractor working crop rows between solar panels, with a green processing plant and a river behind', caption: 'Farms powered by clean energy', position: '55% 50%' },
+  { src: '/images/hero/image3.png', alt: 'Rows of solar panels across a green field under a bright sky', caption: 'Solar power for farms and agro-processors', position: '50% 50%' },
+  { src: '/images/hero/image6.png', alt: 'A green manufacturing hub with a solar array, hydrogen storage tanks and wind turbines beside farmland', caption: 'Green manufacturing hubs for agro-industry', position: '60% 50%' },
+  { src: '/images/hero/image9.png', alt: 'A hydrogen energy storage unit and white storage tanks on grass, with wind turbines and a city skyline behind', caption: 'Green hydrogen for fertilizer and industry', position: '60% 50%' },
 ] as const
 
 export const LEGAL_LAST_UPDATED = '14 October 2026'

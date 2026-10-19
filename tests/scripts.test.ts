@@ -166,7 +166,7 @@ describe('provision-webmail run()', () => {
 
 describe('launch check', () => {
   const slots = [
-    { id: 'a', src: '/images/hero/dawn.jpg' },
+    { id: 'a', src: '/images/hero/image5.png' },
     { id: 'b', src: '/images/team/real.jpg' },
     { id: 'c' },
   ]

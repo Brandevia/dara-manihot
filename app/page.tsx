@@ -22,6 +22,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import { SdgSection } from '@/components/sections/sdg-section'
 
 const stats = [
   { value: '500+', label: 'Farmers empowered' },
@@ -170,6 +171,8 @@ export default function Home() {
           </Reveal>
         </div>
       </section>
+
+      <SdgSection />
 
       {/* Vision */}
       <section className="bg-band-gradient section-y text-canopy-foreground">

@@ -61,7 +61,7 @@ function shell(title: string, bodyHtml: string): string {
 <tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:${BRAND.white};border-radius:12px;overflow:hidden;border:1px solid ${BRAND.line};font-family:Arial,Helvetica,sans-serif;color:${BRAND.ink};">
 <tr><td style="padding:20px 28px;border-bottom:4px solid ${BRAND.green};background:${BRAND.white};">
-<img src="${SITE_URL}/logo.png" alt="${esc(COMPANY_INFO.name)}" width="140" style="display:block;height:auto;border:0;">
+<img src="${SITE_URL}/images/logo.png" alt="${esc(COMPANY_INFO.name)}" width="140" style="display:block;height:auto;border:0;">
 </td></tr>
 <tr><td style="padding:28px;font-size:16px;line-height:1.6;">
 ${bodyHtml}
