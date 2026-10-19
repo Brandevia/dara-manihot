@@ -53,6 +53,9 @@
   --secondary: var(--brand-purple-600);
   --secondary-foreground: var(--brand-white);
   --secondary-hover: var(--brand-purple-700);
+  --leaf: var(--brand-green-600);
+  --leaf-foreground: var(--brand-white);
+  --leaf-hover: var(--brand-green-700);
   --muted: var(--brand-mist);
   --muted-foreground: var(--brand-slate);
   --accent: var(--brand-green-100);
@@ -116,7 +119,9 @@
     color-mix(in srgb, var(--brand-green-950) 55%, transparent);
 
   /* Layout */
-  --header-h: 4.5rem;
+  --header-top: 1rem;
+  --header-h: 5.25rem;
+  --hero-pad: clamp(1rem, 4vw, 6rem);
   --container-max: 76rem;
   --container-pad: clamp(1rem, 4vw, 2rem);
   --section-y: clamp(4rem, 8vw, 7rem);
@@ -136,10 +141,11 @@
 @media (max-width: 47.99rem) {
   :root {
     --hero-gradient: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--brand-green-950) 84%, transparent) 0%,
-      color-mix(in srgb, var(--brand-green-900) 58%, transparent) 45%,
-      color-mix(in srgb, var(--brand-green-950) 80%, transparent) 100%
+        100deg,
+        color-mix(in srgb, var(--brand-green-950) 62%, transparent) 0%,
+        color-mix(in srgb, var(--brand-green-900) 40%, transparent) 38%,
+        color-mix(in srgb, var(--brand-green-800) 10%, transparent) 70%,
+        transparent 100%
     );
   }
 }
@@ -203,6 +209,11 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-leaf: var(--leaf);
+  --color-leaf-foreground: var(--leaf-foreground);
+  --color-leaf-hover: var(--leaf-hover);
+  --text-hero: clamp(2.25rem, 1.5rem + 1.95vw, 3.25rem);
+  --text-hero--line-height: 1.25;
 
   --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-young-serif), ui-serif, Georgia, serif;

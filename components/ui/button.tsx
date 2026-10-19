@@ -23,6 +23,7 @@ const buttonVariants = cva(
         secondary: 'bg-secondary/10 text-secondary hover:bg-secondary/15',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
+        leaf: 'bg-leaf text-leaf-foreground shadow-sm ring-1 ring-inset ring-white/25 hover:bg-leaf-hover hover:shadow-float',
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',

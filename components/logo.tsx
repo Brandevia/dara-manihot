@@ -13,7 +13,7 @@ export function Logo({
 }) {
   return (
     <Image
-      src="/logo.png"
+      src="/images/logo.png"
       alt={`${COMPANY_INFO.name} logo`}
       width={560}
       height={330}

@@ -52,7 +52,7 @@ describe('internal notification', () => {
   })
 
   it('is branded: logo from the site URL and the brand colours', () => {
-    expect(mail.html).toContain(`${SITE_URL}/logo.png`)
+    expect(mail.html).toContain(`${SITE_URL}/images/logo.png`)
     expect(mail.html).toContain('#176827')
     expect(mail.html).toContain('#84289a')
     expect(mail.html).toContain(COMPANY_INFO.address)

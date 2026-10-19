@@ -18,6 +18,7 @@ import { COMPANY_INFO } from '@/lib/constants'
 import type { PhotoSlotId } from '@/lib/imagery'
 import { getPillarServices, PILLARS, type PillarId } from '@/lib/services'
 import { cn } from '@/lib/utils'
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Services',
@@ -214,6 +215,28 @@ export default function ServicesPage() {
           </section>
         )
       })}
+
+      <section aria-labelledby="value-chain-title" className="bg-band-gradient section-y text-canopy-foreground">
+        <div className="page-container">
+          <Reveal className="max-w-3xl">
+            <h2 id="value-chain-title" className="text-title">One hydrogen hub, many products</h2>
+            <p className="mt-5 text-lead text-canopy-foreground/85">Renewable power makes green hydrogen. From there it feeds green ammonia, urea fertilizer, green methanol, sorbitol and e-fuels, so farms and factories draw on one clean supply chain.</p>
+          </Reveal>
+          <Reveal delay={0.1} className="mt-10">
+            <figure>
+              <section aria-label="Green hydrogen value chain diagram"
+                // biome-ignore lint/a11y/noNoninteractiveTabindex: a wide diagram scrolls sideways on phones; keyboard users must be able to reach it.
+                tabIndex={0}
+                className="overflow-x-auto rounded-2xl bg-card shadow-float outline-none focus-visible:ring-[3px] focus-visible:ring-white/60">
+                <Image src="/images/hero/image12.png" width={1024} height={559} sizes="(min-width: 1280px) 1216px, 100vw" quality={85}
+                  alt="Diagram: a green hydrogen hub, powered by solar and wind, supplies green ammonia, urea fertilizer, green methanol, sorbitol and e-fuels. Captured CO2 feeds the urea, methanol and e-fuel plants, and every product leaves through a global distribution terminal."
+                  className="h-auto w-full min-w-[40rem]" />
+              </section>
+              <figcaption className="mt-4 text-sm text-canopy-foreground/75">Concept diagram of a green hydrogen value chain.</figcaption>
+            </figure>
+          </Reveal>
+        </div>
+      </section>
 
       {/* Process: a real sequence, so numbered */}
       <section className="section-y bg-muted">

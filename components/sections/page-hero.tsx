@@ -17,7 +17,7 @@ export function PageHero({
         aria-hidden
         className="absolute -top-24 -right-24 -z-10 size-96 rounded-full bg-secondary/25 blur-3xl"
       />
-      <div className="page-container py-16 sm:py-20 lg:py-24">
+      <div className="page-container pt-[calc(var(--header-h)+4rem)] pb-16 sm:pt-[calc(var(--header-h)+5rem)] sm:pb-20 lg:pt-[calc(var(--header-h)+6rem)] lg:pb-24">
         <div className="max-w-3xl">
           <h1 className="animate-rise text-display motion-reduce:animate-none">
             {title}
