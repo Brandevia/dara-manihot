@@ -115,7 +115,7 @@ ${row('Service', esc(service))}
 </table>
 <p style="margin:0;color:${BRAND.slate};font-size:14px;">Message</p>
 ${messageBox(enquiry.message)}
-<p style="margin:24px 0 0;font-size:14px;color:${BRAND.slate};">Reply to this email to answer ${esc(enquiry.name)} directly. The visitor has already received an automatic acknowledgement.</p>`,
+<p style="margin:24px 0 0;font-size:14px;color:${BRAND.slate};">Reply to this email to answer ${esc(enquiry.name)} directly. A separate automatic acknowledgement is sent to the visitor.</p>`,
   )
 
   const text = [

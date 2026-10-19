@@ -24,14 +24,14 @@ pnpm dev            # http://localhost:3000
 | `pnpm test` | Unit/component tests (Vitest + Testing Library) |
 | `pnpm test:e2e` | Browser tests (Playwright). Needs a build first; first run: `pnpm exec playwright install chromium` |
 | `pnpm check` | lint + typecheck + unit tests |
-| `pnpm launch:check` | Lists everything still blocking a production launch (missing SMTP settings, placeholder team, photos). Exits 1 on blockers |
+| `pnpm launch:check` | Lists everything still blocking a production launch (missing email settings, placeholder team, photos). Exits 1 on blockers |
 | `pnpm webmail:provision` | Creates the five business mailboxes through cPanel. Dry run unless given `-- --apply`. See `docs/EMAIL-SETUP.md` |
 
 > Next 16 no longer lints during `next build`. Run `pnpm check` in CI.
 
 ## Environment
 
-The enquiry form needs SMTP settings to send email. Copy `.env.example` to
+The enquiry form uses ZeptoMail API for both company notifications and visitor acknowledgements. Set `MAIL_DRIVER=zeptomail`, `ZEPTOMAIL_TOKEN`, and a complete authorised `ZEPTOMAIL_FROM_EMAIL`; `ENQUIRY_TO` defaults to `info@daramanihot.com.ng`. Legacy SMTP remains available with `MAIL_DRIVER=smtp`. Copy `.env.example` to
 `.env.local` and fill it in; production sets the same variables in the host's
 environment. Without them the form shows a friendly error and nothing is lost
 silently. Full guide: [`docs/EMAIL-SETUP.md`](docs/EMAIL-SETUP.md).

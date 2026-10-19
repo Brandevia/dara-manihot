@@ -14,13 +14,21 @@ export function runChecks({ env, slots, team, hasRealPhoto, socialLinks }) {
   const findings = []
   const add = (level, id, message) => findings.push({ level, id, message })
 
-  for (const key of ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS'])
-    if (!env[key])
-      add(
-        'BLOCKER',
-        'smtp',
-        `${key} is not set: enquiries cannot be delivered.`,
-      )
+  const zepto = env.MAIL_DRIVER === 'zeptomail' || (!env.MAIL_DRIVER && env.ZEPTOMAIL_TOKEN)
+  if (zepto) {
+    const validAddress = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value ?? '')
+    if (!env.ZEPTOMAIL_TOKEN?.trim() || env.ZEPTOMAIL_TOKEN.includes('********') || /[\r\n]/.test(env.ZEPTOMAIL_TOKEN))
+      add('BLOCKER', 'zeptomail', 'ZEPTOMAIL_TOKEN is missing or invalid.')
+    if (!validAddress(env.ZEPTOMAIL_FROM_EMAIL?.trim()))
+      add('BLOCKER', 'zeptomail', 'ZEPTOMAIL_FROM_EMAIL must be a complete authorised sender address.')
+    if (env.ENQUIRY_TO && !validAddress(env.ENQUIRY_TO.trim()))
+      add('BLOCKER', 'zeptomail', 'ENQUIRY_TO must be a valid recipient address.')
+  } else {
+    for (const key of ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS'])
+      if (!env[key]) add('BLOCKER', 'smtp', `${key} is not set: enquiries cannot be delivered.`)
+  }
+  if (env.MAIL_DRIVER && !['zeptomail', 'smtp', 'json'].includes(env.MAIL_DRIVER))
+    add('BLOCKER', 'mail-driver', 'MAIL_DRIVER must be zeptomail, smtp or json.')
   if (env.MAIL_DRIVER === 'json')
     add(
       'BLOCKER',

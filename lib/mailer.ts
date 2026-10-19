@@ -1,4 +1,5 @@
-import nodemailer, { type Transporter } from 'nodemailer'
+import nodemailer, { type SendMailOptions, type Transporter } from 'nodemailer'
+import { sendZeptoMail } from '@/lib/zeptomail'
 import { COMPANY_INFO } from '@/lib/constants'
 import {
   type EmailContext,
@@ -8,16 +9,17 @@ import {
 import type { EnquiryInput } from '@/lib/enquiry'
 
 /**
- * Email delivery for the enquiry workflow, over plain SMTP so it works with
+ * Email delivery for the enquiry workflow through ZeptoMail API, or legacy SMTP with
  * any business mailbox (cPanel/webmail, Google Workspace, Zoho, Microsoft 365)
  * and on any Node host. Configuration is environment only; see .env.example
  * and docs/EMAIL-SETUP.md.
  */
 
-export type MailDriver = 'smtp' | 'json'
+export type MailDriver = 'zeptomail' | 'smtp' | 'json'
 
 export interface MailConfig {
   driver: MailDriver
+  token?: string
   host?: string
   port: number
   secure: boolean
@@ -32,7 +34,7 @@ export interface MailConfig {
 export class MailNotConfiguredError extends Error {
   constructor() {
     super(
-      'Email is not configured: set SMTP_HOST, SMTP_USER and SMTP_PASS (see .env.example).',
+      'Email is not configured: set ZEPTOMAIL_TOKEN and ZEPTOMAIL_FROM_EMAIL, or configure explicit SMTP delivery (see .env.example).',
     )
     this.name = 'MailNotConfiguredError'
   }
@@ -40,7 +42,7 @@ export class MailNotConfiguredError extends Error {
 
 type Env = Record<string, string | undefined>
 
-/** Returns null when the SMTP settings are incomplete. */
+/** Returns null when the selected delivery channel is not configured. */
 export function readMailConfig(env: Env = process.env): MailConfig | null {
   const to = env.ENQUIRY_TO?.trim() || COMPANY_INFO.email
   const port = Number(env.SMTP_PORT) || 465
@@ -56,6 +58,17 @@ export function readMailConfig(env: Env = process.env): MailConfig | null {
       to,
     }
   }
+
+  // A configured token selects the API unless an explicit legacy driver is set.
+  // Incomplete Zepto settings fail closed rather than silently using SMTP.
+  if (env.MAIL_DRIVER === 'zeptomail' || (!env.MAIL_DRIVER && env.ZEPTOMAIL_TOKEN)) {
+    const token = env.ZEPTOMAIL_TOKEN?.trim()
+    const from = env.ZEPTOMAIL_FROM_EMAIL?.trim()
+    const validAddress = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+    if (!token || token.includes('********') || /[\r\n]/.test(token) || !from || !validAddress(from) || !validAddress(to)) return null
+    return { driver: 'zeptomail', token, from, to, port, secure: true }
+  }
+  if (env.MAIL_DRIVER && env.MAIL_DRIVER !== 'smtp') return null
 
   const host = env.SMTP_HOST?.trim()
   const user = env.SMTP_USER?.trim()
@@ -119,10 +132,13 @@ export async function sendEnquiryEmails(
 ): Promise<SendResult> {
   const config = deps.config === undefined ? readMailConfig() : deps.config
   if (!config) throw new MailNotConfiguredError()
-  const transport = deps.transport ?? createTransport(config)
+  const transport = config.driver === 'zeptomail' ? undefined : deps.transport ?? createTransport(config)
+  const sendMail = (message: SendMailOptions) => config.driver === 'zeptomail'
+    ? sendZeptoMail(config, message)
+    : transport!.sendMail(message)
 
   const notification = renderNotification(enquiry, ctx)
-  await transport.sendMail({
+  await sendMail({
     from: config.from,
     to: config.to,
     replyTo: { name: enquiry.name, address: enquiry.email },
@@ -134,7 +150,7 @@ export async function sendEnquiryEmails(
 
   const ack = renderAcknowledgement(enquiry, ctx)
   try {
-    await transport.sendMail({
+    await sendMail({
       from: config.from,
       to: { name: enquiry.name, address: enquiry.email },
       replyTo: config.to,
@@ -154,7 +170,7 @@ export async function sendEnquiryEmails(
       JSON.stringify({
         event: 'enquiry.ack_failed',
         reference: ctx.reference,
-        error: error instanceof Error ? error.message : String(error),
+        reason: error instanceof Error && error.name === "TimeoutError" ? "timeout" : "delivery-failed",
       }),
     )
     return { notified: true, acknowledged: false }
