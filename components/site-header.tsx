@@ -1,9 +1,8 @@
 'use client'
 
-import { ArrowRight } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Logo } from '@/components/logo'
 import { MobileNav } from '@/components/mobile-nav'
 import { isActivePath } from '@/components/nav-utils'
 import { Button } from '@/components/ui/button'
@@ -22,41 +21,42 @@ export function SiteHeader() {
   const scrolled = useScrolledPast(8)
 
   return (
-    // Sticky, not fixed: it keeps its own height in the layout, so no page
-    // needs a magic top-padding to clear it. Height never changes on scroll
-    // (only shadow/border do), so nothing shifts.
+    // Floating pill, fixed to the top. The <header> is a click-through strip;
+    // only the pill takes pointer events. Pages clear it with `--header-h`.
     <header
       data-scrolled={scrolled}
-      className={cn(
-        'sticky top-0 z-40 h-(--header-h) border-b backdrop-blur-md transition-[box-shadow,background-color,border-color] duration-300',
-        scrolled
-          ? 'border-border bg-background/95 shadow-sm'
-          : 'border-transparent bg-background/80',
-      )}
+      className="group pointer-events-none fixed inset-x-0 top-0 z-40 h-(--header-h) px-(--container-pad) pt-(--header-top)"
     >
-      <div className="page-container flex h-full items-center justify-between gap-6">
+      <div
+        className={cn(
+          'pointer-events-auto mx-auto flex w-full items-center justify-between gap-6 rounded-full p-2 pl-5 ring-1 ring-white/40 backdrop-blur-xl transition-[background-color,box-shadow] duration-300 md:w-fit md:gap-16 md:pl-6',
+          scrolled ? 'bg-background/85 shadow-float' : 'bg-background/55 shadow-lift',
+        )}
+      >
         <Link
           href="/"
           aria-label="Dara-Manihot home"
-          className="shrink-0 rounded-md outline-none transition-transform duration-300 ease-bounce hover:scale-[1.03] focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="flex shrink-0 items-center gap-2 rounded-full outline-none transition-transform duration-300 ease-bounce hover:scale-[1.03] focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
-          <Logo priority />
+          {/* app/icon.png is served at /icon.png by Next's metadata routes. */}
+          <Image src="/icon.png" alt="" width={24} height={24} priority className="size-6 object-contain" />
+          <span className="font-bold text-foreground text-xl">Daramanihot</span>
         </Link>
 
-        <div className="hidden items-center gap-3 md:flex">
-          <NavigationMenu>
+        {/* `contents`: links and CTA become direct children of the pill, so one even gap spaces all three groups. */}
+        <div className="hidden md:contents">
+          <NavigationMenu className="flex-none">
             <NavigationMenuList>
               {NAVIGATION_LINKS.map((link) => (
                 <NavigationMenuItem key={link.href}>
                   <NavigationMenuLink
                     asChild
                     active={isActivePath(pathname, link.href)}
+                    className="font-normal text-base text-foreground"
                   >
                     <Link
                       href={link.href}
-                      aria-current={
-                        isActivePath(pathname, link.href) ? 'page' : undefined
-                      }
+                      aria-current={isActivePath(pathname, link.href) ? 'page' : undefined}
                     >
                       {link.name}
                     </Link>
@@ -66,11 +66,8 @@ export function SiteHeader() {
             </NavigationMenuList>
           </NavigationMenu>
 
-          <Button asChild variant="cta">
-            <Link href="/contact">
-              Get in touch
-              <ArrowRight className="transition-transform group-hover/button:translate-x-1" />
-            </Link>
+          <Button asChild variant="leaf" className="h-13 rounded-full px-5.5 font-semibold text-base">
+            <Link href="/contact">Get in touch</Link>
           </Button>
         </div>
 
