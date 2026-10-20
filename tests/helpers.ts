@@ -42,3 +42,18 @@ export function listFiles(dir: string, exts: string[]): string[] {
   walk(path.join(ROOT, dir))
   return out
 }
+
+/**
+ * Replaces each dynamic segment ("/services/[slug]") with every value the page
+ * generates statically, so links like /services/green-hydrogen can be checked.
+ */
+export function expandDynamicRoutes(
+  routes: string[],
+  params: Record<string, string[]>,
+): string[] {
+  return routes.flatMap((route) =>
+    route.includes('[')
+      ? (params[route] ?? []).map((v) => route.replace(/\[[^\]]+\]/, v))
+      : [route],
+  )
+}

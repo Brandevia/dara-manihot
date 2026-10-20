@@ -1,19 +1,21 @@
 import {
   ArrowRight,
   BookOpen,
-  CheckCircle2,
   Droplets,
   Flame,
   Recycle,
   Sun,
 } from 'lucide-react'
 import Link from 'next/link'
-import { Reveal, Stagger, StaggerItem } from '@/components/animations'
-import { PhotoSlot } from '@/components/photo-slot'
+import { Stagger, StaggerItem } from '@/components/animations'
 import { CtaBand } from '@/components/sections/cta-band'
 import { HomeHero } from '@/components/sections/home-hero'
 import { PillarsSection } from '@/components/sections/pillars'
+import { SdgSection } from '@/components/sections/sdg-section'
 import { SectionHeading } from '@/components/sections/section-heading'
+import { StatsBand } from '@/components/sections/stats-band'
+import { VisionStatement } from '@/components/sections/vision-statement'
+import { WhoWeAre } from '@/components/sections/who-we-are'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -21,8 +23,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { CTA_BAND_IMAGE } from '@/lib/constants'
 import { cn } from '@/lib/utils'
-import { SdgSection } from '@/components/sections/sdg-section'
 
 const stats = [
   { value: '500+', label: 'Farmers empowered' },
@@ -64,57 +66,19 @@ const coreImpactAreas = [
   },
 ]
 
-const whyChooseUs = [
-  'Proven track record in agricultural transformation and project delivery.',
-  'Deep understanding of Nigeria’s agro-industrial challenges—and solutions that work.',
-  'Hands-on experience with renewable energy and hydrogen systems.',
-  'Commitment to empowering women and youth in green value chains.',
-  'Partnerships with leading universities, technical partners, and government agencies.',
-]
-
 export default function Home() {
   return (
     <>
       <HomeHero />
 
+      <StatsBand stats={stats} />
+
       <PillarsSection />
 
-      {/* Who we are */}
-      <section className="section-y">
-        <div className="page-container grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
-          <div>
-            <SectionHeading title="Who we are" className="mb-6" />
-            <Reveal delay={0.1}>
-              <p className="text-lg leading-relaxed text-muted-foreground">
-                Dara-Manihot Industries &amp; Farms is a leading Nigerian
-                enterprise redefining sustainable agriculture and industry
-                through advanced clean technologies. We combine decades of
-                agricultural expertise with cutting-edge renewable energy, green
-                hydrogen systems, and circular economy practices to unlock new
-                opportunities for farmers, processors, and industries.
-              </p>
-            </Reveal>
-          </div>
-
-          <Stagger>
-            <dl className="grid grid-cols-2 gap-x-8 gap-y-10 border-t border-border pt-8">
-              {stats.map((stat) => (
-                <StaggerItem key={stat.label} className="flex flex-col">
-                  <dt className="order-2 mt-1 text-sm text-muted-foreground">
-                    {stat.label}
-                  </dt>
-                  <dd className="order-1 font-display text-5xl text-primary">
-                    {stat.value}
-                  </dd>
-                </StaggerItem>
-              ))}
-            </dl>
-          </Stagger>
-        </div>
-      </section>
+      <WhoWeAre />
 
       {/* Core impact areas */}
-      <section className="section-y bg-muted">
+      <section className="section-y">
         <div className="page-container">
           <SectionHeading
             title="Our core impact areas"
@@ -146,65 +110,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why choose us */}
-      <section className="section-y">
-        <div className="page-container grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          <div>
-            <SectionHeading title="Why choose Dara-Manihot?" className="mb-8" />
-            <Stagger className="space-y-5">
-              {whyChooseUs.map((reason) => (
-                <StaggerItem key={reason} className="flex gap-3">
-                  <CheckCircle2
-                    className="mt-0.5 size-6 shrink-0 text-primary"
-                    aria-hidden
-                  />
-                  <p className="leading-relaxed text-muted-foreground">
-                    {reason}
-                  </p>
-                </StaggerItem>
-              ))}
-            </Stagger>
-          </div>
-
-          <Reveal>
-            <PhotoSlot id="home-people" className="shadow-lift" />
-          </Reveal>
-        </div>
-      </section>
-
       <SdgSection />
 
-      {/* Vision */}
-      <section className="bg-band-gradient section-y text-canopy-foreground">
-        <div className="page-container">
-          <Reveal className="max-w-4xl">
-            <h2 className="text-title">Our vision for the future</h2>
-            <p className="mt-6 font-display text-2xl leading-snug text-canopy-foreground/95 sm:text-3xl">
-              An Africa where farms and factories thrive on clean, affordable
-              energy, agricultural waste becomes a resource, not a burden, and
-              farmers and entrepreneurs gain the tools to lead in a
-              climate-smart economy.
-            </p>
-            <p className="mt-6 max-w-2xl text-lead text-canopy-foreground/80">
-              At Dara-Manihot, we are proud to stand at the forefront of this
-              transformation.
-            </p>
-          </Reveal>
-        </div>
-      </section>
+      <VisionStatement />
 
       <CtaBand
-        title="Ready to learn more?"
-        description="Join us in transforming agriculture and industry through sustainable, innovative solutions."
+        title="Join us in transforming agriculture"
+        description="Together, we can build a sustainable future where clean technologies power Africa’s agricultural transformation. Let’s create lasting impact for communities, businesses, and our planet."
+        image={CTA_BAND_IMAGE}
       >
-        <Button asChild variant="cta" size="lg">
+        <Button asChild variant="cta" size="lg" className="rounded-full">
           <Link href="/services">
             Explore our services
             <ArrowRight className="transition-transform group-hover/button:translate-x-1" />
           </Link>
         </Button>
-        <Button asChild variant="onDark" size="lg">
-          <Link href="/contact">Contact us today</Link>
+        <Button asChild variant="onDark" size="lg" className="rounded-full">
+          <Link href="/contact">Contact us</Link>
         </Button>
       </CtaBand>
     </>

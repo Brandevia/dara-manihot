@@ -8,6 +8,7 @@ import {
   StaggerList,
   StaggerListItem,
 } from '@/components/animations'
+import { CountUp } from '@/components/count-up'
 import { PhotoSlot } from '@/components/photo-slot'
 import { CtaBand } from '@/components/sections/cta-band'
 import { PageHero } from '@/components/sections/page-hero'
@@ -240,7 +241,7 @@ export default function AboutPage() {
               >
                 <stat.icon className="mb-4 size-7 text-primary" aria-hidden />
                 <p className="font-display text-5xl text-foreground">
-                  {stat.number}
+                  <CountUp value={stat.number} />
                 </p>
                 <p className="mt-2 font-medium">{stat.label}</p>
                 <p className="mt-1 text-sm text-muted-foreground">

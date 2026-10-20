@@ -8,8 +8,9 @@ import ServicesPage from '@/app/(pages)/services/page'
 import TermsPage from '@/app/(pages)/terms/page'
 import Home from '@/app/page'
 import { Footer } from '@/components/footer'
+import { PROJECTS } from '@/lib/projects'
 import { PILLARS, SERVICES } from '@/lib/services'
-import { discoverRoutes } from './helpers'
+import { discoverRoutes, expandDynamicRoutes } from './helpers'
 
 vi.mock('next/navigation', () => ({
   usePathname: () => '/',
@@ -26,13 +27,16 @@ const pages = [
   ['/terms', TermsPage],
 ] as const
 
-const routes = discoverRoutes()
+const routes = expandDynamicRoutes(discoverRoutes(), {
+  '/services/[slug]': SERVICES.map((s) => s.id),
+  '/projects/[slug]': PROJECTS.map((p) => p.slug),
+})
 const serviceIds = new Set<string>(SERVICES.map((s) => s.id))
 // Hashes that exist on each page. /services has a section per pillar and a
 // card per service; /contact has the enquiry form.
 const anchorsByPath: Record<string, Set<string>> = {
   '/services': new Set([...serviceIds, ...PILLARS.map((p) => p.id)]),
-  '/contact': new Set(['enquiry']),
+  '/contact': new Set(['enquiry', 'map']),
 }
 
 describe.each(pages)('%s', (_path, Page) => {
@@ -94,21 +98,23 @@ describe.each(pages)('%s', (_path, Page) => {
 })
 
 describe('/projects', () => {
-  it('only shows an "Impact:" label when there is an impact figure', () => {
+  it('only shows an "Impact" figure when there is one to claim', () => {
     const { container } = render(<ProjectsPage />)
-    const labels = [...container.querySelectorAll('strong')].filter(
-      (s) => s.textContent === 'Impact:',
+    const labels = [...container.querySelectorAll('dt')].filter(
+      (dt) => dt.textContent === 'Impact',
     )
     expect(labels).toHaveLength(1)
-    expect(labels[0].parentElement?.textContent).toMatch(/30% cost reduction/)
+    expect(labels[0].nextElementSibling?.textContent).toMatch(
+      /30% cost reduction/,
+    )
   })
 
-  it('wires every "ask about this project" button to an email', () => {
+  it('sends every "Ask about project" link to that project’s own page', () => {
     const { getAllByRole } = render(<ProjectsPage />)
-    const links = getAllByRole('link', { name: /ask about this project/i })
-    expect(links).toHaveLength(2)
-    for (const l of links)
-      expect(l.getAttribute('href')).toMatch(/^mailto:.+\?subject=/)
+    const links = getAllByRole('link', { name: /ask about project/i })
+    expect(links.map((l) => l.getAttribute('href'))).toEqual(
+      PROJECTS.map((p) => `/projects/${p.slug}`),
+    )
   })
 })
 

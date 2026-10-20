@@ -40,7 +40,7 @@ export const PRIVACY_SECTIONS: readonly LegalSection[] = [
         'Technical information. Like most websites, our hosting provider automatically records standard server logs when you visit: your IP address, browser and device type, the pages requested, and the date and time of the request. To protect the enquiry form from automated spam, we also check how quickly it was completed and keep a short lived count of submissions per IP address in the memory of the web server. That count is not stored permanently.',
       ),
       p(
-        'At the time of writing, this website does not set cookies and does not use third-party analytics or advertising trackers. Fonts and images are served from our own domain.',
+        'At the time of writing, this website does not set cookies of its own and does not use third-party analytics or advertising trackers. Fonts and images are served from our own domain. The one exception is the optional map on the Contact page, described under “Cookies” below.',
       ),
     ],
   },
@@ -137,6 +137,9 @@ export const PRIVACY_SECTIONS: readonly LegalSection[] = [
     blocks: [
       p(
         'We do not currently use cookies on this website. If that changes, we will update this policy and, where required, ask for your consent first.',
+      ),
+      p(
+        'The Contact page can show a Google map of our office. It does not load until you choose “Load interactive map”. Once it loads, Google receives your IP address and browser details and may set its own cookies, under Google’s privacy policy. If you would rather not load it, the directions links beside it open Google Maps in a separate tab instead.',
       ),
     ],
   },

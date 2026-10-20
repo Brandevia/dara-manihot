@@ -78,4 +78,14 @@ export const HERO_SLIDES = [
   { src: '/images/hero/image9.png', alt: 'A hydrogen energy storage unit and white storage tanks on grass, with wind turbines and a city skyline behind', caption: 'Green hydrogen for fertilizer and industry', position: '60% 50%' },
 ] as const
 
-export const LEGAL_LAST_UPDATED = '14 October 2026'
+/**
+ * Photo behind the closing call-to-action on the landing page. Decorative (the
+ * band's text carries the message). To use a different photograph, drop it in
+ * public/images/ and change `src`; `tests/site-data.test.ts` checks it exists.
+ */
+export const CTA_BAND_IMAGE = {
+  src: '/images/hero/image5.png',
+  position: '50% 60%',
+} as const
+
+export const LEGAL_LAST_UPDATED = '20 October 2026'
