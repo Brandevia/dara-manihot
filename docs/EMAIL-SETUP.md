@@ -1,3 +1,27 @@
+# ZeptoMail API setup
+
+The enquiry form already sends two separate branded emails with a shared reference: the company notification first, then the visitor acknowledgement. Delivery now supports Zoho CPaaS / ZeptoMail API without changing the form, spam controls or templates.
+
+Set these server-only values in `.env.local` locally, and in Vercel environment settings for the deployment environment:
+
+```dotenv
+MAIL_DRIVER=zeptomail
+ZEPTOMAIL_TOKEN="YOUR_REAL_ZOHO_AGENT_SEND_TOKEN"
+ZEPTOMAIL_FROM_EMAIL="noreply@daramanihot.com.ng"
+ENQUIRY_TO="info@daramanihot.com.ng"
+NEXT_PUBLIC_SITE_URL="https://www.daramanihot.com.ng"
+```
+
+The sender above is an example: confirm it is authorised on the verified Zoho domain. `@daramanihot.com.ng` alone is incomplete. Copy the real agent send token from Zoho, not the masked `********` sample; raw and `Zoho-enczapikey ...` formats are accepted. The supplied Seun address is a test recipient, not the default company destination. No SMTP password is required for API delivery. No new SDK dependency is required: the adapter calls the same REST endpoint as `SendMailClient.sendMail`.
+
+Both emails use the same configured sender. Company notification Reply-To is the visitor; acknowledgement Reply-To is `ENQUIRY_TO`. HTML escaping and existing anti-autoresponder headers are preserved. The existing `acknowledged` API response and form feedback distinguish acknowledgement failure from enquiry failure. A failed company notification returns an error and skips the acknowledgement. A failed acknowledgement keeps enquiry success. No automatic retries are made because a timeout can occur after acceptance. Zoho acceptance does not confirm inbox delivery; check final status in Zoho logs.
+
+After setting variables, restart locally or redeploy on Vercel. Run `pnpm launch:check`; existing photo/team blockers are separate from mail configuration. For a live check, use a controlled company recipient and visitor inbox and verify receipt of both emails and Reply-To addresses. Never commit actual tokens. `MAIL_DRIVER=json` sends nothing and is only for tests. Existing SMTP settings remain supported when `MAIL_DRIVER=smtp` is explicitly selected (or no Zepto token/driver is configured).
+
+The remaining sections describe legacy SMTP and mailbox provisioning, which are optional for ZeptoMail API delivery.
+
+---
+
 # Email setup: enquiry form, notifications, auto-replies and webmail
 
 Scope reference: section 4.5 (contact form) and 4.6 (emailing system and the

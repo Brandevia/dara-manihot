@@ -124,10 +124,59 @@ describe('SiteHeader: mobile drawer', () => {
   it('closes with Escape and returns focus to the hamburger', async () => {
     await open()
     await userEvent.keyboard('{Escape}')
+    await vi.waitFor(
+      () => expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+      { timeout: 4000 },
+    )
+    expect(screen.getByRole('button', { name: 'Open menu' })).toHaveFocus()
+  })
+
+  it('is a floating glass panel that grows out of the hamburger', async () => {
+    const dialog = await open()
+    expect(dialog).toHaveAttribute('data-slot', 'menu-panel')
+    expect(dialog).toHaveClass('glass', 'fixed', 'rounded-3xl')
+    // Anchored under the header, scaling from the hamburger's centre.
+    expect(dialog.style.transformOrigin).toBe('var(--menu-origin)')
+    expect(dialog.className).toMatch(/top-\(--header-h\)/)
+    expect(dialog.className).toMatch(/w-\(--menu-w\)/)
+  })
+
+  it('turns the hamburger into a close button while open', async () => {
+    render(<SiteHeader />)
+    const trigger = screen.getByRole('button', { name: 'Open menu' })
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    await userEvent.click(trigger)
+    await screen.findByRole('dialog')
+    expect(
+      document.querySelector('button[aria-expanded="true"]'),
+    ).toHaveAttribute('aria-label', 'Close menu')
+  })
+
+  it('pressing the hamburger again closes it, and it stays closed', async () => {
+    render(<SiteHeader />)
+    await userEvent.click(screen.getByRole('button', { name: 'Open menu' }))
+    await screen.findByRole('dialog')
+    // Radix sets pointer-events:none on <body> while open; the header pill
+    // opts back in with the `pointer-events-auto` class. jsdom loads no
+    // Tailwind CSS, so skip its pointer-events check for this click only.
+    await userEvent
+      .setup({ pointerEventsCheck: 0 })
+      .click(document.querySelector('button[aria-expanded="true"]') as Element)
     await vi.waitFor(() =>
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
     )
-    expect(screen.getByRole('button', { name: 'Open menu' })).toHaveFocus()
+    // Not swallowed as an outside click and re-opened.
+    await new Promise((r) => setTimeout(r, 200))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('closes when the scrim behind it is pressed', async () => {
+    await open()
+    const scrim = document.querySelector('.fixed.inset-0.z-30') as Element
+    await userEvent.click(scrim)
+    await vi.waitFor(() =>
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+    )
   })
 
   it('closes with the close button', async () => {

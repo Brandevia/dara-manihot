@@ -1,3 +1,67 @@
+# Wireframe pass 2: sections, projects, footer, map, menu
+
+Implements the second set of wireframes. No new colours: `mint` is the one new
+token (the logo green at 200), plus a `statement` type size. Email code, the
+enquiry form and the API route were not touched.
+
+## To-do (all verified)
+
+- [x] **Counting figures.** `CountUp` (with `lib/figure.ts`) counts from 0 to the real figure when it scrolls into view: stats band, About stats and the project impact figure ("30%"). The real text is in the markup from the start (SSR, no-JS, screen readers hear it once); only the visible copy animates; reduced motion shows the final value. Years in the timeline and step numbers are not counted on purpose.
+- [x] **Vision (images 2 and 5).** `VisionStatement`: one large centred display-type statement on the page background, "Our vision" beneath it. Replaces the dark band.
+- [x] **Who we are (image 6).** `WhoWeAre`: mint section, label, company statement, five white tiles (3 + wide + narrow). It replaces both the old "Who we are" and "Why choose us" blocks; the five reasons are the five tiles. The tiles are static and only their contents fade in on scroll.
+- [x] **Projects (image 7).** `ProjectFeature`: large title, date chip, write-up, "Ask about project", status/goal/impact column, full-width photo. Data moved to `lib/projects.ts`.
+- [x] **Strategic partnerships (image 8)** and **Impact goals (image 9).** `PartnershipsSection`, `ImpactGoalsSection`; same card content, contents fade in onto static tiles.
+- [x] **Closing CTA.** `ScrollFade`: the words fade in and rise as you scroll, over the photo (scroll-linked, so it reverses on scroll up). `CtaBand` is now always an inset card on the page background.
+- [x] **White before the footer (image 3).** Every page now ends on the page background: `CtaBand` is an inset card, the footer sits in a `bg-background` wrapper, and a test fails if any page's last section is a full-bleed colour.
+- [x] **Contact page (image 4).** Gradient removed (`--page-gradient` deleted). New "Visit our office" section (`#map`) with the Google map, directions and open-in-Maps links.
+- [x] **Mobile menu.** Floating frosted-glass panel that grows out of the hamburger (which turns into an X) with items staggering in, and reverses on close: items drop away, then the panel shrinks back into the button. Radix Dialog still provides focus trap, Escape, scroll lock and focus return. `ui/sheet.tsx` and the old drawer tokens and keyframes were removed.
+- [x] **Footer.** The logo (on a light plate) replaces the icon and wordmark.
+- [x] **Dedicated pages for footer content.** `/services/[slug]` (6 pages), `/projects/[slug]` (2 pages); footer services link to them, the address links to `/contact#map`. "Ask about project" now opens the project's page. The services page gained a "Service details" link per card.
+- [x] **Privacy policy** and its date updated to disclose the optional Google map.
+
+## Notes for review
+
+- **Map loads on click.** Google's embed sets cookies, and the privacy policy says the site sets none, so the map shows a placeholder until the visitor presses "Load interactive map". The only published location is the text address "Ketu, Lagos, Nigeria", so the map searches for that text rather than a hand-typed pin. For an exact pin, give me the coordinates or a Google Maps share link.
+- **Project date.** Only the Covenant project shows a date (Feb 3, 2025, from the wireframe); the other has none, so no chip is shown.
+- **Unused photo slots.** `home-people` and `projects-community` are no longer shown anywhere (the wireframes have no photo in those sections). They are left in `lib/imagery.ts` and `PHOTO-REQUEST.md`; delete both together if you do not want those photos.
+- **Vision type.** The wireframe heading is italic; the display face has no italic and the project forbids faked styles, so it is upright.
+- **Footer logo plate.** `logo.png` was not available to inspect, so it sits on a light plate to stay legible on the dark footer.
+
+---
+
+# Wireframe pass: frosted navbar, footer, contact page, landing page
+
+Implements the five wireframe screenshots without changing the design system:
+every colour still comes from a token in `app/globals.css`, every CTA is still
+the secondary colour, and the layout, motion and accessibility rules are kept.
+
+## To-do (all verified)
+
+- [x] **Frosted-glass navbar.** New `glass` utility: blur and saturation lift over a translucent white tint, a bright inner top edge, a hairline outline. Firms up once scrolled (`data-scrolled`), and falls back to a near-opaque tint where `backdrop-filter` is unsupported.
+- [x] **Outline, not underline, on nav links.** Hover shows a hairline pill; the active page gets a firmer ring and a faint wash. The `::after` underline is gone from `navigation-menu.tsx`. The ring is always 1px (transparent at rest), so nothing shifts on hover.
+- [x] **Footer from the wireframe.** Rounded top, hairline, brand column plus Quick links, Our services and Talk to us, a copyright and legal bar, and an oversized cropped wordmark (decorative, `aria-hidden`). Content is Dara-Manihot's own; the wireframe's placeholder text was not copied. Social links, legal links and the `/services#<id>` deep links are unchanged.
+- [x] **Contact page from the wireframe.** Split layout: eyebrow, heading, lead and an icon list (email, phone, hours, office) on the left; the enquiry form on a dark card on the right. Copy-to-clipboard buttons kept. The four "How to reach us" cards and the "Ready to start?" card repeated the list and were removed; the office photo slot moved next to "Why get in touch?".
+- [x] **White-to-logo-green page gradient** (`--page-gradient`, `bg-page-gradient`). White holds to 55%, then mint, then the logo green. Text only ever sits on white or pale mint; the full green is kept to a text-free strip above the footer.
+- [x] **Form on the dark card without touching the form.** `surface-canopy` re-points the colour tokens for everything inside it, so `Input`, `Select`, `Textarea`, labels, hints, errors and focus rings restyle automatically. Labels stay visible (the wireframe shows placeholders only; placeholders are not labels). Errors use a new light-red token, `--brand-danger-light`, so they stay AA on the dark card. The submit button is now a full-width pill.
+- [x] **Landing page.** Stats band directly under the hero (`StatsBand`), replacing the figures that sat beside "Who we are". The closing call-to-action is now the inset photo card "Join us in transforming agriculture" (`CtaBand` gained an optional `image`; the other three pages are unchanged).
+
+## Notes for review
+
+- **CTA colour.** The wireframe's closing button is green. It is purple here on purpose: `e2e/layout.spec.ts` enforces that every CTA uses `--secondary`.
+- **Closing photo.** `CTA_BAND_IMAGE` in `lib/constants.ts` points at `/images/hero/image5.png` (tractor between crop rows). To use the aerial farm photo from the wireframe, add it under `public/images/` and change `src`.
+- **Placeholder figures.** The wireframe's "457+" and "5+" were not copied; the band uses the real figures already on the site.
+
+## Verification
+
+| Check | Result |
+| --- | --- |
+| Unit and component tests (Vitest) | **344 pass** (308 existing + 36 new) |
+| `tsc`, ESLint | 0 errors |
+| Browser spot-checks in Chromium (h1 count, console errors, 360px overflow, CTA token, glass applied, outline ring, copy button, form validation, dark-surface focus and error colours) | all pass |
+| Mutation check: 6 behaviours broken on purpose | **6/6 caught** |
+
+---
+
 # Scope alignment: sustainable energy, enquiry form, email workflow
 
 Brings the site in line with the Scope of Work (14 Sept 2026) and the Project

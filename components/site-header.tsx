@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/navigation-menu'
 import { useScrolledPast } from '@/hooks/use-scrolled-past'
 import { NAVIGATION_LINKS } from '@/lib/constants'
-import { cn } from '@/lib/utils'
 
 export function SiteHeader() {
   const pathname = usePathname()
@@ -28,10 +27,9 @@ export function SiteHeader() {
       className="group pointer-events-none fixed inset-x-0 top-0 z-40 h-(--header-h) px-(--container-pad) pt-(--header-top)"
     >
       <div
-        className={cn(
-          'pointer-events-auto mx-auto flex w-full items-center justify-between gap-6 rounded-full p-2 pl-5 ring-1 ring-white/40 backdrop-blur-xl transition-[background-color,box-shadow] duration-300 md:w-fit md:gap-16 md:pl-6',
-          scrolled ? 'bg-background/85 shadow-float' : 'bg-background/55 shadow-lift',
-        )}
+        data-scrolled={scrolled}
+        // `glass` (globals.css) is the frosted surface; data-scrolled firms it up.
+        className="glass pointer-events-auto mx-auto flex w-full items-center justify-between gap-6 rounded-full p-2 pl-5 transition-[background-color] duration-300 md:w-fit md:gap-16 md:pl-6"
       >
         <Link
           href="/"

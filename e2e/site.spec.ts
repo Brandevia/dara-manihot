@@ -69,14 +69,16 @@ test('footer legal links work', async ({ page }) => {
   }
 })
 
-test('footer service links deep-link to the service card', async ({ page }) => {
+test('footer service links open that service’s own page', async ({ page }) => {
   await page.goto('/')
   await page
     .locator('footer')
     .getByRole('link', { name: 'Green Hydrogen Production' })
     .click()
-  await expect(page).toHaveURL(/\/services#green-hydrogen$/)
-  await expect(page.locator('#green-hydrogen')).toBeInViewport()
+  await expect(page).toHaveURL(/\/services\/green-hydrogen$/)
+  await expect(page.getByRole('heading', { level: 1 })).toContainText(
+    'Green Hydrogen',
+  )
 })
 
 test('unknown routes show the styled 404', async ({ page }) => {

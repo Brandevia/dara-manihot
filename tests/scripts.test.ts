@@ -195,6 +195,16 @@ describe('launch check', () => {
     expect(ids(f, 'WARNING')).toContain('photos')
   })
 
+  it('accepts complete ZeptoMail settings without SMTP credentials', () => {
+    const env = { MAIL_DRIVER: 'zeptomail', ZEPTOMAIL_TOKEN: 'test-token', ZEPTOMAIL_FROM_EMAIL: 'noreply@daramanihot.com.ng' }
+    expect(ids(runChecks({ ...base, env }), 'BLOCKER')).toEqual([])
+  })
+
+  it('blocks incomplete ZeptoMail settings instead of requiring SMTP', () => {
+    const findings = runChecks({ ...base, env: { MAIL_DRIVER: 'zeptomail', ZEPTOMAIL_FROM_EMAIL: '@daramanihot.com.ng' } })
+    expect(ids(findings, 'BLOCKER')).toEqual(['zeptomail', 'zeptomail'])
+  })
+
   it('blocks on missing SMTP settings', () => {
     expect(ids(runChecks({ ...base, env: {} }), 'BLOCKER')).toEqual([
       'smtp',

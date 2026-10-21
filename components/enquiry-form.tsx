@@ -385,7 +385,7 @@ export function EnquiryForm() {
         size="lg"
         disabled={busy}
         aria-busy={busy}
-        className="w-full sm:w-auto"
+        className="w-full rounded-full"
       >
         {busy ? (
           <>

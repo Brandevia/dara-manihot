@@ -22,7 +22,9 @@ describe('routes and links', () => {
         '/contact',
         '/privacy',
         '/projects',
+        '/projects/[slug]',
         '/services',
+        '/services/[slug]',
         '/terms',
       ].sort(),
     )

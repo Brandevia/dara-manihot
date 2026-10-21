@@ -59,10 +59,10 @@ function NavigationMenuLink({
     <NavigationMenuPrimitive.Link
       data-slot="navigation-menu-link"
       className={cn(
-        // Underline grows from the left on hover and stays for the active page.
-        'relative inline-flex items-center rounded-md px-3.5 py-2 text-[0.95rem] font-medium text-foreground/75 outline-none transition-colors duration-200 hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50',
-        "after:absolute after:inset-x-3.5 after:bottom-1 after:h-0.5 after:origin-left after:scale-x-0 after:rounded-full after:bg-primary after:transition-transform after:duration-300 after:ease-out-expo after:content-['']",
-        'hover:after:scale-x-100 data-[active]:text-foreground data-[active]:after:scale-x-100',
+        // Outline, not underline: a hairline pill that fades in on hover and
+        // firms up (with a faint wash) for the active page.
+        'relative inline-flex items-center rounded-full px-4 py-2 text-[0.95rem] font-medium text-foreground/75 outline-none ring-1 ring-inset ring-transparent transition-[color,background-color,box-shadow] duration-200 hover:text-foreground hover:ring-primary/35 focus-visible:ring-[3px] focus-visible:ring-ring/50',
+        'data-[active]:bg-primary/8 data-[active]:text-foreground data-[active]:ring-primary/70',
         className,
       )}
       {...props}

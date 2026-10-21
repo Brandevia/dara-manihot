@@ -1,27 +1,23 @@
 import type { Page } from '@playwright/test'
 
-type Sample = [elapsedMs: number, left: number | null]
-type Recorder = Window & { __samples?: Sample[] }
-
-/** Starts sampling `selector`'s left edge every animation frame for ~1.1s. */
-export async function startRecording(page: Page, selector: string) {
+/** Starts sampling `selector`'s width and right edge every frame for ~1.1s. */
+export async function startSizeRecording(page: Page, selector: string) {
   await page.evaluate((sel) => {
-    const w = window as Recorder
-    w.__samples = []
+    const w = window as Window & { __sizes?: [number, number][] }
+    w.__sizes = []
     const t0 = performance.now()
     const tick = () => {
       const r = document.querySelector(sel)?.getBoundingClientRect()
-      w.__samples?.push([Math.round(performance.now() - t0), r ? r.left : null])
+      if (r) w.__sizes?.push([r.width, r.right])
       if (performance.now() - t0 < 1100) requestAnimationFrame(tick)
     }
     tick()
   }, selector)
 }
 
-/** Left-edge positions recorded while the element existed. */
-export async function recordedLefts(page: Page): Promise<number[]> {
-  const samples = await page.evaluate(
-    () => (window as Recorder).__samples ?? [],
+/** [width, right] pairs recorded while the element existed. */
+export async function recordedSizes(page: Page): Promise<[number, number][]> {
+  return page.evaluate(
+    () => (window as Window & { __sizes?: [number, number][] }).__sizes ?? [],
   )
-  return samples.map(([, l]) => l).filter((l): l is number => l !== null)
 }

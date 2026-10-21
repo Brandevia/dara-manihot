@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { recordedLefts, startRecording } from './helpers'
+import { recordedSizes, startSizeRecording } from './helpers'
 
 test.describe('desktop navigation', () => {
   test.skip(({ isMobile }) => isMobile, 'desktop only')
@@ -47,38 +47,63 @@ test.describe('mobile drawer', () => {
     await expect(page.getByRole('navigation', { name: 'Main' })).toBeHidden()
   })
 
-  test('slides in from the right and overshoots (bounce), then settles flush to the edge', async ({
+  test('grows out of the hamburger into a floating glass panel', async ({
     page,
   }) => {
     await page.goto('/')
     await page.waitForLoadState('networkidle')
-    await startRecording(page, '[data-slot="sheet-content"]')
+    const burger = await page
+      .getByRole('button', { name: 'Open menu' })
+      .boundingBox()
+    await startSizeRecording(page, '[data-slot="menu-panel"]')
     await page.getByRole('button', { name: 'Open menu' }).click()
     await page.waitForTimeout(1200)
-    const lefts = await recordedLefts(page)
-    const rest = lefts.at(-1) as number
-    expect(lefts[0]).toBeGreaterThan(rest + 100) // started off to the right
-    expect(Math.min(...lefts)).toBeLessThan(rest - 5) // overshot past rest
-    const right = await page
-      .locator('[data-slot="sheet-content"]')
-      .evaluate((e) => e.getBoundingClientRect().right)
-    expect(Math.round(right)).toBe(page.viewportSize()?.width)
+    const sizes = await recordedSizes(page)
+    const [firstWidth, firstRight] = sizes[0]
+    const [restWidth, restRight] = sizes.at(-1) as [number, number]
+    // Starts tiny, beside the hamburger, and ends at full size.
+    expect(firstWidth).toBeLessThan(restWidth * 0.25)
+    expect(
+      Math.abs(firstRight - ((burger?.x ?? 0) + (burger?.width ?? 0))),
+    ).toBeLessThan(24)
+    expect(restWidth).toBeGreaterThan(250)
+    // Translucent: it is the frosted glass surface, not an opaque sheet.
+    await expect(page.locator('[data-slot="menu-panel"]')).toHaveClass(/glass/)
+    expect(restRight).toBeLessThanOrEqual(page.viewportSize()?.width ?? 0)
   })
 
-  test('bounces out too: small anticipation, then exits and unmounts', async ({
+  test('closes by shrinking back into the hamburger, then unmounts', async ({
     page,
   }) => {
     await page.goto('/')
     await page.waitForLoadState('networkidle')
     await page.getByRole('button', { name: 'Open menu' }).click()
     await page.waitForTimeout(1000)
-    await startRecording(page, '[data-slot="sheet-content"]')
+    await startSizeRecording(page, '[data-slot="menu-panel"]')
     await page.keyboard.press('Escape')
     await page.waitForTimeout(1200)
-    const lefts = await recordedLefts(page)
-    expect(Math.min(...lefts)).toBeLessThan(lefts[0] - 3) // anticipation
-    expect(Math.max(...lefts)).toBeGreaterThan(page.viewportSize()!.width) // left the screen
-    await expect(page.locator('[data-slot="sheet-content"]')).toHaveCount(0)
+    const sizes = await recordedSizes(page)
+    const [startWidth] = sizes[0]
+    const [endWidth] = sizes.at(-1) as [number, number]
+    expect(endWidth).toBeLessThan(startWidth * 0.25) // shrank into the button
+    await expect(page.locator('[data-slot="menu-panel"]')).toHaveCount(0)
+  })
+
+  test('pressing the hamburger again closes the menu and it stays closed', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    await page.waitForLoadState('networkidle')
+    await page.getByRole('button', { name: 'Open menu' }).click()
+    const dialog = page.getByRole('dialog', { name: 'Site navigation' })
+    await expect(dialog).toBeVisible()
+    // The same button, now an X. Radix hides it from the accessibility tree
+    // while the dialog is open, so target it by its expanded state.
+    await page.locator('button[aria-expanded="true"]').click()
+    await expect(dialog).toHaveCount(0)
+    await page.waitForTimeout(400)
+    await expect(dialog).toHaveCount(0) // not swallowed and re-opened
+    await expect(page.getByRole('button', { name: 'Open menu' })).toBeVisible()
   })
 
   test('traps focus, locks scroll, and returns focus to the hamburger', async ({
@@ -92,8 +117,7 @@ test.describe('mobile drawer', () => {
       await page.keyboard.press('Tab')
       expect(
         await page.evaluate(
-          () =>
-            !!document.activeElement?.closest('[data-slot="sheet-content"]'),
+          () => !!document.activeElement?.closest('[data-slot="menu-panel"]'),
         ),
       ).toBe(true)
     }
