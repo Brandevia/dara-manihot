@@ -3,6 +3,7 @@ import localFont from 'next/font/local'
 import './globals.css'
 import { MotionProvider } from '@/components/animations'
 import { BackToTop } from '@/components/back-to-top'
+import { CookieBanner } from '@/components/cookie-banner'
 import { Footer } from '@/components/footer'
 import { SiteHeader } from '@/components/site-header'
 
@@ -68,6 +69,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <BackToTop />
+          <CookieBanner />
         </MotionProvider>
       </body>
     </html>

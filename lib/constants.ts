@@ -88,4 +88,46 @@ export const CTA_BAND_IMAGE = {
   position: '50% 60%',
 } as const
 
-export const LEGAL_LAST_UPDATED = '20 October 2026'
+export interface PageHeroImage {
+  src: string
+  /** CSS object-position, to keep the subject in frame when cropped. */
+  position?: string
+}
+
+/**
+ * Photo behind the banner of each inner page (`PageHero`). Decorative: the
+ * banner's own text carries the message, so the image has an empty alt. A
+ * translucent green overlay (`--page-hero-overlay`) always sits on top, so
+ * any photograph is safe for the white text. The Contact page has no banner.
+ * `pillars` is keyed by `Service.pillar`, for the service detail pages.
+ * To change one, drop a file in public/images/ and change `src`;
+ * `tests/site-data.test.ts` checks every file exists.
+ */
+export const PAGE_HERO_IMAGES = {
+  about: { src: '/images/hero/image2.png', position: '50% 70%' },
+  services: { src: '/images/hero/image1.png', position: '50% 50%' },
+  projects: { src: '/images/hero/image10.png', position: '50% 50%' },
+  legal: { src: '/images/hero/image9.png', position: '40% 50%' },
+  pillars: {
+    'sustainable-agriculture': {
+      src: '/images/hero/image5.png',
+      position: '55% 50%',
+    },
+    'sustainable-energy': {
+      src: '/images/hero/image3.png',
+      position: '50% 55%',
+    },
+    supporting: { src: '/images/hero/image7.png', position: '30% 50%' },
+  },
+} as const satisfies {
+  about: PageHeroImage
+  services: PageHeroImage
+  projects: PageHeroImage
+  legal: PageHeroImage
+  pillars: Record<
+    'sustainable-agriculture' | 'sustainable-energy' | 'supporting',
+    PageHeroImage
+  >
+}
+
+export const LEGAL_LAST_UPDATED = '21 October 2026'

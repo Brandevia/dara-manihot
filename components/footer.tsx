@@ -1,5 +1,6 @@
 import { Facebook, Linkedin, Twitter } from 'lucide-react'
 import Link from 'next/link'
+import { CookieSettingsButton } from '@/components/cookie-settings-button'
 import { Logo } from '@/components/logo'
 import {
   COMPANY_INFO,
@@ -131,15 +132,19 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <CookieSettingsButton className={linkClass} />
+              </li>
             </ul>
           </div>
         </div>
 
-        {/* Oversized wordmark, cropped by the footer's bottom edge. Purely
-          decorative, so it is hidden from assistive tech and not selectable. */}
+        {/* Oversized wordmark, sitting one mouse-cursor's height (mb-5, 1.25rem)
+          above the footer's bottom edge. Purely decorative, so it is hidden
+          from assistive tech and not selectable. */}
         <p
           aria-hidden
-          className="pointer-events-none mt-6 -mb-[0.2em] select-none text-center font-bold leading-none tracking-tight text-[clamp(3rem,13vw,13rem)] text-canopy-muted/10"
+          className="pointer-events-none mt-6 mb-5 select-none text-center font-bold leading-none tracking-tight text-[clamp(3rem,13vw,13rem)] text-canopy-muted/10"
         >
           {COMPANY_INFO.shortName}
         </p>

@@ -39,7 +39,7 @@ export function PillarsSection() {
                 />
                 <div className="flex flex-1 flex-col gap-5 p-7">
                   <div className="flex items-center gap-3">
-                    <span className="flex size-11 items-center justify-center rounded-xl bg-accent text-primary">
+                    <span className="flex size-11 items-center justify-center rounded-xl bg-secondary-soft text-secondary">
                       <pillar.icon className="size-6" aria-hidden />
                     </span>
                     <h3 className="text-2xl">{pillar.title}</h3>
@@ -49,7 +49,7 @@ export function PillarsSection() {
                     {pillar.highlights.map((item) => (
                       <li key={item} className="flex gap-2.5 text-sm">
                         <CheckCircle2
-                          className="mt-0.5 size-4 shrink-0 text-primary"
+                          className="mt-0.5 size-4 shrink-0 text-secondary"
                           aria-hidden
                         />
                         <span>{item}</span>

@@ -137,8 +137,35 @@ describe('dark form surface (surface-canopy)', () => {
       expect(block, `--${token}`).toMatch(new RegExp(`--${token}:`))
   })
 
-  it('makes fields transparent so they read as outlines on the green', () => {
-    expect(block).toMatch(/--background:\s*transparent/)
+  it('fills fields with a translucent, lighter green (not solid, not clear)', () => {
+    const fill = block.match(/--background:\s*([^;]+);/)?.[1] ?? ''
+    expect(fill).toMatch(
+      /color-mix\(in srgb,\s*var\(--canopy-muted\)\s+\d+%,\s*transparent\)/,
+    )
+  })
+
+  it('keeps placeholders and typed text AA on the lightened field fill', () => {
+    const canopy = tokenHex('canopy')
+    const pct = Number(block.match(/--background:[^;]*?(\d+)%/)?.[1]) / 100
+    const mix = (a: string, b: string, t: number) =>
+      '#' +
+      [1, 3, 5]
+        .map((i) =>
+          Math.round(
+            Number.parseInt(a.slice(i, i + 2), 16) * t +
+              Number.parseInt(b.slice(i, i + 2), 16) * (1 - t),
+          )
+            .toString(16)
+            .padStart(2, '0'),
+        )
+        .join('')
+    const field = mix(tokenHex('canopy-muted'), canopy, pct)
+    expect(contrast(tokenHex('canopy-muted'), field)).toBeGreaterThanOrEqual(
+      4.5,
+    )
+    expect(
+      contrast(tokenHex('canopy-foreground'), field),
+    ).toBeGreaterThanOrEqual(4.5)
   })
 
   it('error text, labels and placeholders stay AA on the canopy colour', () => {
@@ -210,5 +237,67 @@ describe('frosted glass', () => {
       tint,
     )
     expect(contrast(tokenHex('foreground'), glass)).toBeGreaterThanOrEqual(4.5)
+  })
+})
+
+describe('page hero photo overlay (--page-hero-overlay)', () => {
+  const decl =
+    css.match(/--page-hero-overlay:\s*linear-gradient\(([\s\S]*?)\);/)?.[1] ??
+    ''
+  const stops = [
+    ...decl.matchAll(
+      /color-mix\(in srgb, var\(--([\w-]+)\) (\d+)%, transparent\)/g,
+    ),
+  ].map((m) => ({ token: m[1], alpha: Number(m[2]) / 100 }))
+
+  const blend = (fg: string, bg: string, a: number) =>
+    '#' +
+    [1, 3, 5]
+      .map((i) =>
+        Math.round(
+          Number.parseInt(fg.slice(i, i + 2), 16) * a +
+            Number.parseInt(bg.slice(i, i + 2), 16) * (1 - a),
+        )
+          .toString(16)
+          .padStart(2, '0'),
+      )
+      .join('')
+
+  it('is a translucent gradient with several stops, so the photo shows', () => {
+    expect(stops.length).toBeGreaterThanOrEqual(3)
+    for (const s of stops) expect(s.alpha).toBeLessThan(1)
+  })
+
+  it('has a utility, and the solid gradient is still there for pages without a photo', () => {
+    expect(css).toMatch(/@utility bg-page-hero-overlay/)
+    expect(css).toMatch(/@utility bg-page-hero-gradient/)
+  })
+
+  it('keeps white text AA at every stop, even over a pure white photograph', () => {
+    const white = tokenHex('brand-white')
+    for (const s of stops) {
+      const veil = blend(tokenHex(s.token), white, s.alpha)
+      // The banner's description is white at 85%, the weakest text on it.
+      const text = blend(white, veil, 0.85)
+      expect(
+        contrast(text, veil),
+        `${s.token} @ ${s.alpha}`,
+      ).toBeGreaterThanOrEqual(4.5)
+      expect(
+        contrast(white, veil),
+        `${s.token} @ ${s.alpha}`,
+      ).toBeGreaterThanOrEqual(4.5)
+    }
+  })
+})
+
+describe('text on a bare photograph (--text-on-photo-shadow)', () => {
+  it('is a token, exposed as the text-on-photo utility, built from brand tokens only', () => {
+    const decl = css.match(/--text-on-photo-shadow:([\s\S]*?);/)?.[1] ?? ''
+    expect(decl).toMatch(/var\(--brand-green-950\)/)
+    expect(decl).not.toMatch(/#[0-9a-f]{3,8}\b|rgba?\(/i)
+    expect(css).toMatch(
+      /@utility text-on-photo \{\s*text-shadow:\s*var\(--text-on-photo-shadow\)/,
+    )
   })
 })

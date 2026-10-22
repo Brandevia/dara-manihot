@@ -57,7 +57,7 @@ export function CopyButton({
             className="flex"
           >
             {copied ? (
-              <Check className="text-primary" aria-hidden />
+              <Check className="text-secondary" aria-hidden />
             ) : (
               <Copy aria-hidden />
             )}

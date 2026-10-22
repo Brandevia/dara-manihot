@@ -71,8 +71,12 @@ component uses a Tailwind palette class (`bg-green-600`) or a hex/rgb value.
 * **Every call-to-action is the secondary colour**: use
   `<Button variant="cta">`. To re-colour all CTAs, change `--secondary`
   (and `--secondary-hover`).
-* **Gradients**: `--hero-gradient` (laid over the carousel), `--band-gradient`,
-  `--page-hero-gradient`.
+* **Gradients and overlays**: the home carousel has no gradient (legibility
+  comes from `text-on-photo`, a token text shadow). `--band-gradient` and
+  `--page-hero-gradient` (the Contact page hero) are solid brand gradients;
+  `--page-hero-overlay` is the translucent green laid over a hero photo
+  (`PageHero image=...`, photos listed in `PAGE_HERO_IMAGES` in
+  `lib/constants.ts`). A test enforces AA contrast for the overlay.
 * **Type**: `font-display` (Young Serif, headings) and `font-sans` (Figtree).
   Fluid sizes: `text-display`, `text-title`, `text-lead`.
 * **Layout**: `--header-h`, `--container-max`, `--section-y`; utilities
@@ -103,6 +107,14 @@ and the footer, with no other change.
 **Update contact details.** Edit `COMPANY_INFO` in `lib/constants.ts`. The
 header, footer, contact page and legal pages all read from it.
 
+**Cookie consent.** `lib/cookie-consent.ts` stores the choice (localStorage, 12
+months, versioned; no cookie is set), `hooks/use-cookie-consent.ts` reads it,
+`CookieBanner` asks, and the footer's "Cookie settings" reopens it. Only the
+Contact page Google map is gated: `OfficeMap` loads it automatically once the
+visitor accepts. To gate something new, read `useCookieConsent().state ===
+'accepted'`, and bump `CONSENT_VERSION` plus the Privacy Policy when accepting
+starts to cover more.
+
 **Update legal text.** Edit `lib/legal.ts` and bump `LEGAL_LAST_UPDATED` in
 `lib/constants.ts`.
 
@@ -117,3 +129,32 @@ Skip link, visible focus rings, `aria-current` on the active page, a focus-
 trapped dialog for the drawer, a pause button on the carousel, and
 `prefers-reduced-motion` support everywhere (no autoplay, no push-in, no
 bounce). Scroll reveals fall back to visible content when JS is off.
+
+### The Appear effect
+
+Everything that fades in on scroll uses one effect, from `components/animations.tsx`:
+`Reveal` (fade and lift once, when scrolled into view), `Stagger` and
+`StaggerList` (children appear one after another) and `FadeIn` (fade only, for a
+picture that fills its box). The old scroll-linked `ScrollFade` is gone. The
+closing call to action fades its photo in first (`CTA_IMAGE_DURATION`), then
+its words (`CTA_CONTENT_DELAY`); both live in `lib/motion.ts`.
+
+### Cookie preferences
+
+The banner (`components/cookie-banner.tsx`) has two switches. **Essential** is
+always on and locked. **Non-essential** is off by default and covers the Google
+map on the Contact page. Turning it on opens "Why does the map need cookies?",
+which explains that Google receives the visitor's IP address and may set
+cookies. The stored choice stays binary (`accepted` or `declined`) in
+`lib/cookie-consent.ts`: "Accept all" and "Save choices" with the switch on store
+`accepted`; "Reject non-essential" and "Save choices" with it off store
+`declined`. If you add a second non-essential category, extend the stored shape
+and bump `CONSENT_VERSION` so everyone is asked again.
+
+### Colour notes
+
+Icons and their round chips use the secondary purple: `bg-secondary-soft
+text-secondary` for a chip, `text-secondary` for a bare icon. Inner page banners
+with a photo get the translucent green `bg-page-hero-overlay`. Fields on the dark
+enquiry card (`surface-canopy`) are a translucent lighter green with a light
+outline.

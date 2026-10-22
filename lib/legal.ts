@@ -40,7 +40,7 @@ export const PRIVACY_SECTIONS: readonly LegalSection[] = [
         'Technical information. Like most websites, our hosting provider automatically records standard server logs when you visit: your IP address, browser and device type, the pages requested, and the date and time of the request. To protect the enquiry form from automated spam, we also check how quickly it was completed and keep a short lived count of submissions per IP address in the memory of the web server. That count is not stored permanently.',
       ),
       p(
-        'At the time of writing, this website does not set cookies of its own and does not use third-party analytics or advertising trackers. Fonts and images are served from our own domain. The one exception is the optional map on the Contact page, described under “Cookies” below.',
+        'At the time of writing, this website does not set cookies of its own and does not use third-party analytics or advertising trackers. Fonts and images are served from our own domain. The one exception is the optional map on the Contact page, which loads only if you accept cookies, as described under “Cookies” below.',
       ),
     ],
   },
@@ -136,10 +136,16 @@ export const PRIVACY_SECTIONS: readonly LegalSection[] = [
     title: 'Cookies',
     blocks: [
       p(
-        'We do not currently use cookies on this website. If that changes, we will update this policy and, where required, ask for your consent first.',
+        'This website does not set cookies of its own, and we use no analytics or advertising cookies. The banner shown on your first visit has two switches. Essential is always on and covers only what keeps the site working, which sets no cookies. Non-essential is off by default and covers the Google map on the Contact page, the only thing that can involve cookies. The map loads only if you turn that switch on or accept cookies.',
       ),
       p(
-        'The Contact page can show a Google map of our office. It does not load until you choose “Load interactive map”. Once it loads, Google receives your IP address and browser details and may set its own cookies, under Google’s privacy policy. If you would rather not load it, the directions links beside it open Google Maps in a separate tab instead.',
+        'The map needs your permission because it is an embed from Google: when it loads, your browser contacts Google directly. If you accept, the map loads automatically on the Contact page, with no further click. Google then receives your IP address and browser details and may set its own cookies, under Google’s privacy policy. If you decline or leave non-essential off, nothing is sent to Google, and the directions links beside the map open Google Maps in a separate tab instead.',
+      ),
+      p(
+        'We remember your choice, so we do not ask on every page. It is saved only in your browser’s local storage on this device, as a record of your choice and the date you made it. It is never sent to us or to anyone else. We ask again after 12 months, or if this policy changes what accepting covers.',
+      ),
+      p(
+        'You can change your mind at any time with “Cookie settings” in the footer of every page. That clears your saved choice and shows the banner again. Declining or withdrawing consent does not affect any other part of the website. You can also delete cookies already set by Google in your browser settings.',
       ),
     ],
   },
@@ -237,7 +243,7 @@ export const TERMS_SECTIONS: readonly LegalSection[] = [
     title: 'Third-party links',
     blocks: [
       p(
-        'The website may link to external sites that we do not control. A link is not an endorsement, and we are not responsible for the content, availability or practices of those sites.',
+        'The website may link to external sites that we do not control. A link is not an endorsement, and we are not responsible for the content, availability or practices of those sites. The same applies to the Google map on the Contact page, which is a third-party service provided by Google and shown only if you accept cookies. Google’s terms and privacy policy apply to it.',
       ),
     ],
   },
@@ -264,7 +270,7 @@ export const TERMS_SECTIONS: readonly LegalSection[] = [
     title: 'Privacy',
     blocks: [
       p(
-        'How we handle personal data is described in our Privacy Policy, which forms part of these terms.',
+        'How we handle personal data is described in our Privacy Policy, which forms part of these terms. That includes how we ask for your consent to cookies for the Google map on the Contact page, and how you can change that choice at any time.',
       ),
     ],
   },

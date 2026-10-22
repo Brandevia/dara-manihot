@@ -22,6 +22,8 @@ without a redesign.
 | `home-people` | Home | The team with farmers or community members on site |
 | `about-leadership` | About | A portrait of the founder plus one leadership group photo |
 | `about-field` | About | The team in the field: planting, harvesting, residue processing |
+| `about-vision` | About | Our vision: wide, bright farmland powered by clean energy |
+| `about-mission` | About | Our mission: farm workers and community members at work in the field |
 | `services-agriculture` | Services | Farm and processing activity: cassava, rice, composting, biochar |
 | `services-energy` | Services | Sustainable energy installations: solar arrays, inverters, storage |
 | `services-equipment` | Services | Equipment close ups: gasifier, electrolyser, control panels |

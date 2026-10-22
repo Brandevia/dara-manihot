@@ -93,7 +93,7 @@ export default function Home() {
               >
                 <Card className="h-full gap-4 transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift">
                   <CardHeader>
-                    <span className="mb-3 flex size-12 items-center justify-center rounded-xl bg-accent text-primary">
+                    <span className="mb-3 flex size-12 items-center justify-center rounded-xl bg-secondary-soft text-secondary">
                       <area.icon className="size-6" aria-hidden />
                     </span>
                     <CardTitle className="font-display text-xl font-normal">

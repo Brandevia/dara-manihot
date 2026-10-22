@@ -1,3 +1,4 @@
+import { CTA_CONTENT_DELAY, CTA_IMAGE_DURATION } from '@/lib/motion'
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
@@ -28,6 +29,11 @@ import { StatsBand } from '@/components/sections/stats-band'
 import { VisionStatement } from '@/components/sections/vision-statement'
 import { WhoWeAre } from '@/components/sections/who-we-are'
 import { COMPANY_INFO } from '@/lib/constants'
+import {
+  getConsentSnapshot,
+  resetConsent,
+  setConsent,
+} from '@/lib/cookie-consent'
 import { mapDirectionsUrl, mapEmbedUrl, mapSearchUrl } from '@/lib/maps'
 import { formatProjectDate, PROJECTS, type Project } from '@/lib/projects'
 import { SERVICES } from '@/lib/services'
@@ -392,16 +398,34 @@ describe('office map (contact page)', () => {
     expect(COMPANY_INFO.address).toMatch(/Lagos/) // "Ketu" alone is also a town in Ogun State
   })
 
-  it('shows a placeholder first and loads Google only when asked', async () => {
+  it('shows a placeholder and loads nothing until cookies are accepted', async () => {
+    resetConsent()
     const { container } = render(<OfficeMap />)
     expect(container.querySelector('iframe')).toBeNull()
-    await userEvent.click(
-      screen.getByRole('button', { name: /load interactive map/i }),
-    )
+    expect(
+      screen.queryByRole('button', { name: /load interactive map/i }),
+    ).toBeNull()
+    expect(container.textContent).toMatch(/once you accept cookies/i)
+  })
+
+  it('loads by itself on acceptance, with no extra click', () => {
+    resetConsent()
+    const { container } = render(<OfficeMap />)
+    act(() => setConsent('accepted'))
     const frame = container.querySelector('iframe') as HTMLIFrameElement
     expect(frame.src).toBe(mapEmbedUrl(COMPANY_INFO.address))
     expect(frame.title).toMatch(/office/i)
     expect(frame).toHaveAttribute('loading', 'lazy')
+  })
+
+  it('stays unloaded after declining and offers a way to change the choice', async () => {
+    setConsent('declined')
+    const { container } = render(<OfficeMap />)
+    expect(container.querySelector('iframe')).toBeNull()
+    await userEvent.click(
+      screen.getByRole('button', { name: /change cookie choice/i }),
+    )
+    expect(getConsentSnapshot()).toBe('unset')
   })
 
   it('is on the contact page under #map with working directions links', () => {
@@ -423,21 +447,34 @@ describe('office map (contact page)', () => {
 })
 
 describe('closing CTA (landing page)', () => {
-  it('fades its content in on scroll, over the photo', () => {
+  it('fades the photo in first and the content in after it, over the photo', () => {
     const { container } = render(<Home />)
-    const fade = container.querySelector('[data-scroll-fade]')
-    expect(fade).not.toBeNull()
-    expect(fade?.textContent).toMatch(/join us in transforming agriculture/i)
-    const card = fade?.closest('section > div') as HTMLElement
-    expect(card.querySelector('img')).not.toBeNull()
+    const image = container.querySelector('[data-cta-image]') as HTMLElement
+    const content = container.querySelector('[data-cta-content]') as HTMLElement
+    expect(image).not.toBeNull()
+    expect(content).not.toBeNull()
+    expect(content.textContent).toMatch(/join us in transforming agriculture/i)
+    // Both use the Appear effect (opacity 0 until scrolled into view).
+    expect(image).toHaveAttribute('data-reveal')
+    expect(content).toHaveAttribute('data-reveal')
+    expect(image.style.opacity).toBe('0')
+    expect(content.style.opacity).toBe('0')
+    expect(image.querySelector('img')).not.toBeNull()
+    // The photo comes before the words in the document, beneath them.
+    expect(
+      image.compareDocumentPosition(content) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
   })
 
-  it('shows the content straight away with reduced motion', () => {
-    window.__reduceMotion = true
+  it('starts the content after the photo has mostly faded in', () => {
+    expect(CTA_CONTENT_DELAY).toBeGreaterThan(0)
+    expect(CTA_CONTENT_DELAY).toBeLessThan(CTA_IMAGE_DURATION)
+    expect(CTA_CONTENT_DELAY).toBeGreaterThanOrEqual(CTA_IMAGE_DURATION / 2)
+  })
+
+  it('no longer uses the scroll-linked fade', () => {
     const { container } = render(<Home />)
-    const fade = container.querySelector('[data-scroll-fade]') as HTMLElement
-    expect(fade.style.opacity).toBe('1')
-    window.__reduceMotion = false
+    expect(container.querySelector('[data-scroll-fade]')).toBeNull()
   })
 })
 

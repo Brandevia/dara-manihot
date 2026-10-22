@@ -28,6 +28,15 @@ describe('HeroCarousel', () => {
     window.__reduceMotion = false
   })
 
+  it('lays the site green gradient over the photos, hidden from assistive tech', () => {
+    const { container } = render(<HeroCarousel slides={slides} />)
+    for (const sel of ['.bg-hero-gradient', '.bg-hero-gradient-bottom']) {
+      const el = container.querySelector(sel)
+      expect(el, sel).not.toBeNull()
+      expect(el).toHaveAttribute('aria-hidden', 'true')
+    }
+  })
+
   it('renders every slide and starts on the first', () => {
     render(<HeroCarousel slides={slides} />)
     expect(screen.getAllByRole('img', { hidden: true })).toHaveLength(3)

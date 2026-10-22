@@ -54,6 +54,8 @@
   --secondary: var(--brand-purple-600);
   --secondary-foreground: var(--brand-white);
   --secondary-hover: var(--brand-purple-700);
+  /* Pale purple: the round chip behind a purple icon. */
+  --secondary-soft: var(--brand-purple-100);
   --leaf: var(--brand-green-600);
   --leaf-foreground: var(--brand-white);
   --leaf-hover: var(--brand-green-700);
@@ -103,6 +105,23 @@
     color-mix(in srgb, var(--brand-green-950) 88%, transparent) 0%,
     transparent 38%
   );
+
+  /* Inner page banners with a photo: the same green as --page-hero-gradient,
+   but translucent so the picture shows through. Keep every stop at 82% or
+   above: that is what keeps white text AA over even a pure white photo
+   (tests/design-tokens.test.ts asserts it). */
+  --page-hero-overlay: linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--brand-green-950) 94%, transparent) 0%,
+    color-mix(in srgb, var(--brand-green-900) 88%, transparent) 55%,
+    color-mix(in srgb, var(--brand-green-800) 82%, transparent) 100%
+  );
+  /* Legibility for text set directly on a bare photograph (landing hero),
+     where no colour is laid over the picture. */
+  --text-on-photo-shadow:
+    0 1px 2px color-mix(in srgb, var(--brand-green-950) 60%, transparent),
+    0 2px 24px color-mix(in srgb, var(--brand-green-950) 50%, transparent);
+
   --band-gradient: linear-gradient(
     120deg,
     var(--brand-green-950) 0%,
@@ -191,6 +210,7 @@
   --secondary: #a24bb8;
   --secondary-foreground: #ffffff;
   --secondary-hover: #b560c9;
+  --secondary-soft: #2a1730;
   --muted: #16271c;
   --muted-foreground: #a9b9ad;
   --accent: #1a3323;
@@ -213,6 +233,7 @@
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-soft: var(--secondary-soft);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
@@ -368,6 +389,17 @@
   background-image: var(--image-band-overlay);
 }
 
+/* Translucent green veil over an inner page's banner photo. Without this
+   utility the class was a silent no-op and the photo had no gradient. */
+@utility bg-page-hero-overlay {
+  background-image: var(--page-hero-overlay);
+}
+
+/* Legibility shadow for text set directly on a bare photograph. */
+@utility text-on-photo {
+  text-shadow: var(--text-on-photo-shadow);
+}
+
 /* Frosted glass surface: blur + saturation lift over a translucent tint, a
    bright inner top edge and a hairline outline. `data-scrolled="true"` on the
    element firms the tint up so text stays legible over busy photography.
@@ -395,11 +427,12 @@
 /* A dark (canopy) surface that hosts the normal light-theme form controls.
    Re-points the semantic tokens for everything inside it, so Input, Select,
    Textarea, labels, hints, errors and links restyle without any component
-   knowing about the surface. Fields become outlined and transparent. */
+   knowing about the surface. Fields become a lighter, translucent green fill
+   with a light outline. */
 @utility surface-canopy {
   --foreground: var(--canopy-foreground);
   --muted-foreground: var(--canopy-muted);
-  --background: transparent;
+  --background: color-mix(in srgb, var(--canopy-muted) 16%, transparent);
   --input: color-mix(in srgb, var(--canopy-foreground) 45%, transparent);
   --ring: var(--canopy-foreground);
   --destructive: var(--brand-danger-light);

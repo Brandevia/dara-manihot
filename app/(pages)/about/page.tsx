@@ -1,4 +1,4 @@
-import { Award, Globe, Leaf, Target, Users } from 'lucide-react'
+import { Award, Leaf, Target, Users } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
@@ -13,10 +13,10 @@ import { PhotoSlot } from '@/components/photo-slot'
 import { CtaBand } from '@/components/sections/cta-band'
 import { PageHero } from '@/components/sections/page-hero'
 import { SectionHeading } from '@/components/sections/section-heading'
+import { VisionMission } from '@/components/sections/vision-mission'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { CORE_VALUES } from '@/lib/constants'
+import { CORE_VALUES, PAGE_HERO_IMAGES } from '@/lib/constants'
 
 export const metadata: Metadata = {
   title: 'About us',
@@ -81,6 +81,7 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
+        image={PAGE_HERO_IMAGES.about}
         title="Pioneering sustainable agriculture in Nigeria"
         description="For over a decade, we’ve been at the forefront of transforming Africa’s agricultural landscape through innovative clean technologies and sustainable practices."
       />
@@ -143,42 +144,7 @@ export default function AboutPage() {
       </section>
 
       {/* Mission & vision */}
-      <section className="section-y bg-muted">
-        <div className="page-container">
-          <SectionHeading title="Our mission & vision" />
-          <Stagger className="grid gap-6 md:grid-cols-2">
-            <StaggerItem>
-              <Card className="h-full gap-5 p-8">
-                <span className="flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-                  <Target className="size-6" aria-hidden />
-                </span>
-                <h3 className="text-2xl">Our mission</h3>
-                <p className="leading-relaxed text-muted-foreground">
-                  To transform Africa’s agricultural and industrial sectors
-                  through innovative clean technologies, creating sustainable
-                  value chains that empower communities, enhance productivity,
-                  and protect our environment for future generations.
-                </p>
-              </Card>
-            </StaggerItem>
-            <StaggerItem>
-              <Card className="h-full gap-5 border-transparent bg-canopy p-8 text-canopy-foreground">
-                <span className="flex size-12 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
-                  <Globe className="size-6" aria-hidden />
-                </span>
-                <h3 className="text-2xl">Our vision</h3>
-                <p className="leading-relaxed text-canopy-foreground/85">
-                  To be Africa’s leading catalyst for sustainable
-                  agro-industrial transformation, where farms and factories
-                  thrive with clean energy, waste becomes valuable resources,
-                  and communities lead the transition to a climate-smart
-                  economy.
-                </p>
-              </Card>
-            </StaggerItem>
-          </Stagger>
-        </div>
-      </section>
+      <VisionMission />
 
       {/* Core values */}
       <section className="section-y">
@@ -239,7 +205,7 @@ export default function AboutPage() {
                 key={stat.label}
                 className="border-t border-border pt-6"
               >
-                <stat.icon className="mb-4 size-7 text-primary" aria-hidden />
+                <stat.icon className="mb-4 size-7 text-secondary" aria-hidden />
                 <p className="font-display text-5xl text-foreground">
                   <CountUp value={stat.number} />
                 </p>

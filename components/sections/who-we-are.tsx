@@ -57,7 +57,7 @@ export function WhoWeAre() {
         <Reveal>
           <h2
             id="who-we-are-title"
-            className="font-sans text-lg font-normal text-primary"
+            className="font-sans text-lg font-normal text-secondary"
           >
             Who we are
           </h2>
@@ -83,7 +83,7 @@ export function WhoWeAre() {
               <StaggerItem className="flex flex-1 flex-col justify-between gap-8">
                 <Icon
                   aria-hidden
-                  className="size-20 self-center text-mint sm:size-24"
+                  className="size-20 self-center text-secondary sm:size-24"
                 />
                 <p className="text-lg leading-snug text-muted-foreground">
                   {text}

@@ -70,7 +70,7 @@ export default async function ProjectPage({ params }: Props) {
                     </span>
                     <ArrowUpRight
                       aria-hidden
-                      className="mt-1 size-5 shrink-0 text-primary transition-transform duration-200 group-hover/more:translate-x-0.5 group-hover/more:-translate-y-0.5"
+                      className="mt-1 size-5 shrink-0 text-secondary transition-transform duration-200 group-hover/more:translate-x-0.5 group-hover/more:-translate-y-0.5"
                     />
                   </Link>
                 </StaggerItem>
