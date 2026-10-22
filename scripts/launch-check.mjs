@@ -21,8 +21,8 @@ export function runChecks({ env, slots, team, hasRealPhoto, socialLinks }) {
       add('BLOCKER', 'zeptomail', 'ZEPTOMAIL_TOKEN is missing or invalid.')
     if (!validAddress(env.ZEPTOMAIL_FROM_EMAIL?.trim()))
       add('BLOCKER', 'zeptomail', 'ZEPTOMAIL_FROM_EMAIL must be a complete authorised sender address.')
-    if (env.ENQUIRY_TO && !validAddress(env.ENQUIRY_TO.trim()))
-      add('BLOCKER', 'zeptomail', 'ENQUIRY_TO must be a valid recipient address.')
+    if (env.ENQUIRY_TO && env.ENQUIRY_TO.split(',').some((value) => !validAddress(value.trim()) || /[,;]/.test(value)))
+      add('BLOCKER', 'zeptomail', 'ENQUIRY_TO must be a comma-separated list of valid recipient addresses.')
   } else {
     for (const key of ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS'])
       if (!env[key]) add('BLOCKER', 'smtp', `${key} is not set: enquiries cannot be delivered.`)

@@ -28,7 +28,7 @@ export interface MailConfig {
   /** Sender of both emails. Must be an address on the domain being sent from. */
   from: string
   /** Where enquiry notifications are delivered. */
-  to: string
+  to: string | string[]
 }
 
 export class MailNotConfiguredError extends Error {
@@ -44,7 +44,17 @@ type Env = Record<string, string | undefined>
 
 /** Returns null when the selected delivery channel is not configured. */
 export function readMailConfig(env: Env = process.env): MailConfig | null {
-  const to = env.ENQUIRY_TO?.trim() || COMPANY_INFO.email
+  const recipients = (env.ENQUIRY_TO?.trim() || 'daramanihot@gmail.com,info@daramanihot.com').split(',').map((value) => value.trim())
+  const validAddress = (value: string) => /^[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+$/.test(value)
+  if (!recipients.length || recipients.some((value) => !validAddress(value))) return null
+  const seen = new Set<string>()
+  const uniqueRecipients = recipients.filter((value) => {
+    const key = value.toLowerCase()
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+  const to = uniqueRecipients.length === 1 ? uniqueRecipients[0] : uniqueRecipients
   const port = Number(env.SMTP_PORT) || 465
 
   // "json" builds the message but sends nothing. For staging smoke tests and
@@ -54,7 +64,7 @@ export function readMailConfig(env: Env = process.env): MailConfig | null {
       driver: 'json',
       port,
       secure: false,
-      from: env.MAIL_FROM?.trim() || `"${COMPANY_INFO.shortName}" <${to}>`,
+      from: env.MAIL_FROM?.trim() || `"${COMPANY_INFO.shortName}" <${uniqueRecipients[0]}>`,
       to,
     }
   }
@@ -64,8 +74,7 @@ export function readMailConfig(env: Env = process.env): MailConfig | null {
   if (env.MAIL_DRIVER === 'zeptomail' || (!env.MAIL_DRIVER && env.ZEPTOMAIL_TOKEN)) {
     const token = env.ZEPTOMAIL_TOKEN?.trim()
     const from = env.ZEPTOMAIL_FROM_EMAIL?.trim()
-    const validAddress = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-    if (!token || token.includes('********') || /[\r\n]/.test(token) || !from || !validAddress(from) || !validAddress(to)) return null
+    if (!token || token.includes('********') || /[\r\n]/.test(token) || !from || !validAddress(from)) return null
     return { driver: 'zeptomail', token, from, to, port, secure: true }
   }
   if (env.MAIL_DRIVER && env.MAIL_DRIVER !== 'smtp') return null

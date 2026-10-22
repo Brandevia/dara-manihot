@@ -8,7 +8,7 @@ Set these server-only values in `.env.local` locally, and in Vercel environment 
 MAIL_DRIVER=zeptomail
 ZEPTOMAIL_TOKEN="YOUR_REAL_ZOHO_AGENT_SEND_TOKEN"
 ZEPTOMAIL_FROM_EMAIL="noreply@daramanihot.com.ng"
-ENQUIRY_TO="info@daramanihot.com.ng"
+ENQUIRY_TO="daramanihot@gmail.com,info@daramanihot.com"
 NEXT_PUBLIC_SITE_URL="https://www.daramanihot.com.ng"
 ```
 
@@ -58,7 +58,7 @@ names with the client first.**
 | `accounts@` | Invoices and payments |
 | `noreply@` | Sender for website enquiry emails (`SMTP_USER`) |
 
-`info@daramanihot.com.ng` already exists and is the default `ENQUIRY_TO`.
+`info@daramanihot.com.ng` already exists and was the original single enquiry destination.
 
 ### Option A: cPanel hosting (scripted)
 
@@ -90,7 +90,7 @@ host's environment settings (production):
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE` | Usually `mail.daramanihot.com.ng`, 465, true. Use 587 with `SMTP_SECURE=false` for STARTTLS |
 | `SMTP_USER`, `SMTP_PASS` | The `noreply@` mailbox |
 | `MAIL_FROM` | Sender shown on both emails. Keep it on the same domain as `SMTP_USER` |
-| `ENQUIRY_TO` | Where notifications go. Defaults to `info@daramanihot.com.ng` |
+| `ENQUIRY_TO` | Where notifications go. Defaults to both organisation inboxes |
 | `NEXT_PUBLIC_SITE_URL` | Used for the logo inside emails. Set to the staging URL while on staging |
 
 The site works with Google Workspace, Zoho and Microsoft 365 too: change the
@@ -158,3 +158,6 @@ out of this scope.
 | Acknowledgements go to spam | SPF, DKIM or DMARC missing (section 3) |
 | `acknowledged: false` in logs | The visitor's address bounced. The enquiry itself was delivered |
 | Logo missing in emails | `NEXT_PUBLIC_SITE_URL` unset or pointing at a private address |
+
+
+Organisation notifications now address both `daramanihot@gmail.com` and `info@daramanihot.com` in one email. `ENQUIRY_TO` accepts a comma-separated list, trims whitespace, rejects malformed/empty entries and removes duplicates. The visitor receives a separate acknowledgement, with both organisation inboxes as Reply-To. The sender and public domain/email content are unchanged. Update the Vercel `ENQUIRY_TO` setting to `daramanihot@gmail.com,info@daramanihot.com` and redeploy; an old explicit environment value overrides code defaults. No live emails are sent by tests.

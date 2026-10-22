@@ -1,9 +1,10 @@
 import type { SendMailOptions } from 'nodemailer'
 import type { MailConfig } from '@/lib/mailer'
 
-function emailAddress(value: SendMailOptions['to']): { address: string; name?: string } {
-  if (typeof value === 'string') return { address: value }
-  if (value && !Array.isArray(value) && typeof value === 'object' && 'address' in value && typeof value.address === 'string') return { address: value.address, name: value.name }
+function emailAddresses(value: SendMailOptions['to']): { address: string; name?: string }[] {
+  if (Array.isArray(value)) return value.flatMap((entry) => emailAddresses(entry))
+  if (typeof value === 'string') return [{ address: value }]
+  if (value && typeof value === 'object' && 'address' in value && typeof value.address === 'string') return [{ address: value.address, name: value.name }]
   throw new Error('Unsupported email address')
 }
 
@@ -21,8 +22,8 @@ export async function sendZeptoMail(config: MailConfig, message: SendMailOptions
       },
       body: JSON.stringify({
         from: { address: config.from, name: 'Dara-Manihot' },
-        to: [{ email_address: emailAddress(message.to) }],
-        reply_to: [emailAddress(message.replyTo)],
+        to: emailAddresses(message.to).map((email_address) => ({ email_address })),
+        reply_to: emailAddresses(message.replyTo),
         subject: message.subject,
         htmlbody: message.html,
         textbody: message.text,
@@ -32,7 +33,7 @@ export async function sendZeptoMail(config: MailConfig, message: SendMailOptions
       signal: AbortSignal.timeout(10_000),
     })
     const result = await response.json()
-    if (response.ok && Array.isArray(result?.data) && result.data.some((item: { code?: string }) => item?.code === 'EM_104')) return
+    if (response.ok && Array.isArray(result?.data) && result.data.length > 0 && result.data.every((item: { code?: string }) => item?.code === 'EM_104')) return
   } catch {
     // Provider errors may contain credentials, enquiry content or email addresses.
     throw new Error('ZeptoMail request failed or timed out; acceptance is uncertain')
