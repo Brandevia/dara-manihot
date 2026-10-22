@@ -207,7 +207,7 @@ export function EnquiryForm() {
         data-testid="enquiry-success"
         className="space-y-4 rounded-xl border border-primary/30 bg-accent p-7 text-accent-foreground outline-none"
       >
-        <CheckCircle2 className="size-10 text-primary" aria-hidden />
+        <CheckCircle2 className="size-10 text-secondary" aria-hidden />
         <h3 className="text-2xl">Thank you, we have your enquiry</h3>
         <p>
           {acknowledged
@@ -273,6 +273,7 @@ export function EnquiryForm() {
               {...a}
               name="name"
               autoComplete="name"
+              placeholder="Your full name"
               maxLength={ENQUIRY_LIMITS.name.max}
               value={values.name}
               onChange={(e) => setField('name', e.target.value)}
@@ -290,6 +291,7 @@ export function EnquiryForm() {
               autoComplete="email"
               autoCapitalize="none"
               spellCheck={false}
+              placeholder="you@company.com"
               value={values.email}
               onChange={(e) => setField('email', e.target.value)}
               onBlur={() => values.email && checkField('email')}
@@ -307,7 +309,7 @@ export function EnquiryForm() {
               type="tel"
               inputMode="tel"
               autoComplete="tel"
-              placeholder="+234 802 000 0000"
+              placeholder="+234 800 000 0000"
               value={values.phone}
               onChange={(e) => setField('phone', e.target.value)}
               onBlur={() => values.phone && checkField('phone')}
@@ -327,7 +329,7 @@ export function EnquiryForm() {
               value={values.service}
               onChange={(e) => setField('service', e.target.value)}
             >
-              <option value="">Choose a service</option>
+              <option value="">Select a service</option>
               {groups.map((group) => (
                 <optgroup key={group} label={group}>
                   {SERVICE_OPTIONS.filter((o) => o.group === group).map((o) => (
@@ -353,6 +355,7 @@ export function EnquiryForm() {
           <Textarea
             {...a}
             name="message"
+            placeholder="Tell us about your project or enquiry…"
             maxLength={ENQUIRY_LIMITS.message.max}
             value={values.message}
             onChange={(e) => setField('message', e.target.value)}

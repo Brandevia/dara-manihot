@@ -1,3 +1,22 @@
+# Heroes and cookie consent
+
+## To-do (all verified)
+
+- [x] **Landing hero.** The colour gradient over the carousel is gone. Text legibility now comes from the `text-on-photo` token shadow.
+- [x] **Page heroes.** About, Services (and each service page), Projects, Privacy and Terms now have a photo behind a translucent green overlay (`bg-page-hero-overlay`). Contact keeps the plain gradient. Photos are chosen in `PAGE_HERO_IMAGES`.
+- [x] **Cookie popup.** `CookieBanner` (Accept and Decline equally prominent, non-modal) and a footer "Cookie settings" button to change the choice. The choice is kept in localStorage for 12 months, never as a cookie, and never sent anywhere.
+- [x] **Map.** Loads by itself once cookies are accepted, with no "Load interactive map" click. Declined or undecided shows the address placeholder and the directions links.
+- [x] **Privacy Policy and Terms.** Cookies section rewritten for the consent flow; Terms updated for the Google map and consent. `LEGAL_LAST_UPDATED` is 21 October 2026.
+
+## Notes for review
+
+- **12 months** appears in `CONSENT_MAX_AGE_MS` and in the Privacy Policy. Change both together.
+- **Existing visitors** are asked once, since nothing was stored before.
+- **Legal wording** is a good faith update, not legal advice; have a Nigerian lawyer (NDPA 2023) confirm it.
+- The earlier "Map loads on click" note below is superseded by this change.
+
+---
+
 # Wireframe pass 2: sections, projects, footer, map, menu
 
 Implements the second set of wireframes. No new colours: `mint` is the one new

@@ -11,7 +11,7 @@ import { ProjectFeature } from '@/components/sections/project-feature'
 import { SectionHeading } from '@/components/sections/section-heading'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { COMPANY_INFO } from '@/lib/constants'
+import { COMPANY_INFO, PAGE_HERO_IMAGES } from '@/lib/constants'
 import { PROJECTS } from '@/lib/projects'
 import { TEAM } from '@/lib/team'
 
@@ -25,6 +25,7 @@ export default function ProjectsPage() {
   return (
     <>
       <PageHero
+        image={PAGE_HERO_IMAGES.projects}
         title="Our projects & impact"
         description="Discover how we’re transforming agriculture across Nigeria through innovative projects, strategic partnerships, and community-focused initiatives that create lasting change."
       />
@@ -71,7 +72,7 @@ export default function ProjectsPage() {
                     className="mx-auto mb-4 size-20 rounded-full object-cover"
                   />
                 ) : (
-                  <span className="mx-auto mb-4 flex size-20 items-center justify-center rounded-full bg-accent text-primary">
+                  <span className="mx-auto mb-4 flex size-20 items-center justify-center rounded-full bg-secondary-soft text-secondary">
                     <Users className="size-9" aria-hidden />
                   </span>
                 )}

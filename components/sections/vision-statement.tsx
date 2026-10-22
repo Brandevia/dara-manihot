@@ -11,11 +11,14 @@ export function VisionStatement() {
       <div className="page-container">
         <Reveal className="mx-auto max-w-5xl text-center">
           <p className="font-display text-canopy text-statement text-balance">
-            We envision an Africa where farms and factories thrive with clean,
-            affordable energy; agricultural waste becomes a resource, not a
-            burden; and farmers and entrepreneurs gain the tools to lead in a
-            climate-smart economy. At Dara-Manihot, we are proud to stand at the
-            forefront of this transformation.
+            We envision an Africa where farms and factories thrive with{' '}
+            <span data-accent className="text-secondary">
+              clean, affordable energy
+            </span>
+            ; agricultural waste becomes a resource, not a burden; and farmers
+            and entrepreneurs gain the tools to lead in a climate-smart economy.
+            At Dara-Manihot, we are proud to stand at the forefront of this
+            transformation.
           </p>
           <h2
             id="vision-title"

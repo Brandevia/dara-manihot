@@ -63,7 +63,7 @@ export function PartnershipsSection() {
               <StaggerItem>
                 <span
                   aria-hidden
-                  className="flex size-12 items-center justify-center rounded-full bg-accent text-primary"
+                  className="flex size-12 items-center justify-center rounded-full bg-secondary-soft text-secondary"
                 >
                   <Icon className="size-5" />
                 </span>

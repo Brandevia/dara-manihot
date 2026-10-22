@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import type { ReactNode } from 'react'
-import { ScrollFade } from '@/components/animations'
+import { FadeIn, Reveal } from '@/components/animations'
+import { CTA_CONTENT_DELAY, CTA_IMAGE_DURATION } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
 export interface CtaBandImage {
@@ -16,7 +17,8 @@ export interface CtaBandImage {
  * a full-bleed colour band, so the footer's rounded top corners meet white
  * rather than a second dark block. Without `image` the card is the green
  * gradient; with `image` it is a photo under a deep-green veil. Either way the
- * words fade in on top as you scroll.
+ * words appear on scroll. With a photo, the photo fades in first and the words
+ * follow a beat later, so they arrive onto a picture that is already there.
  */
 export function CtaBand({
   title,
@@ -38,7 +40,11 @@ export function CtaBand({
         )}
       >
         {image && (
-          <>
+          <FadeIn
+            duration={CTA_IMAGE_DURATION}
+            className="absolute inset-0 -z-10"
+            data-cta-image
+          >
             {/* Decorative: the message is the text, so the photo has empty alt. */}
             <Image
               src={image.src}
@@ -46,16 +52,20 @@ export function CtaBand({
               fill
               sizes="(min-width: 1280px) 1216px, 100vw"
               style={{ objectPosition: image.position }}
-              className="-z-20 object-cover"
+              className="object-cover"
             />
             <div
               aria-hidden
-              className="bg-image-band-overlay absolute inset-0 -z-10"
+              className="bg-image-band-overlay absolute inset-0"
             />
-          </>
+          </FadeIn>
         )}
         <div className="px-6 py-20 sm:px-12 sm:py-28">
-          <ScrollFade className="mx-auto max-w-3xl text-center">
+          <Reveal
+            delay={image ? CTA_CONTENT_DELAY : 0}
+            className="mx-auto max-w-3xl text-center"
+            data-cta-content
+          >
             <h2 className="text-title">{title}</h2>
             <p className="mt-5 text-lead text-canopy-foreground/85">
               {description}
@@ -63,7 +73,7 @@ export function CtaBand({
             <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
               {children}
             </div>
-          </ScrollFade>
+          </Reveal>
         </div>
       </div>
     </section>

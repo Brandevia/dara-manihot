@@ -16,11 +16,11 @@ export function HomeHero() {
         <div className="text-canopy-foreground">
           <h1
             id="home-hero-title"
-            className="animate-rise max-w-3xl text-hero text-wrap motion-reduce:animate-none"
+            className="animate-rise text-on-photo max-w-3xl text-hero text-wrap motion-reduce:animate-none"
           >
             Empowering Africa’s Agro Industry with Clean Solutions
           </h1>
-          <p className="animate-rise animation-delay-150 mt-5 max-w-200 text-[1.1rem] text-canopy-foreground/90 leading-[1.55] motion-reduce:animate-none">
+          <p className="animate-rise animation-delay-150 text-on-photo mt-5 max-w-200 text-[1.1rem] text-canopy-foreground leading-[1.55] motion-reduce:animate-none">
             At Dara-Manihot Industries &amp; Farms, we’re transforming
             agriculture and industry—creating resilient communities, competitive
             businesses, and a greener future for Nigeria and beyond.

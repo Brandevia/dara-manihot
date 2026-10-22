@@ -1,5 +1,5 @@
 import { PageHero } from '@/components/sections/page-hero'
-import { LEGAL_LAST_UPDATED } from '@/lib/constants'
+import { LEGAL_LAST_UPDATED, PAGE_HERO_IMAGES } from '@/lib/constants'
 import type { LegalSection } from '@/lib/legal'
 
 /** Shared layout for the Privacy Policy and Terms of Service pages. */
@@ -14,7 +14,11 @@ export function LegalDocument({
 }) {
   return (
     <>
-      <PageHero title={title} description={intro}>
+      <PageHero
+        title={title}
+        description={intro}
+        image={PAGE_HERO_IMAGES.legal}
+      >
         <p className="text-sm text-canopy-muted">
           Last updated: <time>{LEGAL_LAST_UPDATED}</time>
         </p>

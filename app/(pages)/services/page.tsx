@@ -15,7 +15,7 @@ import { PageHero } from '@/components/sections/page-hero'
 import { SectionHeading } from '@/components/sections/section-heading'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { COMPANY_INFO } from '@/lib/constants'
+import { COMPANY_INFO, PAGE_HERO_IMAGES } from '@/lib/constants'
 import type { PhotoSlotId } from '@/lib/imagery'
 import { getPillarServices, PILLARS, type PillarId } from '@/lib/services'
 import { cn } from '@/lib/utils'
@@ -94,6 +94,7 @@ export default function ServicesPage() {
   return (
     <>
       <PageHero
+        image={PAGE_HERO_IMAGES.services}
         title="Our services"
         description="From renewable energy systems to circular economy solutions, we provide end-to-end services that transform agricultural operations and industrial processes for sustainability and profitability."
       >
@@ -134,7 +135,7 @@ export default function ServicesPage() {
                 )}
               >
                 <Reveal className="max-w-3xl">
-                  <span className="mb-4 flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                  <span className="mb-4 flex size-12 items-center justify-center rounded-xl bg-secondary-soft text-secondary">
                     <pillar.icon className="size-6" aria-hidden />
                   </span>
                   <h2 id={`${pillar.id}-title`} className="text-title">
@@ -172,7 +173,7 @@ export default function ServicesPage() {
                       className="scroll-mt-header h-full gap-5 p-7 transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift"
                     >
                       <div className="flex items-start gap-4">
-                        <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-accent text-primary">
+                        <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-secondary-soft text-secondary">
                           <service.icon className="size-6" aria-hidden />
                         </span>
                         <div>
@@ -186,7 +187,7 @@ export default function ServicesPage() {
                         {service.details.map((detail) => (
                           <li key={detail} className="flex gap-2.5 text-sm">
                             <CheckCircle2
-                              className="mt-0.5 size-4 shrink-0 text-primary"
+                              className="mt-0.5 size-4 shrink-0 text-secondary"
                               aria-hidden
                             />
                             <span className="text-muted-foreground">

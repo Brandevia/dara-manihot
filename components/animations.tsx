@@ -4,19 +4,14 @@ import {
   type HTMLMotionProps,
   MotionConfig,
   motion,
-  useScroll,
-  useTransform,
   type Variants,
 } from 'motion/react'
-import { type ReactNode, useRef } from 'react'
-import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
+import type { ReactNode } from 'react'
 import {
   EASE_OUT_EXPO,
   REVEAL_DURATION,
   REVEAL_OFFSET_Y,
   REVEAL_VIEWPORT,
-  SCROLL_FADE_OFFSET,
-  SCROLL_FADE_RISE,
   STAGGER_GAP,
 } from '@/lib/motion'
 
@@ -50,38 +45,35 @@ export function Reveal({ children, delay = 0, ...props }: RevealProps) {
   )
 }
 
-/**
- * Fades and lifts content in as you scroll, tied to the scroll position (so
- * it also reverses when you scroll back up). Use it for content that sits on
- * top of a picture: the picture is there first and the words arrive onto it.
- * With reduced motion the content is simply shown.
- */
-export function ScrollFade({
-  children,
-  className,
-}: {
+interface FadeInProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   children: ReactNode
-  className?: string
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  const reduced = usePrefersReducedMotion()
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: [...SCROLL_FADE_OFFSET],
-  })
-  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1])
-  const y = useTransform(scrollYProgress, [0, 1], [SCROLL_FADE_RISE, 0])
+  delay?: number
+  duration?: number
+}
 
+/**
+ * The Appear effect without the lift: fades in once, when scrolled into view.
+ * For a picture that fills its container (so moving it would show an edge),
+ * and which should arrive before the words that sit on top of it.
+ */
+export function FadeIn({
+  children,
+  delay = 0,
+  duration = REVEAL_DURATION,
+  ...props
+}: FadeInProps) {
   return (
-    <div ref={ref} className={className}>
-      <motion.div
-        data-reveal
-        data-scroll-fade
-        style={reduced ? { opacity: 1, y: 0 } : { opacity, y }}
-      >
-        {children}
-      </motion.div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={REVEAL_VIEWPORT}
+      transition={{ duration, delay, ease: EASE_OUT_EXPO }}
+      data-reveal
+      data-fade-in
+      {...props}
+    >
+      {children}
+    </motion.div>
   )
 }
 

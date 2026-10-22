@@ -1,17 +1,53 @@
+import Image from 'next/image'
 import type { ReactNode } from 'react'
+import type { PageHeroImage } from '@/lib/constants'
+import { cn } from '@/lib/utils'
 
-/** Banner at the top of every inner page. */
+/**
+ * Banner at the top of every inner page except Contact.
+ *
+ * With an `image` the photo fills the banner under a translucent green
+ * gradient (`--page-hero-overlay`), so the picture shows and the white text
+ * stays AA. Without one it is the solid green gradient. The photo is
+ * decorative (empty alt): the heading and description say what the page is.
+ */
 export function PageHero({
   title,
   description,
+  image,
   children,
 }: {
   title: string
   description: string
+  image?: PageHeroImage
   children?: ReactNode
 }) {
   return (
-    <section className="bg-page-hero-gradient relative isolate overflow-hidden text-canopy-foreground">
+    <section
+      data-page-hero
+      data-has-image={image ? 'true' : undefined}
+      className={cn(
+        'relative isolate overflow-hidden text-canopy-foreground',
+        image ? 'bg-canopy' : 'bg-page-hero-gradient',
+      )}
+    >
+      {image && (
+        <>
+          <Image
+            src={image.src}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            style={{ objectPosition: image.position }}
+            className="-z-20 object-cover"
+          />
+          <div
+            aria-hidden
+            className="bg-page-hero-overlay absolute inset-0 -z-10"
+          />
+        </>
+      )}
       {/* A soft wash of the secondary colour ties the banner to the CTAs. */}
       <div
         aria-hidden

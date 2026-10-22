@@ -11,7 +11,13 @@ import {
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Suspense } from 'react'
-import { Reveal, Stagger, StaggerItem } from '@/components/animations'
+import {
+  Reveal,
+  Stagger,
+  StaggerItem,
+  StaggerList,
+  StaggerListItem,
+} from '@/components/animations'
 import { CopyButton } from '@/components/copy-button'
 import { EnquiryForm } from '@/components/enquiry-form'
 import { OfficeMap } from '@/components/office-map'
@@ -50,10 +56,10 @@ function ContactRow({
   children: ReactNode
 }) {
   return (
-    <li className="flex items-center gap-4 py-4">
+    <StaggerListItem className="flex items-center gap-4 py-4">
       <span
         aria-hidden
-        className="flex size-12 shrink-0 items-center justify-center rounded-full bg-accent text-primary"
+        className="flex size-12 shrink-0 items-center justify-center rounded-full bg-secondary-soft text-secondary"
       >
         <Icon className="size-5" />
       </span>
@@ -63,7 +69,7 @@ function ContactRow({
         </p>
         {children}
       </div>
-    </li>
+    </StaggerListItem>
   )
 }
 
@@ -80,20 +86,22 @@ export default function ContactPage() {
         className="scroll-mt-header pt-[calc(var(--header-h)+3rem)] pb-(--section-y)"
       >
         <div className="page-container grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
-          <Reveal>
-            <p className="text-sm font-medium uppercase tracking-[0.14em] text-muted-foreground">
-              Contact {COMPANY_INFO.shortName}
-            </p>
-            <h1 id="contact-title" className="mt-5 text-display text-canopy">
-              Let’s build the future together
-            </h1>
-            <p className="mt-6 max-w-xl text-lead text-muted-foreground">
-              Ready to transform your agricultural operations with sustainable
-              solutions? Let’s discuss how we can work together to create
-              lasting impact.
-            </p>
+          <div>
+            <Reveal>
+              <p className="text-sm font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                Contact {COMPANY_INFO.shortName}
+              </p>
+              <h1 id="contact-title" className="mt-5 text-display text-canopy">
+                Let’s build the future together
+              </h1>
+              <p className="mt-6 max-w-xl text-lead text-muted-foreground">
+                Ready to transform your agricultural operations with sustainable
+                solutions? Let’s discuss how we can work together to create
+                lasting impact.
+              </p>
+            </Reveal>
 
-            <ul className="mt-10 divide-y divide-border border-y border-border">
+            <StaggerList className="mt-10 divide-y divide-border border-y border-border">
               <ContactRow icon={Mail} label="Email">
                 <div className="flex items-center gap-1">
                   <a
@@ -129,8 +137,8 @@ export default function ContactPage() {
               <ContactRow icon={MapPin} label="Office">
                 <p className="font-medium">{COMPANY_INFO.address}</p>
               </ContactRow>
-            </ul>
-          </Reveal>
+            </StaggerList>
+          </div>
 
           <Reveal
             delay={0.1}
@@ -174,7 +182,7 @@ export default function ContactPage() {
               {whyContactUs.map((reason) => (
                 <StaggerItem key={reason} className="flex gap-3">
                   <CheckCircle2
-                    className="mt-0.5 size-6 shrink-0 text-primary"
+                    className="mt-0.5 size-6 shrink-0 text-secondary"
                     aria-hidden
                   />
                   <p className="leading-relaxed text-muted-foreground">

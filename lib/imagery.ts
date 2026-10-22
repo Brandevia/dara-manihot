@@ -68,13 +68,32 @@ export const PHOTO_SLOTS = [
     src: '/images/hero/image6.png',
   },
   {
-  id: 'about-field',
+    id: 'about-field',
     page: 'about',
     category: 'people',
     brief: 'Leadership: a portrait of the founder plus one group photo.',
     alt: 'A farmer checking her crops on a tablet beside solar panels, with a green manufacturing plant behind her',
     src: '/images/hero/image4.png',
     position: '25% 60%',
+  },
+  {
+    id: 'about-vision',
+    page: 'about',
+    category: 'field',
+    brief: 'Our vision: farmland powered by clean energy, wide and bright.',
+    alt: 'Rows of solar panels across a green field under a bright sky',
+    src: '/images/hero/image3.png',
+    position: '50% 50%',
+  },
+  {
+    id: 'about-mission',
+    page: 'about',
+    category: 'people',
+    brief:
+      'Our mission: farm workers and community members at work in the field.',
+    alt: 'A tractor working crop rows between solar panels, with a green processing plant and a river behind',
+    src: '/images/hero/image5.png',
+    position: '55% 50%',
   },
   {
     id: 'services-agriculture',

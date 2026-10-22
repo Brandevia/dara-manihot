@@ -11,10 +11,8 @@ export const STAGGER_GAP = 0.08
 /** How long a headline figure takes to count up to its real value. */
 export const COUNT_DURATION_MS = 1600
 /**
- * Scroll-linked fade (`ScrollFade`): progress runs from 0 as the content's top
- * edge enters the bottom of the screen to 1 when its centre reaches 65% of the
- * way down. The footer always follows, so the page can always scroll far
- * enough to finish the fade.
+ * Closing call-to-action: the photo fades in first (`CTA_IMAGE_DURATION`), and
+ * the words start to appear once it is mostly there (`CTA_CONTENT_DELAY`).
  */
-export const SCROLL_FADE_OFFSET = ['start end', 'center 65%'] as const
-export const SCROLL_FADE_RISE = 36
+export const CTA_IMAGE_DURATION = 0.9
+export const CTA_CONTENT_DELAY = 0.6

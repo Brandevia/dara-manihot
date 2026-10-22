@@ -12,7 +12,7 @@ import { CtaBand } from '@/components/sections/cta-band'
 import { PageHero } from '@/components/sections/page-hero'
 import { SectionHeading } from '@/components/sections/section-heading'
 import { Button } from '@/components/ui/button'
-import { COMPANY_INFO } from '@/lib/constants'
+import { COMPANY_INFO, PAGE_HERO_IMAGES } from '@/lib/constants'
 import { getPillarServices, PILLARS, SERVICES } from '@/lib/services'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -48,7 +48,11 @@ export default async function ServicePage({ params }: Props) {
 
   return (
     <>
-      <PageHero title={service.title} description={service.description}>
+      <PageHero
+        title={service.title}
+        description={service.description}
+        image={PAGE_HERO_IMAGES.pillars[service.pillar]}
+      >
         <div className="flex flex-wrap items-center gap-3">
           <Button asChild variant="cta" size="lg">
             <Link href={enquiry}>
@@ -84,7 +88,7 @@ export default async function ServicePage({ params }: Props) {
               >
                 <CheckCircle2
                   aria-hidden
-                  className="mt-0.5 size-5 shrink-0 text-primary"
+                  className="mt-0.5 size-5 shrink-0 text-secondary"
                 />
                 <p className="leading-relaxed">{detail}</p>
               </StaggerItem>
@@ -117,7 +121,7 @@ export default async function ServicePage({ params }: Props) {
                     </span>
                     <ArrowUpRight
                       aria-hidden
-                      className="mt-1 size-5 shrink-0 text-primary transition-transform duration-200 group-hover/more:translate-x-0.5 group-hover/more:-translate-y-0.5"
+                      className="mt-1 size-5 shrink-0 text-secondary transition-transform duration-200 group-hover/more:translate-x-0.5 group-hover/more:-translate-y-0.5"
                     />
                   </Link>
                 </StaggerListItem>

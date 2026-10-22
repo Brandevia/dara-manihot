@@ -6,6 +6,7 @@ import {
   HERO_SLIDES,
   LEGAL_LINKS,
   NAVIGATION_LINKS,
+  PAGE_HERO_IMAGES,
 } from '@/lib/constants'
 import { PRIVACY_SECTIONS, TERMS_SECTIONS } from '@/lib/legal'
 import { SERVICES } from '@/lib/services'
@@ -85,6 +86,25 @@ describe('hero slides', () => {
       expect(slide.caption.length).toBeGreaterThan(3)
     },
   )
+})
+
+describe('page hero images', () => {
+  const entries = [
+    ...Object.entries(PAGE_HERO_IMAGES).filter(([k]) => k !== 'pillars'),
+    ...Object.entries(PAGE_HERO_IMAGES.pillars),
+  ] as [string, { src: string }][]
+
+  it.each(entries)('%s points at an existing file', (_name, image) => {
+    expect(
+      fs.existsSync(path.join(ROOT, 'public', image.src)),
+      `${image.src} missing`,
+    ).toBe(true)
+  })
+
+  it('covers every pillar a service can belong to', () => {
+    for (const s of SERVICES)
+      expect(PAGE_HERO_IMAGES.pillars[s.pillar]).toBeTruthy()
+  })
 })
 
 describe('legal content', () => {
