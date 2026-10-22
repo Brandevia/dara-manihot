@@ -31,7 +31,7 @@ pnpm dev            # http://localhost:3000
 
 ## Environment
 
-The enquiry form uses ZeptoMail API for both company notifications and visitor acknowledgements. Set `MAIL_DRIVER=zeptomail`, `ZEPTOMAIL_TOKEN`, and a complete authorised `ZEPTOMAIL_FROM_EMAIL`; `ENQUIRY_TO` defaults to `info@daramanihot.com.ng`. Legacy SMTP remains available with `MAIL_DRIVER=smtp`. Copy `.env.example` to
+The enquiry form uses ZeptoMail API for both company notifications and visitor acknowledgements. Set `MAIL_DRIVER=zeptomail`, `ZEPTOMAIL_TOKEN`, and a complete authorised `ZEPTOMAIL_FROM_EMAIL`; `ENQUIRY_TO` defaults to `daramanihot@gmail.com,info@daramanihot.com`. Legacy SMTP remains available with `MAIL_DRIVER=smtp`. Copy `.env.example` to
 `.env.local` and fill it in; production sets the same variables in the host's
 environment. Without them the form shows a friendly error and nothing is lost
 silently. Full guide: [`docs/EMAIL-SETUP.md`](docs/EMAIL-SETUP.md).
@@ -158,3 +158,6 @@ text-secondary` for a chip, `text-secondary` for a bare icon. Inner page banners
 with a photo get the translucent green `bg-page-hero-overlay`. Fields on the dark
 enquiry card (`surface-canopy`) are a translucent lighter green with a light
 outline.
+
+
+Organisation notifications now address both `daramanihot@gmail.com` and `info@daramanihot.com` in one email. `ENQUIRY_TO` accepts a comma-separated list, trims whitespace, rejects malformed/empty entries and removes duplicates. The visitor receives a separate acknowledgement, with both organisation inboxes as Reply-To. The sender and public domain/email content are unchanged. Update the Vercel `ENQUIRY_TO` setting to `daramanihot@gmail.com,info@daramanihot.com` and redeploy; an old explicit environment value overrides code defaults. No live emails are sent by tests.

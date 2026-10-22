@@ -1,6 +1,5 @@
 import type { Transporter } from 'nodemailer'
 import { describe, expect, it, vi } from 'vitest'
-import { COMPANY_INFO } from '@/lib/constants'
 import {
   type MailConfig,
   MailNotConfiguredError,
@@ -46,7 +45,7 @@ describe('readMailConfig', () => {
       SMTP_USER: 'u@x.com',
       SMTP_PASS: 'p',
     })
-    expect(c).toMatchObject({ port: 465, secure: true, to: COMPANY_INFO.email })
+    expect(c).toMatchObject({ port: 465, secure: true, to: ['daramanihot@gmail.com', 'info@daramanihot.com'] })
     expect(c?.from).toContain('u@x.com')
   })
 
@@ -146,4 +145,13 @@ describe('sendEnquiryEmails', () => {
     })
     expect(result.acknowledged).toBe(true)
   })
+})
+
+it('passes both organisation recipients and acknowledgement Reply-To to SMTP', async () => {
+  const sendMail = vi.fn().mockResolvedValue({})
+  const to = ['daramanihot@gmail.com', 'info@daramanihot.com']
+  await sendEnquiryEmails(enquiry, ctx, { config: { ...config, to }, transport: fakeTransport(sendMail) })
+  expect(sendMail.mock.calls[0][0].to).toEqual(to)
+  expect(sendMail.mock.calls[1][0].to).toEqual({ name: enquiry.name, address: enquiry.email })
+  expect(sendMail.mock.calls[1][0].replyTo).toEqual(to)
 })

@@ -65,3 +65,30 @@ describe('ZeptoMail enquiry delivery', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 })
+
+describe('organisation recipient routing', () => {
+  const recipients = ['daramanihot@gmail.com', 'info@daramanihot.com']
+  it('uses both organisation inboxes by default', () => {
+    expect(readMailConfig({ ...env, ENQUIRY_TO: undefined })?.to).toEqual(recipients)
+  })
+  it('normalises the configured list and removes duplicates', () => {
+    expect(readMailConfig({ ...env, ENQUIRY_TO: ' daramanihot@gmail.com , info@daramanihot.com, DARAMANIHOT@gmail.com ' })?.to).toEqual(recipients)
+  })
+  it.each(['one@example.com,', 'one@example.com,invalid', ',one@example.com', 'one@example.com;two@example.com'])('rejects malformed recipient lists', (ENQUIRY_TO) => {
+    expect(readMailConfig({ ...env, ENQUIRY_TO })).toBeNull()
+  })
+  it('addresses both organisations and keeps visitor acknowledgement separate', async () => {
+    await sendEnquiryEmails(enquiry, ctx, { config: readMailConfig({ ...env, ENQUIRY_TO: recipients.join(',') }) })
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+    const [company, visitor] = fetchMock.mock.calls.map((call) => JSON.parse(call[1].body))
+    expect(company.to).toEqual(recipients.map((address) => ({ email_address: { address } })))
+    expect(company.reply_to).toEqual([{ name: enquiry.name, address: enquiry.email }])
+    expect(visitor.to).toEqual([{ email_address: { name: enquiry.name, address: enquiry.email } }])
+    expect(visitor.reply_to).toEqual(recipients.map((address) => ({ address })))
+  })
+  it('does not acknowledge if any provider result is rejected', async () => {
+    fetchMock.mockResolvedValue(Response.json({ data: [{ code: 'EM_104' }, { code: 'ERROR' }] }))
+    await expect(sendEnquiryEmails(enquiry, ctx, { config: readMailConfig({ ...env, ENQUIRY_TO: recipients.join(',') }) })).rejects.toThrow()
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+})

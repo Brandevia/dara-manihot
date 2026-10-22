@@ -205,6 +205,12 @@ describe('launch check', () => {
     expect(ids(findings, 'BLOCKER')).toEqual(['zeptomail', 'zeptomail'])
   })
 
+  it('accepts both organisation recipients for ZeptoMail launch checks', () => {
+    const env = { MAIL_DRIVER: 'zeptomail', ZEPTOMAIL_TOKEN: 'test', ZEPTOMAIL_FROM_EMAIL: 'noreply@daramanihot.com.ng', ENQUIRY_TO: 'daramanihot@gmail.com, info@daramanihot.com' }
+    expect(ids(runChecks({ ...base, env }), 'BLOCKER')).toEqual([])
+    expect(ids(runChecks({ ...base, env: { ...env, ENQUIRY_TO: 'one@example.com,' } }), 'BLOCKER')).toEqual(['zeptomail'])
+  })
+
   it('blocks on missing SMTP settings', () => {
     expect(ids(runChecks({ ...base, env: {} }), 'BLOCKER')).toEqual([
       'smtp',
