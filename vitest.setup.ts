@@ -19,10 +19,12 @@ vi.mock('next/image', async () => {
 })
 
 // jsdom has no matchMedia; tests flip `window.__reduceMotion` to simulate the
-// OS "reduce motion" setting.
+// OS "reduce motion" setting, and `window.__finePointer` to simulate a desktop
+// mouse (the default is a touch device, which keeps the native <select>).
 declare global {
   interface Window {
     __reduceMotion?: boolean
+    __finePointer?: boolean
   }
 }
 
@@ -31,7 +33,9 @@ Object.defineProperty(window, 'matchMedia', {
   value: (query: string) => ({
     matches: query.includes('prefers-reduced-motion')
       ? Boolean(window.__reduceMotion)
-      : false,
+      : query.includes('pointer: fine')
+        ? Boolean(window.__finePointer)
+        : false,
     media: query,
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),

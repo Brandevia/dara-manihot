@@ -1,4 +1,5 @@
 import { expect, type Page, test } from '@playwright/test'
+import { chooseService, selectedService } from './helpers'
 
 /**
  * Scope 4.5, 4.6 and 4.2 in a real browser, on both the desktop and mobile
@@ -28,7 +29,7 @@ async function fillForm(page: Page) {
   await field(page, 'name').fill('Ada Okafor')
   await field(page, 'email').fill('ada@example.com')
   await field(page, 'phone').fill('+234 802 340 0557')
-  await field(page, 'service').selectOption('solar-renewables')
+  await chooseService(page, 'solar-renewables')
   await page
     .getByLabel(/how can we help/i)
     .fill('We would like a solar quote for our cassava mill.')
@@ -117,7 +118,7 @@ test.describe('enquiry form', () => {
 
   test('a deep link preselects the service', async ({ page }) => {
     await page.goto('/contact?service=green-hydrogen#enquiry')
-    await expect(field(page, 'service')).toHaveValue('green-hydrogen')
+    expect(await selectedService(page)).toBe('green-hydrogen')
   })
 
   test('"Enquire about this service" on /services lands on the form with that service chosen', async ({
@@ -130,7 +131,7 @@ test.describe('enquiry form', () => {
       .getByRole('link', { name: /enquire about this service/i })
       .click()
     await expect(page).toHaveURL(/\/contact\?service=solar-renewables#enquiry/)
-    await expect(field(page, 'service')).toHaveValue('solar-renewables')
+    expect(await selectedService(page)).toBe('solar-renewables')
   })
 
   test('the honeypot is invisible and unreachable by keyboard', async ({
@@ -304,5 +305,146 @@ test.describe('images (scope 4.3)', () => {
       )
       expect(broken, path).toEqual([])
     }
+  })
+})
+
+test.describe('service dropdown', () => {
+  test('desktop: a styled listbox, grouped, that opens over the card without being clipped', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(isMobile, 'phones keep the native picker')
+    await page.goto('/contact#enquiry')
+    await page.waitForLoadState('networkidle')
+    const control = field(page, 'service')
+    await expect(control).toHaveAttribute('role', 'combobox')
+
+    await control.click()
+    const list = page.getByRole('listbox')
+    await expect(list).toBeVisible()
+    await expect(control).toHaveAttribute('aria-expanded', 'true')
+    for (const group of [
+      'General',
+      'Sustainable Agriculture',
+      'Sustainable Energy',
+    ])
+      await expect(list.getByText(group, { exact: true })).toBeVisible()
+
+    // Wait out the unfold, then check what is really on top at each row's
+    // centre: if the card clipped the list, the hit would be something else.
+    await page.waitForTimeout(500)
+    const rows = list.getByRole('option')
+    const count = await rows.count()
+    expect(count).toBeGreaterThanOrEqual(7)
+    const first = await rows.first().boundingBox()
+    expect(first).not.toBeNull()
+    const onTop = await rows.first().evaluate((el) => {
+      const r = el.getBoundingClientRect()
+      const hit = document.elementFromPoint(
+        r.x + r.width / 2,
+        r.y + r.height / 2,
+      )
+      return el.contains(hit)
+    })
+    expect(onTop).toBe(true)
+  })
+
+  test('desktop: mouse, keyboard, Escape and outside click', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(isMobile, 'phones keep the native picker')
+    await page.goto('/contact#enquiry')
+    await page.waitForLoadState('networkidle')
+    const control = field(page, 'service')
+
+    await control.click()
+    await page.getByRole('option', { name: /green hydrogen/i }).click()
+    await expect(page.getByRole('listbox')).toBeHidden()
+    await expect(control).toContainText(/green hydrogen/i)
+    await expect(control).toBeFocused()
+
+    await page.keyboard.press('ArrowDown')
+    await expect(page.getByRole('listbox')).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('listbox')).toBeHidden()
+    await expect(control).toContainText(/green hydrogen/i)
+
+    await control.click()
+    await page.getByRole('heading', { name: /send us an enquiry/i }).click()
+    await expect(page.getByRole('listbox')).toBeHidden()
+  })
+
+  test('desktop: choosing a service clears its error', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(isMobile, 'phones keep the native picker')
+    await page.goto('/contact')
+    await page.waitForLoadState('networkidle')
+    await page.getByRole('button', { name: /send enquiry/i }).click()
+    await expect(page.getByText(/please choose a service/i)).toBeVisible()
+    await chooseService(page, 'general')
+    await expect(page.getByText(/please choose a service/i)).toBeHidden()
+  })
+
+  test('phones: keep the native picker, which is easiest to use on a touch screen', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(!isMobile, 'desktop gets the styled listbox')
+    await page.goto('/contact#enquiry')
+    await page.waitForLoadState('networkidle')
+    await expect(field(page, 'service')).toHaveJSProperty('tagName', 'SELECT')
+    await expect(page.getByRole('listbox')).toHaveCount(0)
+  })
+})
+
+test.describe('home: who we are', () => {
+  test('tiles lift and cast a shadow on hover (mouse only)', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(isMobile, 'hover does not apply to touch')
+    await page.goto('/')
+    await page.waitForLoadState('networkidle')
+    const tile = page.locator('[data-tile]').first()
+    await tile.scrollIntoViewIfNeeded()
+    const before = await tile.evaluate((el) => getComputedStyle(el).boxShadow)
+    await tile.hover()
+    await expect
+      .poll(() => tile.evaluate((el) => getComputedStyle(el).boxShadow))
+      .not.toBe(before)
+    // Tailwind v4 lifts with the individual `translate` property.
+    await expect
+      .poll(() => tile.evaluate((el) => getComputedStyle(el).translate))
+      .not.toBe('none')
+    // ...and it must be inside the transition, or the lift would just snap.
+    expect(
+      await tile.evaluate((el) => getComputedStyle(el).transitionProperty),
+    ).toContain('translate')
+  })
+
+  test('the heading and statement are large and bold at every width', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    await page.waitForLoadState('networkidle')
+    const heading = page.getByRole('heading', { name: 'Who we are' })
+    const size = (loc: typeof heading) =>
+      loc.evaluate((el) => {
+        const s = getComputedStyle(el)
+        return {
+          px: Number.parseFloat(s.fontSize),
+          weight: Number(s.fontWeight),
+        }
+      })
+    const h = await size(heading)
+    expect(h.weight).toBeGreaterThanOrEqual(700)
+    expect(h.px).toBeGreaterThanOrEqual(24)
+    const statement = page.getByText(/leading Nigerian enterprise/)
+    const p = await size(statement)
+    expect(p.weight).toBeGreaterThanOrEqual(600)
+    expect(p.px).toBeGreaterThanOrEqual(22)
   })
 })

@@ -301,3 +301,66 @@ describe('text on a bare photograph (--text-on-photo-shadow)', () => {
     )
   })
 })
+
+describe('"Who we are" typography', () => {
+  it('defines the intro size as a fluid token with its own line height', () => {
+    expect(css).toMatch(/--text-intro:\s*clamp\(1\.375rem,[^;]*1\.875rem\);/)
+    expect(css).toMatch(/--text-intro--line-height:\s*1\.4;/)
+  })
+
+  it('keeps the label and the statement AA on mint, now that they are bold', () => {
+    expect(
+      contrast(tokenHex('secondary'), tokenHex('mint')),
+    ).toBeGreaterThanOrEqual(4.5)
+    expect(
+      contrast(tokenHex('muted-foreground'), tokenHex('mint')),
+    ).toBeGreaterThanOrEqual(4.5)
+  })
+})
+
+describe('dropdown panel (popover tokens)', () => {
+  // The open list sits inside the dark enquiry card but must stay light, so it
+  // reads the popover tokens, which surface-canopy deliberately leaves alone.
+  const block =
+    css.match(/@utility surface-canopy \{([\s\S]*?)\n\}\n/)?.[1] ?? ''
+
+  it('is not re-pointed by the dark surface', () => {
+    expect(block).not.toMatch(/--popover/)
+    expect(block).not.toMatch(/--accent/)
+    expect(block).not.toMatch(/--border:/)
+  })
+
+  it('has AA text for rows, headings and the highlighted row', () => {
+    expect(
+      contrast(tokenHex('popover-foreground'), tokenHex('popover')),
+    ).toBeGreaterThanOrEqual(4.5)
+    expect(
+      contrast(tokenHex('accent-foreground'), tokenHex('accent')),
+    ).toBeGreaterThanOrEqual(4.5)
+    // Group headings are the popover text at 70%.
+    const mix = (a: string, b: string, t: number) =>
+      '#' +
+      [1, 3, 5]
+        .map((i) =>
+          Math.round(
+            Number.parseInt(a.slice(i, i + 2), 16) * t +
+              Number.parseInt(b.slice(i, i + 2), 16) * (1 - t),
+          )
+            .toString(16)
+            .padStart(2, '0'),
+        )
+        .join('')
+    const heading = mix(
+      tokenHex('popover-foreground'),
+      tokenHex('popover'),
+      0.7,
+    )
+    expect(contrast(heading, tokenHex('popover'))).toBeGreaterThanOrEqual(4.5)
+  })
+
+  it('draws the tick in the CTA purple, visible on the highlighted row', () => {
+    expect(
+      contrast(tokenHex('secondary'), tokenHex('accent')),
+    ).toBeGreaterThanOrEqual(3)
+  })
+})
