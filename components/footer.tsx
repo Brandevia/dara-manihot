@@ -44,9 +44,11 @@ export function Footer() {
                   <Logo className="h-12" />
                 </span>
               </Link>
+
               <p className="max-w-xs text-sm leading-relaxed text-canopy-muted">
                 {COMPANY_INFO.description}
               </p>
+
               <ul className="flex gap-2">
                 {SOCIALS.map(({ label, href, Icon }) => (
                   <li key={label}>
@@ -104,6 +106,7 @@ export function Footer() {
                     {COMPANY_INFO.email}
                   </a>
                 </li>
+
                 {COMPANY_INFO.phones.map((phone) => (
                   <li key={phone.tel}>
                     <a href={`tel:${phone.tel}`} className={linkClass}>
@@ -111,6 +114,7 @@ export function Footer() {
                     </a>
                   </li>
                 ))}
+
                 <li>
                   <Link href="/contact#map" className={linkClass}>
                     {COMPANY_INFO.address}
@@ -121,9 +125,21 @@ export function Footer() {
           </div>
 
           <div className="mt-14 flex flex-col items-center justify-between gap-4 text-center text-sm text-canopy-muted sm:flex-row sm:text-left">
-            <p>
-              © {currentYear} {COMPANY_INFO.name}. All rights reserved.
-            </p>
+            <div className="flex flex-col items-center gap-2 sm:flex-row sm:flex-wrap sm:gap-x-5 sm:gap-y-2">
+              <p>
+                © {currentYear} {COMPANY_INFO.name}. All rights reserved.
+              </p>
+
+              <a
+                href="https://brandeviaafrica.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={linkClass}
+              >
+                Powered by Brandevia Africa Limited
+              </a>
+            </div>
+
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2">
               {LEGAL_LINKS.map((link) => (
                 <li key={link.href}>
@@ -132,6 +148,7 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+
               <li>
                 <CookieSettingsButton className={linkClass} />
               </li>
