@@ -14,6 +14,7 @@ vi.mock('next/navigation', () => ({
 }))
 
 import { EnquiryForm } from '@/components/enquiry-form'
+import { SERVICE_OPTIONS, serviceLabel } from '@/lib/enquiry'
 import { HONEYPOT_FIELD } from '@/lib/spam'
 
 const fetchMock = vi.fn()
@@ -267,5 +268,116 @@ describe('EnquiryForm: submission', () => {
     expect(
       (screen.getByLabelText(/full name/i) as HTMLInputElement).value,
     ).toBe('')
+  })
+})
+
+describe('EnquiryForm: service dropdown with a mouse', () => {
+  beforeEach(() => {
+    window.__finePointer = true
+  })
+  afterEach(() => {
+    window.__finePointer = false
+  })
+
+  const field = () => screen.getByLabelText(/service of interest/i)
+  const choose = (name: RegExp) => {
+    fireEvent.click(field())
+    fireEvent.click(screen.getByRole('option', { name }))
+  }
+
+  it('is a styled listbox button with every service under its pillar', () => {
+    render(<EnquiryForm />)
+    expect(field().tagName).toBe('BUTTON')
+    expect(field()).toHaveAttribute('id', 'enquiry-service')
+    fireEvent.click(field())
+    const headings = [
+      'General',
+      'Sustainable Agriculture',
+      'Sustainable Energy',
+    ]
+    for (const h of headings) expect(screen.getByText(h)).toBeTruthy()
+    expect(screen.getAllByRole('option')).toHaveLength(SERVICE_OPTIONS.length)
+  })
+
+  it('preselects the service from ?service=', () => {
+    search = 'service=green-hydrogen'
+    render(<EnquiryForm />)
+    expect(field()).toHaveTextContent(serviceLabel('green-hydrogen'))
+  })
+
+  it('ignores an unknown ?service= and shows the placeholder', () => {
+    search = 'service=bogus'
+    render(<EnquiryForm />)
+    expect(field()).toHaveTextContent('Select a service')
+  })
+
+  it('shows the error, marks the field invalid and moves focus to it', () => {
+    render(<EnquiryForm />)
+    submit()
+    expect(screen.getByText(/please choose a service/i)).toBeTruthy()
+    expect(field()).toHaveAttribute('aria-invalid', 'true')
+    expect(field().getAttribute('aria-describedby')).toContain(
+      'enquiry-service-error',
+    )
+    // Name is the first invalid field, so fix it and the service gets focus.
+    fill(/full name/i, 'Ada Okafor')
+    fill(/email address/i, 'ada@example.com')
+    fill(/how can we help/i, 'We would like a solar quote for our mill.')
+    submit()
+    expect(document.activeElement).toBe(field())
+  })
+
+  it('clears the error as soon as a service is chosen', () => {
+    render(<EnquiryForm />)
+    submit()
+    choose(/solar/i)
+    expect(screen.queryByText(/please choose a service/i)).toBeNull()
+    expect(field()).toHaveAttribute('aria-invalid', 'false')
+  })
+
+  it('submits the chosen service', async () => {
+    reply(200, { ok: true, reference: 'DM-1', acknowledged: true })
+    render(<EnquiryForm />)
+    fill(/full name/i, 'Ada Okafor')
+    fill(/email address/i, 'ada@example.com')
+    fill(/how can we help/i, 'We would like a solar quote for our mill.')
+    choose(new RegExp(serviceLabel('solar-renewables'), 'i'))
+    submit()
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledOnce())
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).service).toBe(
+      'solar-renewables',
+    )
+  })
+
+  it('opening and choosing never submits the form on its own', () => {
+    render(<EnquiryForm />)
+    choose(/general enquiry/i)
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('can be filled in with the keyboard alone', async () => {
+    reply(200, { ok: true, reference: 'DM-1', acknowledged: true })
+    render(<EnquiryForm />)
+    fill(/full name/i, 'Ada Okafor')
+    fill(/email address/i, 'ada@example.com')
+    fill(/how can we help/i, 'We would like a solar quote for our mill.')
+    fireEvent.keyDown(field(), { key: 'ArrowDown' })
+    fireEvent.keyDown(field(), { key: 'Enter' }) // first row: General enquiry
+    submit()
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledOnce())
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).service).toBe('general')
+  })
+
+  it('"Send another enquiry" resets the dropdown to the placeholder', async () => {
+    reply(200, { ok: true, reference: 'DM-1', acknowledged: true })
+    render(<EnquiryForm />)
+    fill(/full name/i, 'Ada Okafor')
+    fill(/email address/i, 'ada@example.com')
+    fill(/how can we help/i, 'We would like a solar quote for our mill.')
+    choose(/general enquiry/i)
+    submit()
+    await screen.findByTestId('enquiry-success')
+    fireEvent.click(screen.getByRole('button', { name: /send another/i }))
+    expect(field()).toHaveTextContent('Select a service')
   })
 })

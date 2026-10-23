@@ -126,6 +126,39 @@ describe('who we are (wireframe image 6)', () => {
     expect(spans).toEqual(['4', '4', '4', '8', '4'])
   })
 
+  it('sets the label and the company statement big and bold, on mobile and desktop', () => {
+    const { container } = render(<WhoWeAre />)
+    const label = screen.getByRole('heading', { name: 'Who we are' })
+    // Bold at every width, and larger again from `sm` up.
+    expect(label).toHaveClass('font-bold', 'text-2xl', 'sm:text-3xl')
+    expect(label).not.toHaveClass('font-normal', 'text-lg')
+    // The statement uses the fluid `intro` size (22px on phones up to 30px)
+    // in semibold, instead of the old plain 18px.
+    const statement = container.querySelector(
+      'section > div > div p',
+    ) as HTMLElement
+    expect(statement.textContent).toMatch(/leading Nigerian enterprise/)
+    expect(statement).toHaveClass('text-intro', 'font-semibold')
+    expect(statement).not.toHaveClass('text-lg', 'leading-relaxed')
+  })
+
+  it('lifts each tile and casts a shadow on hover, without moving anyone who prefers reduced motion', () => {
+    const { container } = render(<WhoWeAre />)
+    const tiles = [...container.querySelectorAll('[data-tile]')]
+    expect(tiles).toHaveLength(5)
+    for (const tile of tiles) {
+      expect(tile).toHaveClass(
+        'hover:shadow-float',
+        'hover:-translate-y-1',
+        'transition-[box-shadow,translate]',
+        'motion-reduce:transition-none',
+        'motion-reduce:hover:translate-y-0',
+      )
+      // The shadow is the site's own token, never a one-off value.
+      expect(tile.className).not.toMatch(/shadow-\[/)
+    }
+  })
+
   it('is on the landing page, replacing the separate "Why choose" block', () => {
     render(<Home />)
     expect(

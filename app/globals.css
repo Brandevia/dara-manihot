@@ -292,6 +292,9 @@
   /* Large centred pull-statement (the vision). */
   --text-statement: clamp(1.625rem, 1.05rem + 2.1vw, 2.75rem);
   --text-statement--line-height: 1.28;
+  /* The "Who we are" company statement: large, set in semibold. */
+  --text-intro: clamp(1.375rem, 1.05rem + 1vw, 1.875rem);
+  --text-intro--line-height: 1.4;
 }
 
 /* Animation tokens + keyframes. Kept outside `inline` so they stay var-based. */

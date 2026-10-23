@@ -1,3 +1,21 @@
+# Enquiry dropdown, "Who we are" type and tile hover
+
+## To-do (all verified)
+
+- [x] **Service dropdown.** On desktop the "Service of interest" field is now a styled listbox (`DropdownSelect`, `components/ui/dropdown-select.tsx`) instead of the browser's own list, which could not be themed and clashed with the dark enquiry card. It unfolds from the field, is grouped by pillar, ticks the chosen row, and opens on the side with more room, never taller than that room. Colours are the popover and accent tokens, so it stays light on the dark card.
+- [x] **Phones keep the native picker.** The scope asks for a form that is easy to complete on mobile (4.4), and a phone's own picker is easier than any custom list. `DropdownSelect` renders the native `<select>` unless the device has a hovering, precise pointer (`hooks/use-fine-pointer.ts`). Both report the same value and both carry `id="enquiry-service"`, so labels, error focus and the form's state work the same either way.
+- [x] **Keyboard and screen readers.** WAI-ARIA select-only combobox: Arrow keys, Home, End, Enter, Space, Escape, Alt+ArrowUp and type-ahead. Focus stays on the button and the highlighted row is announced through `aria-activedescendant`. Tab closes the list without changing the value. Reduced motion gets a plain fade.
+- [x] **"Who we are" type.** The label is now bold (24px, 30px from `sm`) and the company statement uses a new fluid `text-intro` token (22px on phones up to 30px) in semibold. Contrast on mint is still AA (the purple label is 5.6:1).
+- [x] **Tile hover.** Each of the five tiles lifts 4px and casts the site's `shadow-float` on hover. Hover-capable devices only; reduced motion gets no movement. Tailwind v4 lifts with the CSS `translate` property, so that is what the transition names (naming `transform` would make the lift snap).
+
+## Notes for review
+
+- **Behaviour change:** on desktop, choosing a service is a click or key press on a custom list. The first empty "Select a service" row is no longer a choosable option there (the field is required, so there is nothing to clear to). The native picker on phones still has it.
+- **Tests:** `tests/dropdown-select.test.tsx` (new), more cases in `tests/enquiry-form.test.tsx`, `tests/site-changes.test.tsx` and `tests/design-tokens.test.ts`. `e2e/helpers.ts` gained `chooseService` and `selectedService`, which work with either control; use them instead of `selectOption` for the service field. `vitest.setup.ts` can now simulate a mouse with `window.__finePointer = true` (the default is a touch device).
+- The dropdown's unfold is inspired by beUI's Select. It is a small purpose built component rather than a copy, because beUI's depends on helper hooks this site does not have and on a search box a 7 option list does not need.
+
+---
+
 # Heroes and cookie consent
 
 ## To-do (all verified)

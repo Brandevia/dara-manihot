@@ -21,3 +21,26 @@ export async function recordedSizes(page: Page): Promise<[number, number][]> {
     () => (window as Window & { __sizes?: [number, number][] }).__sizes ?? [],
   )
 }
+
+/**
+ * Picks a service in the enquiry form, whichever control the browser got:
+ * the phone's native <select> on touch devices, or the styled listbox with a
+ * mouse. (A visitor does the same: tap the field, then tap the option.)
+ */
+export async function chooseService(page: Page, value: string) {
+  const control = page.locator('#enquiry-service')
+  if ((await control.evaluate((el) => el.tagName)) === 'SELECT') {
+    await control.selectOption(value)
+    return
+  }
+  await control.click()
+  await page.locator(`[role="option"][data-value="${value}"]`).click()
+}
+
+/** The chosen service's value, read from whichever control is on the page. */
+export async function selectedService(page: Page): Promise<string> {
+  return page.locator('#enquiry-service').evaluate((el) => {
+    if (el instanceof HTMLSelectElement) return el.value
+    return el.getAttribute('data-value') ?? ''
+  })
+}

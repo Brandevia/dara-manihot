@@ -49,6 +49,7 @@ const REASONS: readonly Reason[] = [
  * Who we are, and why to choose us: one mint section with the company
  * statement and five reasons on white tiles. The tiles are part of the page;
  * only their contents fade in as you scroll, so they arrive onto the card.
+ * Each tile lifts and casts a soft shadow on hover (hover-capable devices only).
  */
 export function WhoWeAre() {
   return (
@@ -57,13 +58,13 @@ export function WhoWeAre() {
         <Reveal>
           <h2
             id="who-we-are-title"
-            className="font-sans text-lg font-normal text-secondary"
+            className="font-sans text-2xl font-bold text-secondary sm:text-3xl"
           >
             Who we are
           </h2>
         </Reveal>
         <Reveal delay={0.1}>
-          <p className="mt-10 max-w-4xl text-lg leading-relaxed text-muted-foreground sm:mt-14">
+          <p className="mt-8 max-w-4xl text-intro font-semibold text-muted-foreground sm:mt-12">
             Dara-Manihot Industries &amp; Farms is a leading Nigerian enterprise
             redefining sustainable agriculture and industry through advanced
             clean technologies. We combine decades of agricultural expertise
@@ -78,7 +79,10 @@ export function WhoWeAre() {
             <div
               key={text}
               data-tile
-              className={cn('flex min-h-64 flex-col bg-background p-6', span)}
+              className={cn(
+                'flex min-h-64 flex-col bg-background p-6 transition-[box-shadow,translate] duration-300 ease-out-expo hover:-translate-y-1 hover:shadow-float motion-reduce:transition-none motion-reduce:hover:translate-y-0',
+                span,
+              )}
             >
               <StaggerItem className="flex flex-1 flex-col justify-between gap-8">
                 <Icon

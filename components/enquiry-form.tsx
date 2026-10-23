@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { type FormEvent, useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { DropdownSelect } from '@/components/ui/dropdown-select'
 import { Input } from '@/components/ui/input'
-import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { COMPANY_INFO } from '@/lib/constants'
 import {
@@ -29,7 +29,6 @@ const FIELD_ORDER: EnquiryField[] = [
   'service',
   'message',
 ]
-const groups = [...new Set(SERVICE_OPTIONS.map((o) => o.group))]
 
 /** Label, control and message, wired together for screen readers. */
 function Field({
@@ -323,23 +322,15 @@ export function EnquiryForm() {
           error={errors.service}
         >
           {(a) => (
-            <Select
+            <DropdownSelect
               {...a}
               name="service"
+              placeholder="Select a service"
+              align="end"
+              options={SERVICE_OPTIONS}
               value={values.service}
-              onChange={(e) => setField('service', e.target.value)}
-            >
-              <option value="">Select a service</option>
-              {groups.map((group) => (
-                <optgroup key={group} label={group}>
-                  {SERVICE_OPTIONS.filter((o) => o.group === group).map((o) => (
-                    <option key={o.value} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </Select>
+              onValueChange={(v) => setField('service', v)}
+            />
           )}
         </Field>
       </div>
