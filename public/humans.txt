@@ -10,7 +10,7 @@
 
 /* SITE */
   Built for: Dara-Manihot Industries & Farms
-  Last update: 2026/10/11
+  Last update: 2026/10/28
   Language: English
   Doctype: HTML5
   Standards: HTML5, CSS3, WAI-ARIA, WCAG 2.2 (AA target)

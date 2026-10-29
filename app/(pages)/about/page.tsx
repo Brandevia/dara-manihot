@@ -11,6 +11,7 @@ import {
 import { CountUp } from '@/components/count-up'
 import { PhotoSlot } from '@/components/photo-slot'
 import { CtaBand } from '@/components/sections/cta-band'
+import { LeaderProfile } from '@/components/sections/leader-profile'
 import { PageHero } from '@/components/sections/page-hero'
 import { SectionHeading } from '@/components/sections/section-heading'
 import { VisionMission } from '@/components/sections/vision-mission'
@@ -124,6 +125,8 @@ export default function AboutPage() {
           </Reveal>
         </div>
       </section>
+
+      <LeaderProfile />
 
       {/* Leadership and field photography */}
       <section aria-label="Our people" className="pb-[var(--section-y)]">

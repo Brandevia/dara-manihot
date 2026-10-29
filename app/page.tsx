@@ -14,6 +14,7 @@ import { PillarsSection } from '@/components/sections/pillars'
 import { SdgSection } from '@/components/sections/sdg-section'
 import { SectionHeading } from '@/components/sections/section-heading'
 import { StatsBand } from '@/components/sections/stats-band'
+import { SummitSpotlight } from '@/components/sections/summit-spotlight'
 import { VisionStatement } from '@/components/sections/vision-statement'
 import { WhoWeAre } from '@/components/sections/who-we-are'
 import { Button } from '@/components/ui/button'
@@ -109,6 +110,8 @@ export default function Home() {
           </Stagger>
         </div>
       </section>
+
+      <SummitSpotlight />
 
       <SdgSection />
 
