@@ -64,8 +64,9 @@ export const PHOTO_SLOTS = [
     page: 'about',
     category: 'people',
     brief: 'Leadership: a portrait of the founder plus one group photo.',
-    alt: 'The Dara-Manihot leadership team',
-    src: '/images/hero/image6.png',
+    alt: 'Speakers and guests standing in a line on the stage at the ABUAD International Hydrogen Summit 2.0',
+    src: '/images/summit/stage-group.jpg',
+    position: '50% 55%',
   },
   {
     id: 'about-field',

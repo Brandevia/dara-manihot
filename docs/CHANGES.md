@@ -1,3 +1,28 @@
+# Summit talk, leadership profile, gallery and social links
+
+## To-do (all verified)
+
+- [x] **Social links.** `SOCIAL_LINKS` is now LinkedIn (`/company/daracare-manihot-industries-farms/`) and Facebook (`/dmanihot`), both confirmed by the client. X (Twitter) is removed from the constants and the footer: the company has no account. `pnpm launch:check` no longer calls the links "unverified guesses"; it only warns if one is not a full https address.
+- [x] **Leadership profile (About, `#leadership`).** `LeaderProfile`: the CEO's portrait in a mint frame, name, title, a short account of the summit talk, and a link to the write-up. Content comes from `LEADER` in `lib/summit.ts`.
+- [x] **Summit write-up (Projects, `#summit`).** `SummitSection`: talk title, date and venue; four counted headline results; system and financing facts; the three-phase model as sliding tabs (`SummitPathway`); what each audience can do as an accordion; and the photo gallery. All text and figures live in `lib/summit.ts`.
+- [x] **Home teaser.** `SummitSpotlight` (between Core impact areas and the SDGs): a photo, three counted figures, one call to action to `/projects#summit`.
+- [x] **Gallery.** `SummitGallery`: bento grid that opens into a lightbox (focus trap, Escape, arrows, swipe, counter, focus returns to the tile). Five photos shown; five uploads were left out (see below).
+- [x] **About "Our people" photo.** The slot `about-leadership` now shows a real summit photo with an accurate description; before, it was a generated illustration described as "the Dara-Manihot leadership team".
+- [x] **Docs.** `DESIGN.md` (Google DESIGN.md format, 0 lint errors) documents the tokens, components and motion.
+- [x] **Tests.** `tests/summit.test.tsx` (30 tests: data, files and pixel sizes, social links, placement, tabs, accordion, gallery) and two launch-check cases in `tests/scripts.test.ts`.
+
+## Notes for review
+
+- **Name spelling: please confirm.** The summit flyer and the CEO's own slides print **"Adekunle Olusile"**. The brief and `docs/PHOTO-REQUEST.md` say "Olashile". The site uses the printed spelling. To change it, edit `LEADER.name` in `lib/summit.ts`; nothing else needs touching.
+- **Portrait quality.** The only usable single-person photo is a speaking shot photographed off a projector screen (570 x 779 px). It is cropped to a portrait and reads well at the size shown, but is soft on high-density screens. Replace `public/images/leadership/ceo.jpg` and update `LEADER.photo` when a studio portrait exists.
+- **Photos left out on purpose:** one is a lower-quality copy of the stage group photo; two are 416 and 570 px wide screen captures; one is a blurred, WhatsApp-stamped room shot that upscaled badly.
+- **People are not named in captions or alt text.** Only the CEO is named, and only on the client's word for which photo is his.
+- **Figures are the presenter's.** 19.4%, N351M, N12.32B and N53.44B come from the CEO's slides and are labelled as such, with the 25-year figure marked a projection. A web search did not find independent coverage of the ABUAD microgrid numbers, so they are not presented as audited.
+- **Left as it was:** the About copy says "over 15 years" while the company was founded in 2014; the four placeholder team members still block launch; the stat figures elsewhere are unchanged.
+- **Footer fix.** The "Powered by" link had no `aria-label`, which an existing footer test already required.
+
+---
+
 # Enquiry dropdown, "Who we are" type and tile hover
 
 ## To-do (all verified)

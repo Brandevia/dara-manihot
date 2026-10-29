@@ -37,6 +37,8 @@ const serviceIds = new Set<string>(SERVICES.map((s) => s.id))
 const anchorsByPath: Record<string, Set<string>> = {
   '/services': new Set([...serviceIds, ...PILLARS.map((p) => p.id)]),
   '/contact': new Set(['enquiry', 'map']),
+  '/projects': new Set(['summit']),
+  '/about': new Set(['leadership']),
 }
 
 describe.each(pages)('%s', (_path, Page) => {
