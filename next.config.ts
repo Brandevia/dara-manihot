@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
   // Next 16 replaces the old wildcard CORS header with an allow-list for the
   // dev server. These cover the Replit preview domains used by this project.
   allowedDevOrigins: ['*.replit.dev', '*.repl.co', '*.replit.app'],
+
+  experimental: {
+    agentUpgrade: 'security',
+  },
 }
 
 export default nextConfig
