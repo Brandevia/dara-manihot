@@ -29,6 +29,7 @@ import { StatsBand } from '@/components/sections/stats-band'
 import { VisionStatement } from '@/components/sections/vision-statement'
 import { WhoWeAre } from '@/components/sections/who-we-are'
 import { COMPANY_INFO } from '@/lib/constants'
+import { SUMMIT_FIGURES } from '@/lib/summit'
 import {
   getConsentSnapshot,
   resetConsent,
@@ -294,8 +295,9 @@ describe('counting figures (wireframe image 1)', () => {
     expect(about.container.querySelectorAll('[data-count-up]').length).toBe(4)
     about.unmount()
     const projects = render(<ProjectsPage />)
+    // The project impact figure, plus the summit results (lib/summit.ts).
     expect(projects.container.querySelectorAll('[data-count-up]').length).toBe(
-      1,
+      1 + SUMMIT_FIGURES.length,
     )
   })
 })

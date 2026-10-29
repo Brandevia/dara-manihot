@@ -68,11 +68,21 @@ export function runChecks({ env, slots, team, hasRealPhoto, socialLinks }) {
       `${pending.length} of ${slots.length} image slots have no real photo yet: ${pending.map((s) => s.id).join(', ')}.`,
     )
 
-  add(
-    'WARNING',
-    'social',
-    `Social links are unverified guesses from the original site: ${Object.values(socialLinks).join(', ')}.`,
-  )
+  const isHttps = (value) => {
+    try {
+      const url = new URL(String(value))
+      return url.protocol === 'https:' && url.hostname.includes('.')
+    } catch {
+      return false
+    }
+  }
+  const badSocial = Object.entries(socialLinks).filter(([, url]) => !isHttps(url))
+  if (badSocial.length > 0)
+    add(
+      'WARNING',
+      'social',
+      `Social link(s) are not full https:// addresses: ${badSocial.map(([name, url]) => `${name} (${url})`).join(', ')}.`,
+    )
 
   return findings
 }

@@ -35,11 +35,11 @@ export const LEGAL_LINKS = [
   { name: 'Terms of Service', href: '/terms' },
 ] as const
 
+/** Confirmed by the client. There is deliberately no X (Twitter): they have no account. */
 export const SOCIAL_LINKS = {
-  linkedin: 'https://linkedin.com/company/dara-manihot',
-  twitter: 'https://twitter.com/dara_manihot',
-  facebook: 'https://facebook.com/dara.manihot',
-}
+  linkedin: 'https://www.linkedin.com/company/daracare-manihot-industries-farms/',
+  facebook: 'https://www.facebook.com/dmanihot',
+} as const
 
 export const CORE_VALUES = [
   'Sustainability',

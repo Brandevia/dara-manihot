@@ -254,3 +254,33 @@ describe('launch check', () => {
     expect(formatReport(runChecks(base))).toContain('No blockers.')
   })
 })
+
+describe('launch check: social links', () => {
+  const base = {
+    env: {
+      SMTP_HOST: 'h',
+      SMTP_USER: 'u',
+      SMTP_PASS: 'p',
+      NEXT_PUBLIC_SITE_URL: 'https://www.daramanihot.com.ng',
+    },
+    slots: [],
+    team: [],
+    hasRealPhoto: () => true,
+  }
+  const warned = (socialLinks: Record<string, string>) =>
+    runChecks({ ...base, socialLinks }).some((f: { id: string }) => f.id === 'social')
+
+  it('no longer calls confirmed links "unverified guesses"', () => {
+    expect(
+      warned({
+        linkedin: 'https://www.linkedin.com/company/daracare-manihot-industries-farms/',
+        facebook: 'https://www.facebook.com/dmanihot',
+      }),
+    ).toBe(false)
+  })
+
+  it('still flags a link that is not a full https address', () => {
+    expect(warned({ facebook: 'facebook.com/dmanihot' })).toBe(true)
+    expect(warned({ facebook: 'http://facebook.com/dmanihot' })).toBe(true)
+  })
+})

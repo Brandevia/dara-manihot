@@ -9,6 +9,7 @@ import { PageHero } from '@/components/sections/page-hero'
 import { PartnershipsSection } from '@/components/sections/partnerships'
 import { ProjectFeature } from '@/components/sections/project-feature'
 import { SectionHeading } from '@/components/sections/section-heading'
+import { SummitSection } from '@/components/sections/summit-section'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { COMPANY_INFO, PAGE_HERO_IMAGES } from '@/lib/constants'
@@ -45,6 +46,8 @@ export default function ProjectsPage() {
           </div>
         </div>
       </section>
+
+      <SummitSection />
 
       <PartnershipsSection />
 

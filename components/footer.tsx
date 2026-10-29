@@ -1,4 +1,4 @@
-import { Facebook, Linkedin, Twitter } from 'lucide-react'
+import { Facebook, Linkedin } from 'lucide-react'
 import Link from 'next/link'
 import { CookieSettingsButton } from '@/components/cookie-settings-button'
 import { Logo } from '@/components/logo'
@@ -12,7 +12,6 @@ import { SERVICES } from '@/lib/services'
 
 const SOCIALS = [
   { label: 'LinkedIn', href: SOCIAL_LINKS.linkedin, Icon: Linkedin },
-  { label: 'X (Twitter)', href: SOCIAL_LINKS.twitter, Icon: Twitter },
   { label: 'Facebook', href: SOCIAL_LINKS.facebook, Icon: Facebook },
 ]
 
@@ -134,6 +133,7 @@ export function Footer() {
                 href="https://brandeviaafrica.com"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Powered by Brandevia Africa Limited (opens in a new tab)"
                 className={linkClass}
               >
                 Powered by Brandevia Africa Limited
