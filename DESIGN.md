@@ -148,7 +148,7 @@ Colour is rationed. Green (`{colors.primary}`) carries identity and numbers. Pur
 ## Colors
 
 - **Primary, logo green (`#176827`):** headings accents, figures, selected tabs, links. 6.7:1 on ivory.
-- **Secondary, logo purple (`#84289a`):** call-to-action buttons only, plus small bullets. White on it passes AA in every state, including hover.
+- **Secondary, logo purple (`#84289a`):** call-to-action buttons only, plus small bullets, the "+" after a counted figure (500+), a project's date chip and its "Ask about project" link. White on it passes AA in every state, including hover; it is 6.3:1 on the pale purple chip and 6.9:1 on mist. The dark-form tokens give 3.4:1, so fix them before a dark toggle ships.
 - **Neutral, ivory (`#fbfcfa`):** the page. White (`{colors.surface}`) is for cards that sit on mist.
 - **Muted, mist (`#f0f5ee`):** alternate section bands and the tab track.
 - **Mint (`#c7e4cb`):** the logo green at 200. Frames around photographs and soft badges.
@@ -190,7 +190,10 @@ Radii are concentric: a frame's radius equals the inner radius plus the padding.
 - **Sliding tabs** (`tabs-track`, `tab-active`, `tab-idle`): a WAI-ARIA tablist. The green pill glides between tabs; arrows, Home and End move focus; only the active tab is in the tab order. The three-phase model (solar, storage, hydrogen) uses it, with a progress rail as a second cue.
 - **Accordion** (`accordion-row`): one open at a time, first open by default so the content exists without JavaScript. Chevron turns, panel eases to its natural height.
 - **Gallery and lightbox** (`lightbox`, `lightbox-control`): a bento of openable tiles. The lightbox is a Radix dialog (focus trap, Escape, scroll lock) with previous and next buttons, arrow keys, swipe on touch, a counter, and focus returned to the tile that opened it. Controls are 48px.
-- **Counting figure:** `CountUp` animates the number; reduced motion shows the final value.
+- **Counting figure:** `CountUp` animates the number; reduced motion shows the final value. Digits are tabular so the figure does not shift while it counts. A "+" straight after the number is drawn in `{colors.secondary}`, at 0.7em, level with the digits; the text stays "500+" for screen readers.
+- **Stats band:** headline figures under the hero, on mist. One centred column on phones, two from 640px, four from 1024px. Every figure counts as it scrolls into view and ends in a purple plus.
+- **Mobile menu:** a toggle of two lines (not three) that rotate into an X, in the header pill. The panel hangs one gap below the pill at the same width, is frosted glass, and holds centred text links (48px targets) and one green "Explore Our Services" pill. No icons. It opens by growing down while the links fade and slide in one after another, and closes in reverse. A dim backdrop, a press outside, Escape, a route change or growing to the desktop layout all close it. Reduced motion cross-fades only.
+- **Icon-free cards:** the core impact areas, the pillar and service cards and the About vision and mission carry no icon. The title is the largest thing in the card; list ticks and the "learn more" arrow remain.
 
 ## Do's and Don'ts
 
@@ -198,7 +201,10 @@ Radii are concentric: a frame's radius equals the inner radius plus the padding.
 - Do write alt text that describes the scene; don't name a person in alt text or a caption unless the source names them.
 - Do reserve the photo's real size with `width` and `height`; don't let a gallery jump as it loads.
 - Do keep exits shorter than entrances (150ms out, 300ms in); don't animate anything the visitor triggers more than once a second for longer than 300ms.
-- Do animate only `transform`, `opacity` and `filter`; don't use `transition: all`.
+- Do animate only `transform`, `opacity` and `filter`; don't use `transition: all`. The one exception is the mobile menu panel, whose `height` opens from 0: it is `position: fixed`, so nothing reflows.
+- Do name the property Tailwind 4 really sets: `hover:-translate-y-1` writes `translate` and `active:scale-*` writes `scale`, so use `transition-[translate,box-shadow]` or `transition-[scale]`. Naming `transform` makes the movement snap.
+- Do reveal each item when it scrolls into view (`StaggerItem`), staggering only the items that arrive together. Don't reveal a whole grid from its container: on a phone the grid is one tall column and the sequence plays off screen.
+- Do give every hover effect a touch counterpart: a press state on links, buttons and tiles, and arrows that nudge on press as well as hover.
 - Do honour reduced motion by removing movement, not feedback; don't rely on animation alone to show state (selected tabs also change colour and `aria-selected`).
 - Don't use Tailwind palette classes (`bg-green-600`) or hex values in components; use tokens.
 - Don't end a page on a full-bleed colour band; end on ivory.

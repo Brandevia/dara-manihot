@@ -53,46 +53,6 @@ export default function ProjectsPage() {
 
       <ImpactGoalsSection />
 
-      {/* Team */}
-      <section className="section-y">
-        <div className="page-container">
-          <SectionHeading
-            title="Meet our team"
-            description="Our diverse team brings together decades of experience in agriculture, renewable energy, and sustainable development."
-          />
-          <StaggerList className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {TEAM.map((member) => (
-              <StaggerListItem
-                key={member.name}
-                className="rounded-xl border border-border bg-card p-6 text-center"
-              >
-                {member.photo ? (
-                  <Image
-                    src={member.photo}
-                    alt={`Portrait of ${member.name}`}
-                    width={160}
-                    height={160}
-                    className="mx-auto mb-4 size-20 rounded-full object-cover"
-                  />
-                ) : (
-                  <span className="mx-auto mb-4 flex size-20 items-center justify-center rounded-full bg-secondary-soft text-secondary">
-                    <Users className="size-9" aria-hidden />
-                  </span>
-                )}
-                <h3 className="text-lg">{member.name}</h3>
-                <p className="mt-1 text-sm font-medium text-primary">
-                  {member.role}
-                </p>
-                <p className="mt-2 mb-4 text-sm text-muted-foreground">
-                  {member.description}
-                </p>
-                <Badge variant="soft">{member.expertise}</Badge>
-              </StaggerListItem>
-            ))}
-          </StaggerList>
-        </div>
-      </section>
-
       <CtaBand
         title="Partner with us"
         description="Join us in building a sustainable future for Nigeria’s agriculture. Let’s discuss how we can work together to create lasting impact."

@@ -17,7 +17,7 @@ export default function NotFound() {
       <Button asChild variant="cta" size="lg" className="mt-8">
         <Link href="/">
           Back to home
-          <ArrowRight className="transition-transform group-hover/button:translate-x-1" />
+          <ArrowRight className="transition-transform group-hover/button:translate-x-1 group-active/button:translate-x-1" />
         </Link>
       </Button>
     </section>

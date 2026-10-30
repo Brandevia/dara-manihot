@@ -56,7 +56,7 @@ export function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`${COMPANY_INFO.shortName} on ${label}`}
-                      className="flex size-10 items-center justify-center rounded-full bg-white/10 text-canopy-foreground transition-[background-color,transform] duration-300 ease-bounce hover:-translate-y-0.5 hover:bg-secondary focus-visible:ring-[3px] focus-visible:ring-white/50 focus-visible:outline-none"
+                      className="flex size-10 items-center justify-center rounded-full bg-white/10 text-canopy-foreground transition-[background-color,translate] duration-300 ease-bounce hover:-translate-y-0.5 active:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:translate-y-0 hover:bg-secondary focus-visible:ring-[3px] focus-visible:ring-white/50 focus-visible:outline-none"
                     >
                       <Icon className="size-4.5" aria-hidden />
                     </a>

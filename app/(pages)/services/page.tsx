@@ -103,10 +103,7 @@ export default function ServicesPage() {
             {PILLARS.map((pillar) => (
               <li key={pillar.id}>
                 <Button asChild variant="onDark">
-                  <a href={`#${pillar.id}`}>
-                    <pillar.icon aria-hidden />
-                    {pillar.title}
-                  </a>
+                  <a href={`#${pillar.id}`}>{pillar.title}</a>
                 </Button>
               </li>
             ))}
@@ -135,10 +132,10 @@ export default function ServicesPage() {
                 )}
               >
                 <Reveal className="max-w-3xl">
-                  <span className="mb-4 flex size-12 items-center justify-center rounded-xl bg-secondary-soft text-secondary">
-                    <pillar.icon className="size-6" aria-hidden />
-                  </span>
-                  <h2 id={`${pillar.id}-title`} className="text-title">
+                  <h2
+                    id={`${pillar.id}-title`}
+                    className="text-title text-canopy"
+                  >
                     {pillar.title}
                   </h2>
                   <p className="mt-4 text-lead text-muted-foreground">
@@ -170,24 +167,21 @@ export default function ServicesPage() {
                   <StaggerItem key={service.id}>
                     <Card
                       id={service.id}
-                      className="scroll-mt-header h-full gap-5 p-7 transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift"
+                      className="scroll-mt-header h-full gap-6 p-7 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:p-8"
                     >
-                      <div className="flex items-start gap-4">
-                        <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-secondary-soft text-secondary">
-                          <service.icon className="size-6" aria-hidden />
-                        </span>
-                        <div>
-                          <h3 className="text-xl">{service.title}</h3>
-                          <p className="mt-2 text-muted-foreground">
-                            {service.description}
-                          </p>
-                        </div>
+                      <div>
+                        <h3 className="text-2xl text-canopy">
+                          {service.title}
+                        </h3>
+                        <p className="mt-3 text-lg leading-relaxed text-muted-foreground">
+                          {service.description}
+                        </p>
                       </div>
-                      <ul className="mt-auto space-y-2.5 border-t border-border pt-5">
+                      <ul className="mt-auto space-y-3 border-t border-border pt-5">
                         {service.details.map((detail) => (
-                          <li key={detail} className="flex gap-2.5 text-sm">
+                          <li key={detail} className="flex gap-2.5 text-base">
                             <CheckCircle2
-                              className="mt-0.5 size-4 shrink-0 text-secondary"
+                              className="mt-1 size-4 shrink-0 text-secondary"
                               aria-hidden
                             />
                             <span className="text-muted-foreground">
@@ -206,7 +200,7 @@ export default function ServicesPage() {
                             }}
                           >
                             Enquire about this service
-                            <ArrowRight className="transition-transform group-hover/button:translate-x-1" />
+                            <ArrowRight className="transition-transform group-hover/button:translate-x-1 group-active/button:translate-x-1" />
                           </Link>
                         </Button>
                         <Button asChild variant="outline" size="sm">

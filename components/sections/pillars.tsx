@@ -31,25 +31,22 @@ export function PillarsSection() {
         <Stagger className="grid gap-6 lg:grid-cols-2">
           {headline.map((pillar) => (
             <StaggerItem key={pillar.id}>
-              <Card className="h-full gap-0 overflow-hidden p-0 transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift">
+              <Card className="h-full gap-0 overflow-hidden p-0 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift motion-reduce:transition-none motion-reduce:hover:translate-y-0">
                 <PhotoSlot
                   id={IMAGE[pillar.id]}
                   sizes="(min-width: 1024px) 560px, 100vw"
                   className="aspect-[16/9] rounded-none"
                 />
-                <div className="flex flex-1 flex-col gap-5 p-7">
-                  <div className="flex items-center gap-3">
-                    <span className="flex size-11 items-center justify-center rounded-xl bg-secondary-soft text-secondary">
-                      <pillar.icon className="size-6" aria-hidden />
-                    </span>
-                    <h3 className="text-2xl">{pillar.title}</h3>
-                  </div>
-                  <p className="text-muted-foreground">{pillar.summary}</p>
-                  <ul className="space-y-2.5">
+                <div className="flex flex-1 flex-col gap-5 p-7 sm:p-8">
+                  <h3 className="text-3xl text-canopy">{pillar.title}</h3>
+                  <p className="text-lg leading-relaxed text-muted-foreground">
+                    {pillar.summary}
+                  </p>
+                  <ul className="space-y-3">
                     {pillar.highlights.map((item) => (
-                      <li key={item} className="flex gap-2.5 text-sm">
+                      <li key={item} className="flex gap-2.5 text-base">
                         <CheckCircle2
-                          className="mt-0.5 size-4 shrink-0 text-secondary"
+                          className="mt-1 size-4 shrink-0 text-secondary"
                           aria-hidden
                         />
                         <span>{item}</span>
@@ -60,7 +57,7 @@ export function PillarsSection() {
                     <Link href={`/services#${pillar.id}`}>
                       Learn more
                       <span className="sr-only"> about {pillar.title}</span>
-                      <ArrowRight className="transition-transform group-hover/button:translate-x-1" />
+                      <ArrowRight className="transition-transform group-hover/button:translate-x-1 group-active/button:translate-x-1" />
                     </Link>
                   </Button>
                 </div>

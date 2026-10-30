@@ -58,7 +58,7 @@ export default async function ProjectPage({ params }: Props) {
                 <StaggerItem key={other.slug}>
                   <Link
                     href={`/projects/${other.slug}`}
-                    className="group/more flex h-full items-start justify-between gap-4 rounded-xl border border-border bg-card p-6 outline-none transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                    className="group/more flex h-full items-start justify-between gap-4 rounded-xl border border-border bg-card p-6 outline-none transition-[translate,scale,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100 focus-visible:ring-[3px] focus-visible:ring-ring/50"
                   >
                     <span>
                       <span className="block font-display text-xl">
@@ -70,7 +70,7 @@ export default async function ProjectPage({ params }: Props) {
                     </span>
                     <ArrowUpRight
                       aria-hidden
-                      className="mt-1 size-5 shrink-0 text-secondary transition-transform duration-200 group-hover/more:translate-x-0.5 group-hover/more:-translate-y-0.5"
+                      className="mt-1 size-5 shrink-0 text-secondary transition-transform duration-200 group-hover/more:translate-x-0.5 group-hover/more:-translate-y-0.5 group-active/more:translate-x-0.5 group-active/more:-translate-y-0.5"
                     />
                   </Link>
                 </StaggerItem>
@@ -88,7 +88,7 @@ export default async function ProjectPage({ params }: Props) {
           <Link href="/contact#enquiry">
             <Mail />
             Get in touch
-            <ArrowRight className="transition-transform group-hover/button:translate-x-1" />
+            <ArrowRight className="transition-transform group-hover/button:translate-x-1 group-active/button:translate-x-1" />
           </Link>
         </Button>
         <Button asChild variant="onDark" size="lg">

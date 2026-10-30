@@ -21,6 +21,10 @@ import { COUNT_DURATION_MS, REVEAL_VIEWPORT } from '@/lib/motion'
  *   is hidden from assistive tech so nobody hears "1, 2, 3 ... 500".
  * - With `prefers-reduced-motion` the real figure is shown straight away.
  * - Text with no number in it is rendered as-is.
+ * - A "+" straight after the number ("500+") is drawn in the secondary
+ *   purple, smaller and level with the middle of the digits. The text of the
+ *   figure is unchanged, so assistive tech and copy-paste still read "500+".
+ * - Digits are tabular, so the figure does not shift sideways as it counts.
  */
 const subscribeNever = () => () => {}
 
@@ -63,13 +67,26 @@ export function CountUp({
 
   if (!figure) return <span className={className}>{value}</span>
 
-  const shown = formatFigure(figure, hydrated && !reduced ? progress : 1)
+  const current = hydrated && !reduced ? progress : 1
+  const number = formatFigure({ ...figure, prefix: '', suffix: '' }, current)
+  const hasPlus = figure.suffix.startsWith('+')
+  const rest = hasPlus ? figure.suffix.slice(1) : figure.suffix
 
   return (
     <span ref={ref} className={className}>
       <span className="sr-only">{value}</span>
-      <span aria-hidden data-count-up>
-        {shown}
+      <span aria-hidden data-count-up className="tabular-nums">
+        {figure.prefix}
+        {number}
+        {hasPlus && (
+          <span
+            data-plus
+            className="ml-[0.08em] align-[0.05em] font-sans text-[0.7em] text-secondary"
+          >
+            +
+          </span>
+        )}
+        {rest}
       </span>
     </span>
   )

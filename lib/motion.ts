@@ -1,6 +1,8 @@
 // Shared config for `motion/react` scroll reveals. (CSS-driven motion lives as
 // tokens in app/globals.css; these are the JS-side equivalents.)
 export const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const
+/** `--ease-standard` in globals.css: state changes that must feel instant yet smooth. */
+export const EASE_STANDARD = [0.2, 0, 0, 1] as const
 export const REVEAL_VIEWPORT = {
   once: true,
   margin: '0px 0px -10% 0px',

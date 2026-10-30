@@ -37,7 +37,7 @@ export function ProjectFeature({
             <p className="mt-8">
               <time
                 dateTime={project.date}
-                className="inline-block rounded-md bg-muted px-2.5 py-1.5 text-xs font-medium tracking-wide text-muted-foreground uppercase"
+                className="inline-block rounded-md bg-secondary-soft px-2.5 py-1.5 text-xs font-semibold tracking-wide text-secondary uppercase"
               >
                 {formatProjectDate(project.date)}
               </time>
@@ -50,13 +50,13 @@ export function ProjectFeature({
           {!asPage && (
             <Link
               href={`/projects/${project.slug}`}
-              className="group/ask mt-8 inline-flex items-center gap-2 rounded-sm font-medium text-canopy underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
+              className="group/ask mt-8 inline-flex items-center gap-2 rounded-sm font-medium text-secondary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
             >
               Ask about project
               <span className="sr-only"> {project.title}</span>
               <ArrowUpRight
                 aria-hidden
-                className="size-4 transition-transform duration-200 group-hover/ask:translate-x-0.5 group-hover/ask:-translate-y-0.5"
+                className="size-4 transition-transform duration-200 group-hover/ask:translate-x-0.5 group-hover/ask:-translate-y-0.5 group-active/ask:translate-x-0.5 group-active/ask:-translate-y-0.5"
               />
             </Link>
           )}
