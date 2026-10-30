@@ -1,85 +1,99 @@
 'use client'
 
 import * as Dialog from '@radix-ui/react-dialog'
-import {
-  ArrowRight,
-  ChevronRight,
-  FolderKanban,
-  Home,
-  Info,
-  type LucideIcon,
-  Mail,
-  Menu,
-  Phone,
-  Wrench,
-  X,
-} from 'lucide-react'
 import { AnimatePresence, motion, type Variants } from 'motion/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
-import { isActivePath, type NavHref } from '@/components/nav-utils'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { isActivePath } from '@/components/nav-utils'
 import { Button } from '@/components/ui/button'
-import { COMPANY_INFO, LEGAL_LINKS, NAVIGATION_LINKS } from '@/lib/constants'
-import { EASE_OUT_EXPO } from '@/lib/motion'
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
+import { COMPANY_INFO, NAVIGATION_LINKS } from '@/lib/constants'
+import { EASE_STANDARD } from '@/lib/motion'
 import { cn } from '@/lib/utils'
-
-// Keyed by href: the compiler flags a nav link that has no icon.
-const ICONS: Record<NavHref, LucideIcon> = {
-  '/': Home,
-  '/about': Info,
-  '/services': Wrench,
-  '/projects': FolderKanban,
-  '/contact': Mail,
-}
 
 // Matches Tailwind's `md` breakpoint, where the desktop nav takes over.
 const DESKTOP_QUERY = '(min-width: 48rem)'
 
 /**
- * The panel grows out of the hamburger (its transform-origin, --menu-origin in
- * globals.css, is the button's centre) and its contents follow one by one. On
- * close the contents drop away first, then the panel shrinks back into the
- * button. `when: 'afterChildren'` is what orders the exit.
+ * Timings (seconds). Opening is the slower half so the eye can follow the
+ * panel down; closing is quicker because the visitor already knows where it
+ * goes (DESIGN.md: exits are shorter than entrances).
  */
-const panel: Variants = {
-  closed: {
-    scale: 0.06,
-    opacity: 0,
-    transition: {
-      when: 'afterChildren',
-      staggerChildren: 0.03,
-      staggerDirection: -1,
-      scale: { duration: 0.34, ease: [0.5, 0, 0.75, 0] },
-      opacity: { duration: 0.16, delay: 0.2 },
+const OPEN = { panel: 0.42, item: 0.3, stagger: 0.05, itemDelay: 0.1 } as const
+const CLOSE = {
+  panel: 0.28,
+  item: 0.12,
+  stagger: 0.02,
+  panelDelay: 0.06,
+} as const
+
+/**
+ * The panel drops down from the header pill: its height opens from 0 while
+ * the links fade and slide down into place one after another. On close the
+ * links lift away in reverse order and the panel folds back up under the pill.
+ *
+ * It is a fixed element, so animating its height never reflows the page.
+ * With `prefers-reduced-motion` nothing moves: the panel only cross-fades.
+ */
+function panelVariants(reduced: boolean): Variants {
+  if (reduced) {
+    return {
+      closed: { opacity: 0, transition: { duration: 0.15 } },
+      open: { opacity: 1, transition: { duration: 0.15 } },
+    }
+  }
+  return {
+    closed: {
+      height: 0,
+      opacity: 0,
+      transition: {
+        staggerChildren: CLOSE.stagger,
+        staggerDirection: -1,
+        height: {
+          duration: CLOSE.panel,
+          delay: CLOSE.panelDelay,
+          ease: EASE_STANDARD,
+        },
+        opacity: { duration: 0.16, delay: CLOSE.panel - 0.1 },
+      },
     },
-  },
-  open: {
-    scale: 1,
-    opacity: 1,
-    transition: {
-      delayChildren: 0.14,
-      staggerChildren: 0.05,
-      scale: { type: 'spring', stiffness: 280, damping: 24 },
-      opacity: { duration: 0.18 },
+    open: {
+      height: 'auto',
+      opacity: 1,
+      transition: {
+        delayChildren: OPEN.itemDelay,
+        staggerChildren: OPEN.stagger,
+        height: { duration: OPEN.panel, ease: EASE_STANDARD },
+        opacity: { duration: 0.18 },
+      },
     },
-  },
+  }
 }
 
 const item: Variants = {
-  closed: { opacity: 0, y: -8, scale: 0.97, transition: { duration: 0.12 } },
+  closed: {
+    opacity: 0,
+    y: -12,
+    transition: { duration: CLOSE.item, ease: 'easeOut' },
+  },
   open: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    transition: { duration: 0.38, ease: EASE_OUT_EXPO },
+    transition: { duration: OPEN.item, ease: 'easeOut' },
   },
 }
+
+const bar =
+  'block h-0.5 w-5 rounded-full bg-current motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-standard'
 
 export function MobileNav() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const reduced = usePrefersReducedMotion()
   const triggerRef = useRef<HTMLButtonElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const panel = useMemo(() => panelVariants(reduced), [reduced])
 
   // Navigating anywhere (a link, back/forward) closes the menu. Done while
   // rendering, which is React's recommended way to reset state on a change.
@@ -102,28 +116,25 @@ export function MobileNav() {
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
+      {/* Two lines that rotate into an X. Radix supplies aria-expanded,
+          aria-controls and aria-haspopup; the label says what a press does. */}
       <Dialog.Trigger asChild>
         <Button
           ref={triggerRef}
           variant="ghost"
           size="icon"
-          className="size-11 rounded-full md:hidden"
+          className="size-11 rounded-full transition-[background-color,scale] duration-150 ease-out active:scale-[0.96] md:hidden"
           aria-label={open ? 'Close menu' : 'Open menu'}
         >
-          <span className="relative size-6">
-            <Menu
-              aria-hidden
-              className={cn(
-                'absolute inset-0 size-6 transition-[opacity,transform] duration-300 ease-bounce motion-reduce:transition-none',
-                open && 'rotate-90 scale-50 opacity-0',
-              )}
+          <span
+            aria-hidden
+            className="flex size-6 flex-col items-center justify-center gap-[5px]"
+          >
+            <span
+              className={cn(bar, open && 'translate-y-[3.5px] rotate-45')}
             />
-            <X
-              aria-hidden
-              className={cn(
-                'absolute inset-0 size-6 transition-[opacity,transform] duration-300 ease-bounce motion-reduce:transition-none',
-                !open && '-rotate-90 scale-50 opacity-0',
-              )}
+            <span
+              className={cn(bar, open && '-translate-y-[3.5px] -rotate-45')}
             />
           </span>
         </Button>
@@ -132,14 +143,15 @@ export function MobileNav() {
       <AnimatePresence>
         {open && (
           <Dialog.Portal forceMount>
-            {/* Under the header (z-40), so the hamburger stays clickable. */}
+            {/* Under the header (z-40), so the toggle stays pressable. Any
+                press on it, or anywhere outside the panel, closes the menu. */}
             <Dialog.Overlay asChild forceMount>
               <motion.div
-                className="fixed inset-0 z-30 bg-canopy/25 backdrop-blur-[2px]"
+                className="fixed inset-0 z-30 bg-canopy/30"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.25 }}
               />
             </Dialog.Overlay>
 
@@ -147,7 +159,13 @@ export function MobileNav() {
               asChild
               forceMount
               aria-describedby="mobile-nav-desc"
-              // Pressing the hamburger again must close the menu, not be
+              // Focus the panel itself, without scrolling: while it is still
+              // growing, focusing a link inside would scroll the clipped box.
+              onOpenAutoFocus={(e) => {
+                e.preventDefault()
+                panelRef.current?.focus({ preventScroll: true })
+              }}
+              // Pressing the toggle again must close the menu, not be
               // swallowed as an "outside click" that then re-opens it.
               onInteractOutside={(e) => {
                 if (triggerRef.current?.contains(e.target as Node))
@@ -155,6 +173,8 @@ export function MobileNav() {
               }}
             >
               <motion.div
+                ref={panelRef}
+                tabIndex={-1}
                 data-slot="menu-panel"
                 // `glass` + data-scrolled gives the firmer frosted tint.
                 data-scrolled="true"
@@ -162,94 +182,66 @@ export function MobileNav() {
                 initial="closed"
                 animate="open"
                 exit="closed"
-                style={{ transformOrigin: 'var(--menu-origin)' }}
-                className="glass fixed top-(--header-h) right-(--container-pad) z-50 max-h-[calc(100svh-var(--header-h)-1rem)] w-(--menu-w) overflow-y-auto overscroll-contain rounded-3xl p-3 outline-none"
+                // As wide as the header pill, one gap below it. Clipped while
+                // it grows; the inner box scrolls if a short screen needs it.
+                className="glass fixed inset-x-(--container-pad) top-(--header-h) z-50 overflow-hidden rounded-3xl outline-none"
               >
-                <Dialog.Title className="sr-only">Site navigation</Dialog.Title>
-                <Dialog.Description id="mobile-nav-desc" className="sr-only">
-                  Browse the pages of the {COMPANY_INFO.shortName} website.
-                </Dialog.Description>
+                <div className="max-h-[calc(100svh-var(--header-h)-1rem)] overflow-y-auto overscroll-contain p-3">
+                  <Dialog.Title className="sr-only">
+                    Site navigation
+                  </Dialog.Title>
+                  <Dialog.Description id="mobile-nav-desc" className="sr-only">
+                    Browse the pages of the {COMPANY_INFO.shortName} website.
+                  </Dialog.Description>
 
-                <nav aria-label="Mobile">
-                  <ul className="space-y-1">
-                    {NAVIGATION_LINKS.map((link) => {
-                      const Icon = ICONS[link.href]
-                      const active = isActivePath(pathname, link.href)
-                      return (
-                        <motion.li key={link.href} variants={item}>
-                          <Link
-                            href={link.href}
-                            onClick={() => setOpen(false)}
-                            aria-current={active ? 'page' : undefined}
-                            className={cn(
-                              'group/item flex items-center gap-3.5 rounded-2xl p-2.5 pr-3 font-medium outline-none transition-colors duration-200 focus-visible:ring-[3px] focus-visible:ring-ring/50',
-                              active
-                                ? 'bg-accent text-accent-foreground'
-                                : 'text-foreground hover:bg-accent/60',
-                            )}
-                          >
-                            <span
+                  <nav aria-label="Mobile">
+                    <ul>
+                      {NAVIGATION_LINKS.map((link) => {
+                        const active = isActivePath(pathname, link.href)
+                        return (
+                          <motion.li key={link.href} variants={item}>
+                            <Link
+                              href={link.href}
+                              onClick={() => setOpen(false)}
+                              aria-current={active ? 'page' : undefined}
                               className={cn(
-                                'flex size-10 items-center justify-center rounded-xl transition-transform duration-300 ease-bounce group-hover/item:scale-110 group-active/item:scale-95',
+                                'flex min-h-12 items-center justify-center rounded-lg px-4 text-lg outline-none [-webkit-tap-highlight-color:transparent] transition-colors duration-150 focus-visible:ring-[3px] focus-visible:ring-ring/50 active:bg-accent',
                                 active
-                                  ? 'bg-primary text-primary-foreground'
-                                  : 'bg-card text-primary',
+                                  ? 'bg-accent font-semibold text-accent-foreground'
+                                  : 'text-foreground hover:bg-accent/60',
                               )}
                             >
-                              <Icon className="size-5" />
-                            </span>
-                            <span className="flex-1 text-base">
                               {link.name}
-                            </span>
-                            <ChevronRight className="size-4 text-muted-foreground transition-transform duration-200 group-hover/item:translate-x-0.5" />
-                          </Link>
-                        </motion.li>
-                      )
-                    })}
-                  </ul>
-                </nav>
+                            </Link>
+                          </motion.li>
+                        )
+                      })}
+                    </ul>
+                  </nav>
 
-                <motion.div
-                  variants={item}
-                  className="mt-3 space-y-3 border-t border-border pt-4"
-                >
-                  <Button asChild variant="cta" size="lg" className="w-full">
-                    <Link href="/contact" onClick={() => setOpen(false)}>
-                      Get in touch
-                      <ArrowRight className="transition-transform group-hover/button:translate-x-1" />
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline" className="w-full">
-                    <a href={`tel:${COMPANY_INFO.phones[0].tel}`}>
-                      <Phone />
-                      {COMPANY_INFO.phones[0].display}
-                    </a>
-                  </Button>
-                  <ul className="flex justify-center gap-5 pt-1 text-xs text-muted-foreground">
-                    {LEGAL_LINKS.map((link) => (
-                      <li key={link.href}>
-                        <Link
-                          href={link.href}
-                          onClick={() => setOpen(false)}
-                          className="underline-offset-4 hover:text-foreground hover:underline"
-                        >
-                          {link.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
+                  <motion.div variants={item} className="mt-3">
+                    <Button
+                      asChild
+                      variant="leaf"
+                      className="h-13 w-full rounded-full text-base font-semibold"
+                    >
+                      <Link href="/services" onClick={() => setOpen(false)}>
+                        Explore Our Services
+                      </Link>
+                    </Button>
+                  </motion.div>
 
-                {/* For keyboard and screen-reader users, who cannot reach the
-                    hamburger while the dialog traps focus. */}
-                <Dialog.Close asChild>
-                  <Button
-                    variant="ghost"
-                    className="sr-only w-full focus-visible:not-sr-only"
-                  >
-                    Close menu
-                  </Button>
-                </Dialog.Close>
+                  {/* For keyboard and screen-reader users, who cannot reach
+                      the toggle while the dialog traps focus. */}
+                  <Dialog.Close asChild>
+                    <Button
+                      variant="ghost"
+                      className="sr-only mt-2 w-full focus-visible:not-sr-only"
+                    >
+                      Close menu
+                    </Button>
+                  </Dialog.Close>
+                </div>
               </motion.div>
             </Dialog.Content>
           </Dialog.Portal>

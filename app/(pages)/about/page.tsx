@@ -66,7 +66,7 @@ const companyStats = [
   },
   {
     icon: Target,
-    number: '5',
+    number: '5+',
     label: 'States reached',
     description: 'Expanding our impact across Nigeria',
   },

@@ -102,7 +102,7 @@ export function SummitGallery({
                 setIndex(i)
               }}
               aria-label={`Open photo: ${image.caption}`}
-              className="relative block size-full overflow-hidden rounded-2xl bg-muted outline-none [-webkit-tap-highlight-color:transparent] focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-[0.98]"
+              className="relative block size-full overflow-hidden rounded-2xl bg-muted outline-none [-webkit-tap-highlight-color:transparent] transition-[scale] duration-150 ease-out focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100"
             >
               <Image
                 src={image.src}
@@ -111,11 +111,11 @@ export function SummitGallery({
                 height={image.height}
                 sizes="(min-width: 1216px) 592px, (min-width: 1024px) 50vw, 100vw"
                 style={{ objectPosition: image.position }}
-                className="size-full object-cover outline -outline-offset-1 outline-black/10 transition-transform duration-500 ease-out-expo group-hover/tile:scale-105 motion-reduce:transition-none motion-reduce:group-hover/tile:scale-100"
+                className="size-full object-cover outline -outline-offset-1 outline-black/10 transition-transform duration-500 ease-out-expo group-hover/tile:scale-105 group-active/tile:scale-105 motion-reduce:transition-none motion-reduce:group-hover/tile:scale-100"
               />
               <span
                 aria-hidden
-                className="bg-hero-gradient-bottom pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover/tile:opacity-100 group-focus-within/tile:opacity-100"
+                className="bg-hero-gradient-bottom pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover/tile:opacity-100 group-active/tile:opacity-100 group-focus-within/tile:opacity-100"
               />
               <span
                 aria-hidden

@@ -79,7 +79,7 @@ export function LeaderProfile() {
           <Button asChild variant="cta" size="lg" className="mt-8 rounded-full">
             <Link href={SUMMIT.href}>
               Read about the talk
-              <ArrowRight className="transition-transform group-hover/button:translate-x-1" />
+              <ArrowRight className="transition-transform group-hover/button:translate-x-1 group-active/button:translate-x-1" />
             </Link>
           </Button>
         </Reveal>

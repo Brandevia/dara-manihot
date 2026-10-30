@@ -111,9 +111,18 @@ describe('mint (pale green section tint)', () => {
 })
 
 describe('menu tokens', () => {
-  it('defines the panel width and the origin it grows out of', () => {
-    expect(css).toMatch(/--menu-w:/)
-    expect(css).toMatch(/--menu-origin:/)
+  it('has no width or origin tokens: the panel is as wide as the header pill', () => {
+    expect(css).not.toMatch(/--menu-w:|--menu-origin:/)
+    expect(css).toMatch(/--header-h:/)
+    expect(css).toMatch(/--container-pad:/)
+  })
+
+  it('defines the standard easing for toggles, for CSS and the JS side', () => {
+    expect(css).toMatch(/--ease-standard: cubic-bezier\(0\.2, 0, 0, 1\)/)
+    expect(css).toMatch(/--ease-standard: var\(--ease-standard\)/)
+    expect(readSource('lib/motion.ts')).toMatch(
+      /EASE_STANDARD = \[0\.2, 0, 0, 1\]/,
+    )
   })
 
   it('no longer carries the old drawer slide keyframes', () => {

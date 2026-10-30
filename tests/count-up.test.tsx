@@ -128,3 +128,33 @@ describe('CountUp', () => {
     expect(visible()).toBe('5')
   })
 })
+
+describe('CountUp: purple plus', () => {
+  it('draws the plus in the secondary colour, separately from the digits', () => {
+    render(<CountUp value="500+" />)
+    const plus = document.querySelector('[data-plus]')
+    expect(plus).toHaveClass('text-secondary')
+    expect(plus?.textContent).toBe('+')
+    expect(visible()).toBe('0+') // text is still "<number>+"
+  })
+
+  it('keeps the plus through the whole count and at rest', () => {
+    render(<CountUp value="50+" />)
+    scrollIntoView()
+    act(() => vi.advanceTimersByTime(4000))
+    expect(visible()).toBe('50+')
+    expect(document.querySelectorAll('[data-plus]')).toHaveLength(1)
+  })
+
+  it('adds no plus to a figure that has none', () => {
+    render(<CountUp value="₦351M" />)
+    expect(document.querySelector('[data-plus]')).toBeNull()
+  })
+
+  it('uses tabular digits so the figure does not shift while counting', () => {
+    render(<CountUp value="500+" />)
+    expect(document.querySelector('[data-count-up]')).toHaveClass(
+      'tabular-nums',
+    )
+  })
+})

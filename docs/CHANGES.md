@@ -1,3 +1,21 @@
+# Mobile menu, stats band, icon-free cards, mobile motion
+
+## To-do (all verified)
+
+- [x] **Mobile menu.** `MobileNav` is now a dropdown that hangs from the header pill: two-line toggle that rotates into an X, a glass panel as wide as the pill that grows down while the links feed in (reverse on close), centred text links and one green "Explore Our Services" button. No icons, phone line or legal links. Closes on backdrop press, Escape, route change, or growing past `md`. Reduced motion cross-fades only. The old `--menu-w` and `--menu-origin` tokens are removed; `--ease-standard` is added.
+- [x] **Stats band.** One column on phones, mist background, labels as in the supplied screenshot ("Years of Experience" keeps its "of"), and `5` is now `5+`. `CountUp` draws the plus in purple and uses tabular digits.
+- [x] **Project feature.** Date chip and "Ask about project" link are purple.
+- [x] **Icons removed.** Core impact areas, the Sustainable Agriculture / Energy cards, the services page and About vision and mission. Text is larger and the card padding is generous. The unused `icon` fields in `lib/services.ts` are gone.
+- [x] **Mobile motion, root causes.** (1) `Stagger` revealed every child when its container's first pixel appeared, so on a phone the whole sequence played below the fold. `StaggerItem` and `StaggerListItem` now reveal when each item arrives, staggered only against items arriving in the same frame (`lib/reveal-batch.ts`). (2) Card lifts, the footer icons and `Button` press named `transform` but Tailwind 4 sets `translate` and `scale`, so they snapped; they now name the right property. Arrow nudges and the gallery tile also respond to a press.
+- [x] **Docs.** `DESIGN.md` updated (colours, components, motion rules).
+- [x] **Tests.** New: `tests/mobile-overhaul.test.tsx`, `tests/reveal-batch.test.tsx`, plus rewritten mobile-menu cases in `tests/navigation.test.tsx`, purple-plus cases in `tests/count-up.test.tsx`, and updated token and icon tests. `e2e/navigation.spec.ts` is rewritten for the new menu (not run in CI here).
+
+## Notes for review
+
+- Checked in a real Chromium at 390px: the panel starts 8px under the pill with the pill's x and width; its height grows 0 to 328px in about 350ms with the top edge fixed; links fade in in order; closing reverses and unmounts.
+- Kept deliberately: Home stays in the menu; list check marks stay; the purple plus is only on headline counts (not 19.4% or ₦351M).
+- The Playwright suite was not run here (no browser download); the unit suite has the same 18 failures as before this work, all from image and font files that are not in the repository export.
+
 # Summit talk, leadership profile, gallery and social links
 
 ## To-do (all verified)

@@ -83,7 +83,7 @@ export function SummitSpotlight() {
             >
               <Link href={SUMMIT.href}>
                 See the roadmap and photos
-                <ArrowRight className="transition-transform group-hover/button:translate-x-1" />
+                <ArrowRight className="transition-transform group-hover/button:translate-x-1 group-active/button:translate-x-1" />
               </Link>
             </Button>
           </Reveal>

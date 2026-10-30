@@ -37,29 +37,36 @@ describe('About: mission and vision (mint, alternating rows)', () => {
     expect(
       screen.getByRole('region', { name: /our mission & vision/i }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Our vision' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Our mission' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Our vision' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Our mission' }),
+    ).toBeInTheDocument()
   })
 
   it('alternates the photo side: right for vision, left for mission', () => {
     const { container } = render(<VisionMission />)
     const [vision, mission] = [...container.querySelectorAll('[data-row]')]
     const photoOrder = (row: Element) =>
-      row.querySelector('[data-photo-slot]')?.closest('[data-reveal]')?.className
+      row.querySelector('[data-photo-slot]')?.closest('[data-reveal]')
+        ?.className
     expect(photoOrder(vision)).not.toMatch(/lg:order-1/)
     expect(photoOrder(mission)).toMatch(/lg:order-1/)
   })
 
-  it('puts the icon in a purple chip', () => {
+  it('has two rows and no icon in either (the words are the centrepiece)', () => {
     const { container } = render(<VisionMission />)
-    for (const chip of container.querySelectorAll('[data-row] span[aria-hidden]')) {
-      expect(chip.className).toMatch(/text-secondary/)
-    }
+    const rows = container.querySelectorAll('[data-row]')
+    expect(rows).toHaveLength(2)
+    for (const row of rows) expect(row.querySelector('svg')).toBeNull()
   })
 
   it('fades text and photo in with the Appear effect', () => {
     const { container } = render(<VisionMission />)
-    expect(container.querySelectorAll('[data-reveal]').length).toBeGreaterThanOrEqual(5)
+    expect(
+      container.querySelectorAll('[data-reveal]').length,
+    ).toBeGreaterThanOrEqual(5)
   })
 
   it('replaces the old cards on the About page', () => {
@@ -133,7 +140,9 @@ describe('contact page', () => {
     const rows = list.querySelectorAll(':scope > li')
     expect(rows.length).toBe(4)
     for (const row of rows) expect(row).toHaveAttribute('data-reveal')
-    const intro = container.querySelector('#contact-title')?.closest('[data-reveal]')
+    const intro = container
+      .querySelector('#contact-title')
+      ?.closest('[data-reveal]')
     expect(intro).not.toBeNull()
   })
 
@@ -174,11 +183,15 @@ describe('footer wordmark', () => {
 describe('page hero gradients', () => {
   it('every inner page hero with a photo paints the translucent green overlay', async () => {
     const css = readSource('app/globals.css')
-    expect(css).toMatch(/@utility bg-page-hero-overlay \{\s*background-image: var\(--page-hero-overlay\)/)
+    expect(css).toMatch(
+      /@utility bg-page-hero-overlay \{\s*background-image: var\(--page-hero-overlay\)/,
+    )
     const { container } = render(<AboutPage />)
     const hero = container.querySelector('[data-page-hero][data-has-image]')
     expect(hero?.querySelector('.bg-page-hero-overlay')).not.toBeNull()
-    expect(within(hero as HTMLElement).getByRole('heading', { level: 1 })).toBeInTheDocument()
+    expect(
+      within(hero as HTMLElement).getByRole('heading', { level: 1 }),
+    ).toBeInTheDocument()
   })
 })
 
@@ -192,6 +205,8 @@ describe('enquiry fields (dark card look and placeholders)', () => {
     expect(
       screen.getByPlaceholderText('Tell us about your project or enquiry…'),
     ).toBeInTheDocument()
-    expect(screen.getByRole('option', { name: 'Select a service' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('option', { name: 'Select a service' }),
+    ).toBeInTheDocument()
   })
 })

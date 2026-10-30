@@ -1,4 +1,3 @@
-import { Globe, type LucideIcon, Target } from 'lucide-react'
 import { Reveal } from '@/components/animations'
 import { PhotoSlot } from '@/components/photo-slot'
 import type { PhotoSlotId } from '@/lib/imagery'
@@ -6,7 +5,6 @@ import { cn } from '@/lib/utils'
 
 interface Row {
   id: string
-  icon: LucideIcon
   title: string
   text: string
   photo: PhotoSlotId
@@ -18,7 +16,6 @@ interface Row {
 const ROWS: readonly Row[] = [
   {
     id: 'vision',
-    icon: Globe,
     title: 'Our vision',
     text: 'To be Africa’s leading catalyst for sustainable agro-industrial transformation, where farms and factories thrive with clean energy, waste becomes valuable resources, and communities lead the transition to a climate-smart economy.',
     photo: 'about-vision',
@@ -26,7 +23,6 @@ const ROWS: readonly Row[] = [
   },
   {
     id: 'mission',
-    icon: Target,
     title: 'Our mission',
     text: 'To transform Africa’s agricultural and industrial sectors through innovative clean technologies, creating sustainable value chains that empower communities, enhance productivity, and protect our environment for future generations.',
     photo: 'about-mission',
@@ -36,9 +32,9 @@ const ROWS: readonly Row[] = [
 
 /**
  * Our mission and vision: one mint section, two alternating rows of text and
- * photograph. Each row has a round icon chip (the icon in the secondary
- * purple), a heading and a paragraph. The text and the photo each fade in as
- * they scroll into view (the Appear effect), the photo a beat later.
+ * photograph. Each row is a heading and a paragraph, set large: the words are
+ * the centrepiece, with no icon above them. The text and the photo each fade
+ * in as they scroll into view (the Appear effect), the photo a beat later.
  */
 export function VisionMission() {
   return (
@@ -58,7 +54,7 @@ export function VisionMission() {
         </Reveal>
 
         <div className="mt-12 space-y-12 lg:mt-16 lg:space-y-20">
-          {ROWS.map(({ id, icon: Icon, title, text, photo, photoSide }) => (
+          {ROWS.map(({ id, title, text, photo, photoSide }) => (
             <div
               key={id}
               data-row={id}
@@ -70,16 +66,8 @@ export function VisionMission() {
                   photoSide === 'left' && 'lg:order-2 lg:justify-self-start',
                 )}
               >
-                <span
-                  aria-hidden
-                  className="flex size-12 items-center justify-center rounded-full bg-background text-secondary"
-                >
-                  <Icon className="size-5" />
-                </span>
-                <h3 className="mt-6 text-3xl text-canopy">{title}</h3>
-                <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-                  {text}
-                </p>
+                <h3 className="text-title text-canopy">{title}</h3>
+                <p className="mt-5 text-lead text-foreground/80">{text}</p>
               </Reveal>
               <Reveal
                 delay={0.15}

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { recordedSizes, startSizeRecording } from './helpers'
+import { recordedRects, startRectRecording } from './helpers'
 
 test.describe('desktop navigation', () => {
   test.skip(({ isMobile }) => isMobile, 'desktop only')
@@ -47,45 +47,126 @@ test.describe('mobile drawer', () => {
     await expect(page.getByRole('navigation', { name: 'Main' })).toBeHidden()
   })
 
-  test('grows out of the hamburger into a floating glass panel', async ({
+  test('drops down from the header pill into a glass panel as wide as it', async ({
     page,
   }) => {
     await page.goto('/')
     await page.waitForLoadState('networkidle')
-    const burger = await page
-      .getByRole('button', { name: 'Open menu' })
-      .boundingBox()
-    await startSizeRecording(page, '[data-slot="menu-panel"]')
+    const pill = await page.locator('header > div').first().boundingBox()
+    await startRectRecording(page, '[data-slot="menu-panel"]')
     await page.getByRole('button', { name: 'Open menu' }).click()
     await page.waitForTimeout(1200)
-    const sizes = await recordedSizes(page)
-    const [firstWidth, firstRight] = sizes[0]
-    const [restWidth, restRight] = sizes.at(-1) as [number, number]
-    // Starts tiny, beside the hamburger, and ends at full size.
-    expect(firstWidth).toBeLessThan(restWidth * 0.25)
-    expect(
-      Math.abs(firstRight - ((burger?.x ?? 0) + (burger?.width ?? 0))),
-    ).toBeLessThan(24)
-    expect(restWidth).toBeGreaterThan(250)
-    // Translucent: it is the frosted glass surface, not an opaque sheet.
+    const rects = await recordedRects(page)
+    const first = rects[0]
+    const rest = rects.at(-1)
+    if (!(first && rest && pill)) throw new Error('no samples')
+    // Starts flat, directly under the pill, and grows downward to full height.
+    expect(first.height).toBeLessThan(rest.height * 0.25)
+    expect(rest.height).toBeGreaterThan(200)
+    expect(first.top).toBeGreaterThanOrEqual(pill.y + pill.height)
+    // The top edge never moves: it expands down, it does not slide.
+    expect(Math.abs(rest.top - first.top)).toBeLessThan(2)
+    // Same side margins as the pill, so the two read as one unit.
+    expect(Math.abs(rest.left - pill.x)).toBeLessThan(2)
+    expect(Math.abs(rest.width - pill.width)).toBeLessThan(2)
     await expect(page.locator('[data-slot="menu-panel"]')).toHaveClass(/glass/)
-    expect(restRight).toBeLessThanOrEqual(page.viewportSize()?.width ?? 0)
   })
 
-  test('closes by shrinking back into the hamburger, then unmounts', async ({
+  test('the toggle is two lines that turn into an X', async ({ page }) => {
+    await page.goto('/')
+    const toggle = page.getByRole('button', { name: 'Open menu' })
+    const bars = toggle.locator('span[aria-hidden] > span')
+    await expect(bars).toHaveCount(2)
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    await toggle.click()
+    const open = page.locator('button[aria-expanded="true"]')
+    await expect(open).toHaveAttribute('aria-label', 'Close menu')
+    await page.waitForTimeout(450)
+    const angles = await open
+      .locator('span[aria-hidden] > span')
+      .evaluateAll((els) =>
+        els.map((el) => {
+          const m = new DOMMatrix(getComputedStyle(el).transform)
+          return Math.round(Math.atan2(m.b, m.a) * (180 / Math.PI))
+        }),
+      )
+    expect(angles.map(Math.abs)).toEqual([45, 45])
+    expect(angles[0]).toBe(-angles[1])
+  })
+
+  test('shows text links then a green call to action, and nothing else', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Open menu' }).click()
+    const dialog = page.getByRole('dialog', { name: 'Site navigation' })
+    await expect(dialog).toBeVisible()
+    await expect(dialog.locator('svg')).toHaveCount(0)
+    const cta = dialog.getByRole('link', { name: 'Explore Our Services' })
+    await expect(cta).toBeVisible()
+    await expect(cta).toHaveCSS('background-color', 'rgb(31, 127, 49)')
+  })
+
+  test('the links feed in one after another, top to bottom', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    await page.waitForLoadState('networkidle')
+    await page.evaluate(() => {
+      const w = window as Window & { __seen?: Record<string, number> }
+      w.__seen = {}
+      const t0 = performance.now()
+      const tick = () => {
+        for (const li of document.querySelectorAll(
+          '[data-slot="menu-panel"] li',
+        ))
+          if (Number(getComputedStyle(li).opacity) > 0.5) {
+            const key = li.textContent ?? ''
+            w.__seen ??= {}
+            w.__seen[key] ??= performance.now() - t0
+          }
+        if (performance.now() - t0 < 1500) requestAnimationFrame(tick)
+      }
+      tick()
+    })
+    await page.getByRole('button', { name: 'Open menu' }).click()
+    await page.waitForTimeout(1600)
+    const seen = await page.evaluate(
+      () =>
+        (window as Window & { __seen?: Record<string, number> }).__seen ?? {},
+    )
+    const times = Object.values(seen)
+    expect(times.length).toBeGreaterThanOrEqual(4)
+    expect(times).toEqual([...times].sort((a, b) => a - b))
+    expect(times.at(-1)).toBeGreaterThan(times[0])
+  })
+
+  test('pressing outside the panel closes it', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Open menu' }).click()
+    const dialog = page.getByRole('dialog', { name: 'Site navigation' })
+    await expect(dialog).toBeVisible()
+    const vh = page.viewportSize()?.height ?? 600
+    await page.mouse.click(10, vh - 10)
+    await expect(dialog).toHaveCount(0)
+  })
+
+  test('closes by folding up under the pill, then unmounts', async ({
     page,
   }) => {
     await page.goto('/')
     await page.waitForLoadState('networkidle')
     await page.getByRole('button', { name: 'Open menu' }).click()
     await page.waitForTimeout(1000)
-    await startSizeRecording(page, '[data-slot="menu-panel"]')
+    await startRectRecording(page, '[data-slot="menu-panel"]')
     await page.keyboard.press('Escape')
     await page.waitForTimeout(1200)
-    const sizes = await recordedSizes(page)
-    const [startWidth] = sizes[0]
-    const [endWidth] = sizes.at(-1) as [number, number]
-    expect(endWidth).toBeLessThan(startWidth * 0.25) // shrank into the button
+    const rects = await recordedRects(page)
+    const start = rects[0]
+    const end = rects.at(-1)
+    if (!(start && end)) throw new Error('no samples')
+    expect(end.height).toBeLessThan(start.height * 0.25) // collapsed upward
+    expect(Math.abs(end.top - start.top)).toBeLessThan(2) // top edge fixed
     await expect(page.locator('[data-slot="menu-panel"]')).toHaveCount(0)
   })
 

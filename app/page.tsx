@@ -1,11 +1,4 @@
-import {
-  ArrowRight,
-  BookOpen,
-  Droplets,
-  Flame,
-  Recycle,
-  Sun,
-} from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { Stagger, StaggerItem } from '@/components/animations'
 import { CtaBand } from '@/components/sections/cta-band'
@@ -28,39 +21,34 @@ import { CTA_BAND_IMAGE } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 const stats = [
-  { value: '500+', label: 'Farmers empowered' },
-  { value: '50+', label: 'Projects delivered' },
-  { value: '10+', label: 'Years of experience' },
-  { value: '5', label: 'States reached' },
+  { value: '500+', label: 'Farmers Empowered' },
+  { value: '50+', label: 'Projects Delivered' },
+  { value: '10+', label: 'Years of Experience' },
+  { value: '5+', label: 'States Reached' },
 ]
 
 const coreImpactAreas = [
   {
-    icon: Recycle,
     title: 'Circular Economy Solutions',
     description:
       'Closing the loop in agro-industrial value chains by turning waste into valuable resources—reducing costs, boosting productivity, and minimizing environmental impact.',
   },
   {
-    icon: Flame,
     title: 'Biomass Gasification & Biochar',
     description:
       'Converting agricultural residues into clean syngas for power and biochar for soil restoration, enhancing yields while cutting fossil fuel dependence.',
   },
   {
-    icon: Sun,
     title: 'Renewable Energy Systems',
     description:
       'Designing and deploying solar PV and hybrid solutions that deliver reliable, affordable, and low-carbon power for farms, agro-processors, and rural industries.',
   },
   {
-    icon: Droplets,
     title: 'Green Hydrogen for Agriculture & Industry',
     description:
       'Integrating hydrogen production from renewable energy to power processes, enable green fertilizer production, and decarbonize logistics.',
   },
   {
-    icon: BookOpen,
     title: 'Capacity Building & Training',
     description:
       'Equipping communities, cooperatives, and enterprises with the knowledge and skills to adopt and scale sustainable practices, with a strong focus on gender inclusion.',
@@ -92,16 +80,13 @@ export default function Home() {
                 // Two wide cards on top, three across below: no orphan card.
                 className={cn('md:col-span-3', i >= 2 && 'lg:col-span-2')}
               >
-                <Card className="h-full gap-4 transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift">
-                  <CardHeader>
-                    <span className="mb-3 flex size-12 items-center justify-center rounded-xl bg-secondary-soft text-secondary">
-                      <area.icon className="size-6" aria-hidden />
-                    </span>
-                    <CardTitle className="font-display text-xl font-normal">
+                <Card className="h-full gap-4 py-8 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+                  <CardHeader className="px-6 sm:px-8">
+                    <CardTitle className="font-display text-2xl leading-tight font-normal text-canopy sm:text-[1.75rem]">
                       {area.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardDescription className="px-6 text-base leading-relaxed">
+                  <CardDescription className="px-6 text-lg leading-relaxed sm:px-8">
                     {area.description}
                   </CardDescription>
                 </Card>
@@ -125,7 +110,7 @@ export default function Home() {
         <Button asChild variant="cta" size="lg" className="rounded-full">
           <Link href="/services">
             Explore our services
-            <ArrowRight className="transition-transform group-hover/button:translate-x-1" />
+            <ArrowRight className="transition-transform group-hover/button:translate-x-1 group-active/button:translate-x-1" />
           </Link>
         </Button>
         <Button asChild variant="onDark" size="lg" className="rounded-full">
