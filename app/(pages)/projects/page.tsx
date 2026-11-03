@@ -28,7 +28,7 @@ export default function ProjectsPage() {
       <PageHero
         image={PAGE_HERO_IMAGES.projects}
         title="Our projects & impact"
-        description="Discover how we’re transforming agriculture across Nigeria through innovative projects, strategic partnerships, and community-focused initiatives that create lasting change."
+        description="Discover how we’re transforming industry and agriculture across Nigeria through innovative projects, strategic partnerships, and community-focused initiatives that create lasting change."
       />
 
       {/* Key projects */}
@@ -55,7 +55,7 @@ export default function ProjectsPage() {
 
       <CtaBand
         title="Partner with us"
-        description="Join us in building a sustainable future for Nigeria’s agriculture. Let’s discuss how we can work together to create lasting impact."
+        description="Join us in building a sustainable future for Nigeria’s industry and agriculture. Let’s discuss how we can work together to create lasting impact."
       >
         <Button asChild variant="cta" size="lg">
           <Link href="/contact">

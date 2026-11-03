@@ -98,7 +98,7 @@ describe('who we are (wireframe image 6)', () => {
     expect(
       screen.getByRole('heading', { name: 'Who we are' }),
     ).toBeInTheDocument()
-    expect(container.textContent).toMatch(/leading Nigerian enterprise/)
+    expect(container.textContent).toMatch(/leading African enterprise/)
     expect(container.querySelectorAll('[data-tile]')).toHaveLength(5)
   })
 
@@ -138,7 +138,7 @@ describe('who we are (wireframe image 6)', () => {
     const statement = container.querySelector(
       'section > div > div p',
     ) as HTMLElement
-    expect(statement.textContent).toMatch(/leading Nigerian enterprise/)
+    expect(statement.textContent).toMatch(/leading African enterprise/)
     expect(statement).toHaveClass('text-intro', 'font-semibold')
     expect(statement).not.toHaveClass('text-lg', 'leading-relaxed')
   })
@@ -430,7 +430,7 @@ describe('office map (contact page)', () => {
     )
     expect(mapSearchUrl(COMPANY_INFO.address)).toContain(`query=${q}`)
     expect(mapDirectionsUrl(COMPANY_INFO.address)).toContain(`destination=${q}`)
-    expect(COMPANY_INFO.address).toMatch(/Lagos/) // "Ketu" alone is also a town in Ogun State
+    expect(COMPANY_INFO.address).toMatch(/Lagos/) // a bare area name can match several places, so keep the city for the map search
   })
 
   it('shows a placeholder and loads nothing until cookies are accepted', async () => {
@@ -488,7 +488,7 @@ describe('closing CTA (landing page)', () => {
     const content = container.querySelector('[data-cta-content]') as HTMLElement
     expect(image).not.toBeNull()
     expect(content).not.toBeNull()
-    expect(content.textContent).toMatch(/join us in transforming agriculture/i)
+    expect(content.textContent).toMatch(/join us in transforming energy access, industry and agriculture/i)
     // Both use the Appear effect (opacity 0 until scrolled into view).
     expect(image).toHaveAttribute('data-reveal')
     expect(content).toHaveAttribute('data-reveal')

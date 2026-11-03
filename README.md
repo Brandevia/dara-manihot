@@ -1,7 +1,8 @@
 # Dara-Manihot Industries & Farms
 
-Marketing site for Dara-Manihot Industries & Farms: sustainable agriculture,
-renewable energy, biomass gasification and green hydrogen in Nigeria.
+Marketing site for Dara-Manihot Industries & Farms: sustainable energy for green
+industries and agriculture, including renewable energy, biomass gasification
+and green hydrogen, in Nigeria and West Africa.
 
 **Stack:** Next.js 16 (App Router, Turbopack) · React 19 · Tailwind CSS 4 ·
 shadcn/ui + Radix · Motion · TypeScript · Biome + ESLint · Vitest + Playwright.
@@ -98,7 +99,8 @@ illustrations.
 [`docs/PHOTO-REQUEST.md`](docs/PHOTO-REQUEST.md).
 
 **Add or change a service.** Edit `SERVICES` in `lib/services.ts` and give it a
-`pillar` (`sustainable-agriculture`, `sustainable-energy` or `supporting`). It
+`pillar` (`sustainable-energy`, `green-industries`, `sustainable-agriculture` or
+`supporting`). It
 then appears in the right Services section, the enquiry form's service list
 and the footer, with no other change.
 

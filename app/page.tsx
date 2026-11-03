@@ -29,29 +29,29 @@ const stats = [
 
 const coreImpactAreas = [
   {
-    title: 'Circular Economy Solutions',
-    description:
-      'Closing the loop in agro-industrial value chains by turning waste into valuable resources—reducing costs, boosting productivity, and minimizing environmental impact.',
-  },
-  {
-    title: 'Biomass Gasification & Biochar',
-    description:
-      'Converting agricultural residues into clean syngas for power and biochar for soil restoration, enhancing yields while cutting fossil fuel dependence.',
-  },
-  {
     title: 'Renewable Energy Systems',
     description:
       'Designing and deploying solar PV and hybrid solutions that deliver reliable, affordable, and low-carbon power for farms, agro-processors, and rural industries.',
   },
   {
-    title: 'Green Hydrogen for Agriculture & Industry',
+    title: 'Green Industrial Value Chains',
     description:
-      'Integrating hydrogen production from renewable energy to power processes, enable green fertilizer production, and decarbonize logistics.',
+      'Supporting industrial decarbonization through business model innovation, technology, and process transitions to increase efficiency and reduce waste.',
   },
   {
-    title: 'Capacity Building & Training',
+    title: 'Green Hydrogen for Agriculture & Industry',
     description:
-      'Equipping communities, cooperatives, and enterprises with the knowledge and skills to adopt and scale sustainable practices, with a strong focus on gender inclusion.',
+      'Integrating hydrogen production from renewable energy to power processes, enable green fertilizer production, industrial value chains, and logistics decarbonization.',
+  },
+  {
+    title: 'Circular Economy Solutions',
+    description:
+      'Closing the loop in agro-industrial value chains by turning waste into valuable resources—reducing costs, boosting productivity, and minimizing environmental impact.',
+  },
+  {
+    title: 'Biomass Gasification & Valorization',
+    description:
+      'Converting agricultural residues into clean syngas for power and biochar for soil restoration, enhancing yields while cutting fossil fuel dependence.',
   },
 ]
 
@@ -71,7 +71,7 @@ export default function Home() {
         <div className="page-container">
           <SectionHeading
             title="Our core impact areas"
-            description="We focus on five key areas that drive sustainable transformation across agriculture and industry."
+            description="We focus on five key areas that drive sustainable transformation across industry and agriculture."
           />
           <Stagger className="grid gap-6 md:grid-cols-6">
             {coreImpactAreas.map((area, i) => (
@@ -103,8 +103,8 @@ export default function Home() {
       <VisionStatement />
 
       <CtaBand
-        title="Join us in transforming agriculture"
-        description="Together, we can build a sustainable future where clean technologies power Africa’s agricultural transformation. Let’s create lasting impact for communities, businesses, and our planet."
+        title="Join us in transforming Energy Access, Industry and Agriculture"
+        description="Together, we can build a sustainable future where clean energy and innovative technologies power Africa’s industrial and agricultural transformation. Let’s create lasting impact for communities, businesses, and our planet."
         image={CTA_BAND_IMAGE}
       >
         <Button asChild variant="cta" size="lg" className="rounded-full">

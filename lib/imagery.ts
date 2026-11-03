@@ -51,6 +51,16 @@ export const PHOTO_SLOTS = [
     src: '/images/hero/image1.png',
   },
   {
+    id: 'home-industry',
+    page: 'home',
+    category: 'energy',
+    brief:
+      'A factory or processing plant running on solar, storage or biomass, ideally with staff.',
+    alt: 'A green manufacturing hub with a solar array, hydrogen storage tanks and wind turbines beside farmland',
+    src: '/images/hero/image6.png',
+    position: '60% 50%',
+  },
+  {
     id: 'home-people',
     page: 'home',
     category: 'people',
@@ -154,8 +164,8 @@ export const PHOTO_SLOTS = [
     id: 'contact-office',
     page: 'contact',
     category: 'people',
-    brief: 'The team at the Ketu office, or a welcoming reception shot.',
-    alt: 'The Dara-Manihot team at the Ketu office',
+    brief: 'The team at the Ikosi office, or a welcoming reception shot.',
+    alt: 'The Dara-Manihot team at the Ikosi office',
     src: '/images/hero/image7.png',
   },
 ] as const satisfies readonly PhotoSlotDef[]

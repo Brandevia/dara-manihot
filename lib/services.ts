@@ -10,6 +10,48 @@ export interface Service {
 
 export const SERVICES = [
   {
+    id: 'solar-renewables',
+    pillar: 'sustainable-energy',
+    title: 'Solar PV & Renewable Energy Solutions',
+    shortTitle: 'Renewable Energy Systems',
+    description:
+      'Comprehensive renewable energy systems tailored for agricultural and industrial applications.',
+    details: [
+      'Solar PV system design, installation, and commissioning',
+      'Hybrid renewable energy systems (solar + biomass + storage)',
+      'Grid-tied and off-grid solutions for rural areas',
+      'Energy audits and efficiency optimization',
+    ],
+  },
+  {
+    id: 'green-industrial-value-chains',
+    pillar: 'green-industries',
+    title: 'Green Industrial Value Chains',
+    shortTitle: 'Green Industrial Value Chains',
+    description:
+      'Supporting industrial decarbonization through business model innovation, technology, and process transitions to increase efficiency and reduce waste.',
+    details: [
+      'Energy and process audits that show where fossil fuels and waste can be displaced',
+      'Zero-CAPEX solar and battery storage agreements for factories and processors',
+      'Business model innovation and process transitions that raise efficiency and cut waste',
+      'A phased path from solar savings to battery storage and green hydrogen',
+    ],
+  },
+  {
+    id: 'green-hydrogen',
+    pillar: 'sustainable-energy',
+    title: 'Green Hydrogen Production & Applications',
+    shortTitle: 'Green Hydrogen Production',
+    description:
+      'Cutting-edge green hydrogen solutions for agriculture and industry decarbonization.',
+    details: [
+      'Electrolysis systems powered by renewable energy',
+      'Green ammonia production for fertilizer manufacturing',
+      'Hydrogen storage and distribution systems',
+      'Integration with agricultural processing facilities',
+    ],
+  },
+  {
     id: 'circular-economy',
     pillar: 'sustainable-agriculture',
     title: 'Circular Economy & Waste-to-Value Solutions',
@@ -26,8 +68,8 @@ export const SERVICES = [
   {
     id: 'biomass-gasification',
     pillar: 'sustainable-energy',
-    title: 'Biomass Gasification & Energy Systems',
-    shortTitle: 'Biomass Gasification',
+    title: 'Biomass Gasification & Valorization',
+    shortTitle: 'Biomass Gasification & Valorization',
     description:
       'Advanced biomass gasification technologies that convert agricultural waste into clean energy.',
     details: [
@@ -35,34 +77,6 @@ export const SERVICES = [
       'Syngas production for heating, power generation, and industrial processes',
       'Integration with existing agricultural operations',
       'Training on operation, maintenance, and safety protocols',
-    ],
-  },
-  {
-    id: 'solar-renewables',
-    pillar: 'sustainable-energy',
-    title: 'Solar PV & Renewable Energy Solutions',
-    shortTitle: 'Renewable Energy Systems',
-    description:
-      'Comprehensive renewable energy systems tailored for agricultural and industrial applications.',
-    details: [
-      'Solar PV system design, installation, and commissioning',
-      'Hybrid renewable energy systems (solar + biomass + storage)',
-      'Grid-tied and off-grid solutions for rural areas',
-      'Energy audits and efficiency optimization',
-    ],
-  },
-  {
-    id: 'green-hydrogen',
-    pillar: 'sustainable-energy',
-    title: 'Green Hydrogen Production & Applications',
-    shortTitle: 'Green Hydrogen Production',
-    description:
-      'Cutting-edge green hydrogen solutions for agriculture and industry decarbonization.',
-    details: [
-      'Electrolysis systems powered by renewable energy',
-      'Green ammonia production for fertilizer manufacturing',
-      'Hydrogen storage and distribution systems',
-      'Integration with agricultural processing facilities',
     ],
   },
   {
@@ -96,8 +110,9 @@ export const SERVICES = [
 ] as const satisfies readonly Service[]
 
 export type PillarId =
-  | 'sustainable-agriculture'
   | 'sustainable-energy'
+  | 'green-industries'
+  | 'sustainable-agriculture'
   | 'supporting'
 
 export interface Pillar {
@@ -111,10 +126,33 @@ export interface Pillar {
 }
 
 /**
- * The two headline offerings, plus the services that support both. Order is
- * display order. Agriculture and energy are deliberately equal in weight.
+ * Sustainable energy is the pathway, so it leads; green industries and
+ * sustainable agriculture are the two areas it serves; training and research
+ * support all three. Order is display order.
  */
 export const PILLARS = [
+  {
+    id: 'sustainable-energy',
+    title: 'Sustainable Energy',
+    summary:
+      'Solar PV, biomass gasification and green hydrogen that deliver reliable, affordable, low-carbon power for industries and farms.',
+    highlights: [
+      'Solar PV and hybrid systems, grid-tied and off-grid',
+      'Biomass gasification turning crop residue into clean power',
+      'Green hydrogen and green ammonia for fertilizer and industry',
+    ],
+  },
+  {
+    id: 'green-industries',
+    title: 'Green Industries',
+    summary:
+      'Clean power and process change for factories and processors, so they cut energy costs, waste and emissions while staying competitive.',
+    highlights: [
+      'Industrial decarbonization through business model and process transitions',
+      'Zero-CAPEX solar and storage for factories and processors',
+      'A phased path from solar savings to green hydrogen',
+    ],
+  },
   {
     id: 'sustainable-agriculture',
     title: 'Sustainable Agriculture',
@@ -127,21 +165,10 @@ export const PILLARS = [
     ],
   },
   {
-    id: 'sustainable-energy',
-    title: 'Sustainable Energy',
-    summary:
-      'Solar PV, biomass gasification and green hydrogen that deliver reliable, affordable, low-carbon power for farms and industry.',
-    highlights: [
-      'Solar PV and hybrid systems, grid-tied and off-grid',
-      'Biomass gasification turning crop residue into clean power',
-      'Green hydrogen and green ammonia for fertilizer and industry',
-    ],
-  },
-  {
     id: 'supporting',
     title: 'Training & Research',
     summary:
-      'Capacity building and R&D that help both agriculture and energy solutions take root locally.',
+      'Capacity building and R&D that support integrating sustainable energy with green industries and sustainable agriculture, establishing long-term local energy solutions.',
     highlights: [
       'Technical and entrepreneurship training',
       'Feasibility studies, pilots and local adaptation',

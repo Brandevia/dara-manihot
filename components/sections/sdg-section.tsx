@@ -27,7 +27,7 @@ export function SdgSection() {
           <SectionHeading
             id="sdg-title"
             title="Aligned with the UN Sustainable Development Goals"
-            description="Every project is designed to move the goals below forward, from clean energy on the farm to training the people who run it."
+            description="Every project is designed to move the goals below forward, from clean energy in factories and on farms to training the people who run it."
             className="mb-0"
           />
           <Reveal delay={0.1}>

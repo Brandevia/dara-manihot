@@ -18,12 +18,12 @@ export function HomeHero() {
             id="home-hero-title"
             className="animate-rise text-on-photo max-w-3xl text-hero text-wrap motion-reduce:animate-none"
           >
-            Empowering Africa’s Agro Industry with Clean Solutions
+            Empowering Africa’s Agribusiness and Industries with Clean Energy Innovations
           </h1>
           <p className="animate-rise animation-delay-150 text-on-photo mt-5 max-w-200 text-[1.1rem] text-canopy-foreground leading-[1.55] motion-reduce:animate-none">
-            At Dara-Manihot Industries &amp; Farms, we’re transforming
-            agriculture and industry—creating resilient communities, competitive
-            businesses, and a greener future for Nigeria and beyond.
+            At Dara-Manihot Industries, we’re transforming industry and
+            agriculture, creating competitive businesses, resilient
+            communities, and a greener future for Africa and beyond.
           </p>
           <div className="animate-rise animation-delay-300 mt-8 flex flex-col gap-3 sm:flex-row motion-reduce:animate-none">
             <Button asChild variant="leaf" size="lg" className="rounded-full font-semibold text-lg">
