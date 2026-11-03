@@ -255,20 +255,21 @@ test.describe('POST /api/enquiry', () => {
 })
 
 test.describe('sustainable energy positioning (scope 4.2)', () => {
-  test('the home page shows agriculture and energy as equals', async ({
+  test('the home page leads with sustainable energy, then green industries and agriculture', async ({
     page,
   }) => {
     await page.goto('/')
-    const hero = page.getByRole('list', { name: /what we do/i })
-    await expect(hero).toContainText('Sustainable Agriculture')
-    await expect(hero).toContainText('Sustainable Energy')
-
+    // (The old "what we do" hero list was removed from HomeHero earlier.)
     const section = page
       .locator('#pillars-title')
       .locator('xpath=ancestor::section')
+    await expect(section.getByRole('heading', { level: 2 })).toHaveText(
+      'Sustainable Energy for Green Industries and Sustainable Agriculture',
+    )
     await expect(section.getByRole('heading', { level: 3 })).toHaveText([
-      'Sustainable Agriculture',
       'Sustainable Energy',
+      'Green Industries',
+      'Sustainable Agriculture',
     ])
   })
 
@@ -277,7 +278,11 @@ test.describe('sustainable energy positioning (scope 4.2)', () => {
   }) => {
     await page.goto('/services')
     await page.waitForLoadState('networkidle')
-    for (const id of ['sustainable-agriculture', 'sustainable-energy']) {
+    for (const id of [
+      'sustainable-energy',
+      'green-industries',
+      'sustainable-agriculture',
+    ]) {
       await expect(page.locator(`#${id}`)).toBeVisible()
     }
     await page
@@ -286,6 +291,17 @@ test.describe('sustainable energy positioning (scope 4.2)', () => {
       .click()
     await expect(page).toHaveURL(/#sustainable-energy$/)
     await expect(page.locator('#solar-renewables')).toBeVisible()
+  })
+
+  test('the new Green Industrial Value Chains service has a card and its own page', async ({
+    page,
+  }) => {
+    await page.goto('/services')
+    await expect(page.locator('#green-industrial-value-chains')).toBeVisible()
+    await page.goto('/services/green-industrial-value-chains')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      'Green Industrial Value Chains',
+    )
   })
 })
 
@@ -442,7 +458,7 @@ test.describe('home: who we are', () => {
     const h = await size(heading)
     expect(h.weight).toBeGreaterThanOrEqual(700)
     expect(h.px).toBeGreaterThanOrEqual(24)
-    const statement = page.getByText(/leading Nigerian enterprise/)
+    const statement = page.getByText(/leading African enterprise/)
     const p = await size(statement)
     expect(p.weight).toBeGreaterThanOrEqual(600)
     expect(p.px).toBeGreaterThanOrEqual(22)

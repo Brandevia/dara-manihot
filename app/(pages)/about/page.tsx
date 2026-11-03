@@ -22,7 +22,7 @@ import { CORE_VALUES, PAGE_HERO_IMAGES } from '@/lib/constants'
 export const metadata: Metadata = {
   title: 'About us',
   description:
-    'For over a decade, Dara-Manihot has been transforming Africa’s agricultural landscape through innovative clean technologies and sustainable practices.',
+    'For over a decade, Dara-Manihot has been transforming Africa’s agricultural landscape, and today brings the same clean technologies to industry.',
 }
 
 const companyMilestones = [
@@ -83,8 +83,8 @@ export default function AboutPage() {
     <>
       <PageHero
         image={PAGE_HERO_IMAGES.about}
-        title="Pioneering sustainable agriculture in Nigeria"
-        description="For over a decade, we’ve been at the forefront of transforming Africa’s agricultural landscape through innovative clean technologies and sustainable practices."
+        title="Pioneering clean energy for industry and agriculture in Nigeria"
+        description="For over a decade, we’ve been at the forefront of transforming Africa’s agricultural landscape, and today we bring the same innovative clean technologies and sustainable practices to industry."
       />
 
       {/* Leadership */}
@@ -223,8 +223,8 @@ export default function AboutPage() {
       </section>
 
       <CtaBand
-        title="Join us in transforming agriculture"
-        description="Together, we can build a sustainable future where clean technologies power Africa’s agricultural transformation. Let’s create lasting impact for communities, businesses, and our planet."
+        title="Join us in transforming Energy Access, Industry and Agriculture"
+        description="Together, we can build a sustainable future where clean energy and innovative technologies power Africa’s industrial and agricultural transformation. Let’s create lasting impact for communities, businesses, and our planet."
       >
         <Button asChild variant="cta" size="lg">
           <Link href="/contact">Get in touch</Link>

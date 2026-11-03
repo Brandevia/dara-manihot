@@ -133,7 +133,7 @@ export default async function ServicePage({ params }: Props) {
 
       <CtaBand
         title={`Talk to us about ${service.shortTitle.toLowerCase()}`}
-        description="Tell us about your farm, plant or project and we’ll recommend where to start."
+        description="Tell us about your plant, farm or project and we’ll recommend where to start."
       >
         <Button asChild variant="cta" size="lg">
           <Link href={enquiry}>Enquire about this service</Link>

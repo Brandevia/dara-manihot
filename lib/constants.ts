@@ -1,9 +1,9 @@
 export const COMPANY_INFO = {
   name: 'Dara-Manihot Industries & Farms',
   shortName: 'Dara-Manihot',
-  tagline: 'Transforming Agriculture and Industry through Clean Technologies',
+  tagline: 'Transforming Industry and Agriculture through Clean Technologies',
   description:
-    'Leading Nigerian enterprise redefining sustainable agriculture and industry through advanced clean technologies.',
+    'Dara-Manihot, a leading enterprise redefining sustainable energy in the green industry and sustainable agriculture through advanced innovation, processes, and clean technologies in Africa.',
   founded: '2014',
   location: 'Nigeria',
   email: 'info@daramanihot.com.ng',
@@ -11,7 +11,7 @@ export const COMPANY_INFO = {
     { display: '+234 802 340 0557', tel: '+2348023400557' },
     { display: '+234 706 141 2439', tel: '+2347061412439' },
   ],
-  address: 'Ketu, Lagos, Nigeria',
+  address: 'Ikosi, Lagos, Nigeria',
   hours: 'Mon - Fri: 8:00 AM - 6:00 PM',
 } as const
 
@@ -72,8 +72,8 @@ export function formatSdgNumbers(goals: readonly { number: number }[] = SDG_GOAL
 }
 
 export const HERO_SLIDES = [
-  { src: '/images/hero/image5.png', alt: 'A tractor working crop rows between solar panels, with a green processing plant and a river behind', caption: 'Farms powered by clean energy', position: '55% 50%' },
-  { src: '/images/hero/image3.png', alt: 'Rows of solar panels across a green field under a bright sky', caption: 'Solar power for farms and agro-processors', position: '50% 50%' },
+  { src: '/images/hero/image5.png', alt: 'A tractor working crop rows between solar panels, with a green processing plant and a river behind', caption: 'Industries and Farms powered by clean energy', position: '55% 50%' },
+  { src: '/images/hero/image3.png', alt: 'Rows of solar panels across a green field under a bright sky', caption: 'Solar power for industries, farms and agro-processors', position: '50% 50%' },
   { src: '/images/hero/image6.png', alt: 'A green manufacturing hub with a solar array, hydrogen storage tanks and wind turbines beside farmland', caption: 'Green manufacturing hubs for agro-industry', position: '60% 50%' },
   { src: '/images/hero/image9.png', alt: 'A hydrogen energy storage unit and white storage tanks on grass, with wind turbines and a city skyline behind', caption: 'Green hydrogen for fertilizer and industry', position: '60% 50%' },
 ] as const
@@ -117,6 +117,10 @@ export const PAGE_HERO_IMAGES = {
       src: '/images/hero/image3.png',
       position: '50% 55%',
     },
+    'green-industries': {
+      src: '/images/hero/image6.png',
+      position: '60% 50%',
+    },
     supporting: { src: '/images/hero/image7.png', position: '30% 50%' },
   },
 } as const satisfies {
@@ -125,7 +129,10 @@ export const PAGE_HERO_IMAGES = {
   projects: PageHeroImage
   legal: PageHeroImage
   pillars: Record<
-    'sustainable-agriculture' | 'sustainable-energy' | 'supporting',
+    | 'sustainable-agriculture'
+    | 'sustainable-energy'
+    | 'green-industries'
+    | 'supporting',
     PageHeroImage
   >
 }

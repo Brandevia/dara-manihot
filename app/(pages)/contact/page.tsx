@@ -31,14 +31,14 @@ import { mapDirectionsUrl, mapSearchUrl } from '@/lib/maps'
 export const metadata: Metadata = {
   title: 'Contact us',
   description:
-    'Talk to Dara-Manihot about sustainable agriculture, renewable energy and green hydrogen projects. Call, email or visit us in Ketu, Lagos.',
+    'Talk to Dara-Manihot about renewable energy, green industry, sustainable agriculture and green hydrogen projects. Call, email or visit us in Ikosi, Lagos.',
 }
 
 const whyContactUs = [
-  'Expert consultation on sustainable agriculture solutions',
   'Custom renewable energy system design and implementation',
+  'Expert consultation on green industry and sustainable agriculture solutions',
   'Partnership opportunities in green technology projects',
-  'Training programs for farmers and agro-processors',
+  'Training programs for industries, agro-processors and farmers',
   'Technical support for circular economy initiatives',
 ]
 
@@ -95,9 +95,9 @@ export default function ContactPage() {
                 Let’s build the future together
               </h1>
               <p className="mt-6 max-w-xl text-lead text-muted-foreground">
-                Ready to transform your agricultural operations with sustainable
-                solutions? Let’s discuss how we can work together to create
-                lasting impact.
+                Ready to transform your industrial or agricultural operations
+                with sustainable solutions? Let’s discuss how we can work
+                together to create lasting impact.
               </p>
             </Reveal>
 
@@ -172,10 +172,11 @@ export default function ContactPage() {
             <SectionHeading title="Why get in touch?" className="mb-6" />
             <Reveal delay={0.1}>
               <p className="mb-8 text-lg text-muted-foreground">
-                Whether you’re a farmer looking to adopt sustainable practices,
-                an agro-processor seeking renewable energy solutions, or an
-                organization interested in partnership opportunities, we’re here
-                to help.
+                Whether you’re an industrial operator looking to cut energy
+                costs, an agro-processor seeking renewable energy solutions, a
+                farmer looking to adopt sustainable practices, or an
+                organization interested in partnership opportunities, we’re
+                here to help.
               </p>
             </Reveal>
             <Stagger className="space-y-4">

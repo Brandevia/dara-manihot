@@ -23,7 +23,7 @@ import { cn } from '@/lib/utils'
 export const metadata: Metadata = {
   title: 'Services',
   description:
-    'Renewable energy, biomass gasification, green hydrogen, circular economy solutions and training for sustainable agriculture and industry.',
+    'Renewable energy, green industrial value chains, green hydrogen, biomass gasification, circular economy solutions and training for green industry and sustainable agriculture.',
 }
 
 const processSteps = [
@@ -85,8 +85,9 @@ const projectSupport = [
 ]
 
 const PILLAR_IMAGES: Record<PillarId, readonly PhotoSlotId[]> = {
-  'sustainable-agriculture': ['services-agriculture'],
   'sustainable-energy': ['services-energy', 'services-equipment'],
+  'green-industries': [],
+  'sustainable-agriculture': ['services-agriculture'],
   supporting: [],
 }
 
@@ -96,7 +97,7 @@ export default function ServicesPage() {
       <PageHero
         image={PAGE_HERO_IMAGES.services}
         title="Our services"
-        description="From renewable energy systems to circular economy solutions, we provide end-to-end services that transform agricultural operations and industrial processes for sustainability and profitability."
+        description="From renewable energy systems to circular economy solutions, we provide end-to-end services that transform industrial processes and agricultural operations for sustainability and profitability."
       >
         <nav aria-label="Service areas">
           <ul className="flex flex-wrap gap-3">
@@ -111,7 +112,7 @@ export default function ServicesPage() {
         </nav>
       </PageHero>
 
-      {/* One section per pillar: agriculture and energy at equal weight. */}
+      {/* One section per pillar, in PILLARS order: energy first, then green industries and agriculture. */}
       {PILLARS.map((pillar, i) => {
         const images = PILLAR_IMAGES[pillar.id]
         return (
@@ -234,7 +235,7 @@ export default function ServicesPage() {
             <p className="mt-5 text-lead text-canopy-foreground/85">
               Renewable power makes green hydrogen. From there it feeds green
               ammonia, urea fertilizer, green methanol, sorbitol and e-fuels, so
-              farms and factories draw on one clean supply chain.
+              factories and farms draw on one clean supply chain.
             </p>
           </Reveal>
           <Reveal delay={0.1} className="mt-10">

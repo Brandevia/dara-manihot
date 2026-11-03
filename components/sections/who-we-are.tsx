@@ -65,12 +65,12 @@ export function WhoWeAre() {
         </Reveal>
         <Reveal delay={0.1}>
           <p className="mt-8 max-w-4xl text-intro font-semibold text-muted-foreground sm:mt-12">
-            Dara-Manihot Industries &amp; Farms is a leading Nigerian enterprise
-            redefining sustainable agriculture and industry through advanced
-            clean technologies. We combine decades of agricultural expertise
-            with cutting-edge renewable energy, green hydrogen systems, and
-            circular economy practices to unlock new opportunities for farmers,
-            processors, and industries.
+            Dara-Manihot Industries &amp; Farms is a leading African enterprise
+            redefining clean energy access, green industry, and agriculture
+            through advanced clean technologies. We combine decades of
+            agricultural expertise with cutting-edge renewable energy, green
+            hydrogen systems, and circular economy practices to unlock new
+            opportunities for industries, processors, and farmers.
           </p>
         </Reveal>
 

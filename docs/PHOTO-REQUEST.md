@@ -17,8 +17,9 @@ without a redesign.
 
 | Slot id | Page | Please send |
 | --- | --- | --- |
-| `home-agriculture` | Home | Farmers or field staff at work on a Dara-Manihot supported farm |
 | `home-energy` | Home | A completed solar PV or biomass installation, ideally with staff |
+| `home-industry` | Home | A factory or processing plant running on solar, storage or biomass, ideally with staff |
+| `home-agriculture` | Home | Farmers or field staff at work on a Dara-Manihot supported farm |
 | `home-people` | Home | The team with farmers or community members on site |
 | `about-leadership` | About | A portrait of the founder plus one leadership group photo |
 | `about-field` | About | The team in the field: planting, harvesting, residue processing |
@@ -30,7 +31,7 @@ without a redesign.
 | `projects-green-energy-hub` | Projects | Covenant University Green Energy Hub: the site, equipment, partners |
 | `projects-circular-fertilizer` | Projects | Fertilizer production or agricultural residue processing |
 | `projects-community` | Projects | Training sessions and community impact: cooperatives, women, youth |
-| `contact-office` | Contact | The team at the Ketu office, or a welcoming reception shot |
+| `contact-office` | Contact | The team at the Ikosi office, or a welcoming reception shot |
 
 ## Also needed
 

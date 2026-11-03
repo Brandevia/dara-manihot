@@ -9,14 +9,16 @@ import type { PhotoSlotId } from '@/lib/imagery'
 import { PILLARS } from '@/lib/services'
 
 const IMAGE: Record<string, PhotoSlotId> = {
-  'sustainable-agriculture': 'home-agriculture',
   'sustainable-energy': 'home-energy',
+  'green-industries': 'home-industry',
+  'sustainable-agriculture': 'home-agriculture',
 }
 
 /**
- * The two headline offerings at equal weight, straight under the hero, so a
- * visitor sees both within the first scroll. The "supporting" group is left
- * out here; it has its own section on /services.
+ * The three headline offerings straight under the hero: sustainable energy
+ * (the pathway), then the two areas it serves, green industries and
+ * sustainable agriculture. Order follows PILLARS. The "supporting" group is
+ * left out here; it has its own section on /services.
  */
 export function PillarsSection() {
   const headline = PILLARS.filter((p) => p.id in IMAGE)
@@ -25,16 +27,16 @@ export function PillarsSection() {
       <div className="page-container">
         <SectionHeading
           id="pillars-title"
-          title="Sustainable agriculture and sustainable energy"
-          description="Two connected solution areas that together transform how Nigerian farms and industries grow and power themselves."
+          title="Sustainable Energy for Green Industries and Sustainable Agriculture"
+          description="Two connected solution areas that together transform how industries and agriculture grow and power themselves sustainably."
         />
-        <Stagger className="grid gap-6 lg:grid-cols-2">
+        <Stagger className="grid gap-6 lg:grid-cols-3">
           {headline.map((pillar) => (
             <StaggerItem key={pillar.id}>
               <Card className="h-full gap-0 overflow-hidden p-0 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift motion-reduce:transition-none motion-reduce:hover:translate-y-0">
                 <PhotoSlot
                   id={IMAGE[pillar.id]}
-                  sizes="(min-width: 1024px) 560px, 100vw"
+                  sizes="(min-width: 1216px) 400px, (min-width: 1024px) 33vw, 100vw"
                   className="aspect-[16/9] rounded-none"
                 />
                 <div className="flex flex-1 flex-col gap-5 p-7 sm:p-8">

@@ -152,7 +152,7 @@ describe('landing page', () => {
     const last = sections.at(-1)
     expect(
       within(last as HTMLElement).getByRole('heading', {
-        name: 'Join us in transforming agriculture',
+        name: 'Join us in transforming Energy Access, Industry and Agriculture',
       }),
     ).toBeInTheDocument()
     expect(last?.querySelector('img')).not.toBeNull()

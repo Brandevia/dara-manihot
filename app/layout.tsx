@@ -25,11 +25,11 @@ const figtree = localFont({
 export const metadata: Metadata = {
   title: {
     default:
-      'Dara-Manihot Industries & Farms - Sustainable Agriculture & Clean Energy',
+      'Dara-Manihot Industries & Farms - Sustainable Energy for Green Industry & Agriculture',
     template: '%s | Dara-Manihot',
   },
   description:
-    'Transforming Agriculture and Industry through Clean Technologies, Circular Economy, Renewable Energy, and Green Hydrogen Solutions in Nigeria and West Africa.',
+    'Sustainable energy for green industries and agriculture: clean technologies, circular economy, renewable energy and green hydrogen solutions in Nigeria and West Africa.',
   // Emits <meta name="author"> and <link rel="author" href="/humans.txt">.
   authors: [{ name: 'Sodeke Pamilerin', url: '/humans.txt' }],
 }
