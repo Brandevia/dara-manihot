@@ -40,8 +40,8 @@ export const SERVICES = [
   {
     id: 'green-hydrogen',
     pillar: 'sustainable-energy',
-    title: 'Green Hydrogen Production & Applications',
-    shortTitle: 'Green Hydrogen Production',
+    title: 'Green Hydrogen for Agriculture & Industry  & Applications',
+    shortTitle: 'Green Hydrogen for Agriculture & Industry ',
     description:
       'Cutting-edge green hydrogen solutions for agriculture and industry decarbonization.',
     details: [

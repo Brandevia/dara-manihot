@@ -376,7 +376,7 @@ describe('footer', () => {
     expect(links.map((a) => a.textContent)).toEqual([
       'Renewable Energy Systems',
       'Green Industrial Value Chains',
-      'Green Hydrogen Production',
+      'Green Hydrogen for Agriculture & Industry ',
       'Circular Economy Solutions',
       'Biomass Gasification & Valorization',
       'Capacity Building',
