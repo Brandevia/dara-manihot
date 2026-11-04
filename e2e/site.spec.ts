@@ -73,7 +73,7 @@ test('footer service links open that service’s own page', async ({ page }) => 
   await page.goto('/')
   await page
     .locator('footer')
-    .getByRole('link', { name: 'Green Hydrogen Production' })
+    .getByRole('link', { name: 'Green Hydrogen for Agriculture & Industry ' })
     .click()
   await expect(page).toHaveURL(/\/services\/green-hydrogen$/)
   await expect(page.getByRole('heading', { level: 1 })).toContainText(
