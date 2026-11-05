@@ -172,7 +172,7 @@ Young Serif sets the voice: display, titles and the big figures. Figtree does th
 
 One container (`max 76rem`, fluid side padding) and one vertical rhythm (`--section-y`, 64px on phones to 112px on desktop). Sections alternate between ivory and mist; **every page ends on ivory** so the footer's rounded corners meet white, and a test enforces it.
 
-Grids collapse from the content, not the device: four figure tiles become two at 480px and one below; the gallery is one wide tile plus two pairs on a phone, and a six-column bento from 1024px. No page scrolls sideways at 320, 375, 768 or 1280px. In-page anchors (`#summit`, `#leadership`, `#map`) clear the floating header with `scroll-mt-header`.
+Grids collapse from the content, not the device: four figure tiles become two at 480px and one below; the gallery is one wide tile plus two pairs on a phone, and a six-column bento from 1024px. No page scrolls sideways at 320, 375, 768 or 1280px. The header follows the same rule: the hamburger becomes the full desktop pill at 1024px (`lg`), not at the 768px tablet preset. That pill is about 895px wide and nothing in it can shrink, so it needs 959px of screen; below that the "Get in touch" button would spill out of the pill. Tablets in portrait (768 to 1023px) therefore get the hamburger. If a nav link, label or gap makes the pill wider, raise the breakpoint rather than squeezing the spacing; `tests/header-breakpoint.test.tsx` and `e2e/header-fit.spec.ts` fail when the two drift. In-page anchors (`#summit`, `#leadership`, `#map`) clear the floating header with `scroll-mt-header`.
 
 ## Elevation & Depth
 
