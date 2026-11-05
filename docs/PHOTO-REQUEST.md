@@ -30,6 +30,9 @@ without a redesign.
 | `services-equipment` | Services | Equipment close ups: gasifier, electrolyser, control panels |
 | `projects-green-energy-hub` | Projects | Covenant University Green Energy Hub: the site, equipment, partners |
 | `projects-circular-fertilizer` | Projects | Fertilizer production or agricultural residue processing |
+| `projects-abuad-green-energy-hub` | Projects | ABUAD Green Energy Hub: the campus site, planned equipment and partners |
+| `projects-ekiti-knowledge-zone` | Projects | Ekiti Knowledge Zone hub: the site, processing plant and solar array |
+| `projects-mesmo-solar-pv` | Projects | MESMO Africa Ltd: the solar PV installation and the plant it powers, ideally with staff |
 | `projects-community` | Projects | Training sessions and community impact: cooperatives, women, youth |
 | `contact-office` | Contact | The team at the Ikosi office, or a welcoming reception shot |
 

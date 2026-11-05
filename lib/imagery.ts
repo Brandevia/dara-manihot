@@ -152,6 +152,36 @@ export const PHOTO_SLOTS = [
     position: '50% 70%',
   },
   {
+    id: 'projects-abuad-green-energy-hub',
+    page: 'projects',
+    category: 'project',
+    brief:
+      'ABUAD Green Energy Hub: the campus site, the planned kit and partners.',
+    alt: 'Inside a processing plant: a large silver tank on red steel supports, white piping and blue drums, with two staff walking down the aisle',
+    src: '/images/projects/abuad-plant-interior.jpg',
+    position: '50% 55%',
+  },
+  {
+    id: 'projects-ekiti-knowledge-zone',
+    page: 'projects',
+    category: 'project',
+    brief:
+      'Ekiti Knowledge Zone hub: the site, the processing plant and the solar array.',
+    alt: 'Concept illustration of a solar-powered industrial hub in the Ekiti Knowledge Zone: a truck delivering palm fruit, workers beside a processing plant, and an energy dashboard by the gate',
+    src: '/images/hero/ekiti-hub-concept.jpg',
+    position: '50% 50%',
+  },
+  {
+    id: 'projects-mesmo-solar-pv',
+    page: 'projects',
+    category: 'project',
+    brief:
+      'MESMO Africa Ltd: the solar PV installation and the plant it powers, ideally with staff.',
+    alt: 'Concept illustration of the MESMO Africa Ltd processing plant with solar panels on the roof and an energy management display at the gate',
+    src: '/images/hero/mesmo-solar-concept.jpg',
+    position: '50% 50%',
+  },
+  {
     id: 'projects-community',
     page: 'projects',
     category: 'community',
