@@ -15,9 +15,11 @@ const FOCUS = [
 /**
  * The CEO, on the About page. The portrait sits in a mint frame: the frame's
  * radius is the photo's radius plus the padding (20px + 12px = 32px), so the
- * two curves stay concentric. The photo is a speaking shot from the summit and
- * is cropped to a portrait; swap `LEADER.photo` for a studio portrait when
- * one exists, nothing else needs to change.
+ * two curves stay concentric. The photo is a landscape speaking shot from the
+ * summit and is shown whole, never cropped: the image takes its height from
+ * its own width and height, and the photo column is the wider of the two.
+ * Update `LEADER.photo` (src, width, height) to swap the picture; nothing else
+ * needs to change.
  */
 export function LeaderProfile() {
   const { photo } = LEADER
@@ -27,17 +29,16 @@ export function LeaderProfile() {
       aria-labelledby="leader-title"
       className="scroll-mt-header pb-[var(--section-y)]"
     >
-      <div className="page-container grid items-center gap-10 lg:grid-cols-[5fr_7fr] lg:gap-16">
-        <Reveal className="mx-auto w-full max-w-sm lg:max-w-none">
+      <div className="page-container grid items-center gap-10 lg:grid-cols-[7fr_5fr] lg:gap-16">
+        <Reveal className="mx-auto w-full max-w-2xl lg:max-w-none">
           <div className="rounded-[2rem] bg-mint p-3">
             <Image
               src={photo.src}
               alt={photo.alt}
               width={photo.width}
               height={photo.height}
-              sizes="(min-width: 1024px) 440px, (min-width: 384px) 384px, 100vw"
-              style={{ objectPosition: photo.position }}
-              className="aspect-[4/5] w-full rounded-2xl object-cover outline -outline-offset-1 outline-black/10"
+              sizes="(min-width: 1024px) 672px, (min-width: 672px) 672px, 100vw"
+              className="h-auto w-full rounded-2xl outline -outline-offset-1 outline-black/10"
             />
           </div>
         </Reveal>

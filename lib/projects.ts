@@ -1,4 +1,11 @@
-import { type LucideIcon, Recycle, Zap } from 'lucide-react'
+import {
+  Factory,
+  GraduationCap,
+  type LucideIcon,
+  Recycle,
+  Sun,
+  Zap,
+} from 'lucide-react'
 import type { PhotoSlotId } from '@/lib/imagery'
 
 export type ProjectStatus = 'Active' | 'Development'
@@ -46,6 +53,42 @@ export const PROJECTS: readonly Project[] = [
     status: 'Development',
     photo: 'projects-circular-fertilizer',
     impact: '30% cost reduction target',
+  },
+  {
+    slug: 'abuad-green-energy-hub-development-plan',
+    icon: GraduationCap,
+    title: 'ABUAD Green Energy Hub Development Plan',
+    goal: 'Planning a green energy hub at Afe Babalola University',
+    description:
+      'We are contributing to the development plan for a green energy hub at Afe Babalola University, Ado-Ekiti: the home of the Institute of Hydrogen and Future Energy Systems.',
+    details:
+      'The plan sets out the clean energy infrastructure, the phasing of works and the partners the hub needs, so that research, training and industry can draw on one shared energy platform.',
+    status: 'Development',
+    photo: 'projects-abuad-green-energy-hub',
+  },
+  {
+    slug: 'ekiti-knowledge-zone-green-energy-industrial-hub',
+    icon: Factory,
+    title: 'Ekiti Knowledge Zone Green Energy and Industrial Hub',
+    goal: 'Powering an industrial hub with clean energy',
+    description:
+      'A green energy and industrial hub for the Ekiti Knowledge Zone, pairing on-site solar power and a microgrid with agro-processing and manufacturing.',
+    details:
+      'Locating processing plants beside their own clean power cuts energy costs for the factories, keeps value-adding work close to the farms that supply it, and gives the zone a base for future green hydrogen.',
+    status: 'Development',
+    photo: 'projects-ekiti-knowledge-zone',
+  },
+  {
+    slug: 'mesmo-africa-solar-pv-integrated-energy-systems',
+    icon: Sun,
+    title: 'MESMO Africa Ltd Solar PV Integrated Energy Systems',
+    goal: 'Sustaining industrial capacity',
+    description:
+      'Solar PV integrated energy systems for MESMO Africa Ltd, designed to keep its processing plant running on clean, predictable power.',
+    details:
+      'Rooftop solar, battery storage and an energy management system work together so production capacity holds steady and power costs stay under control.',
+    status: 'Development',
+    photo: 'projects-mesmo-solar-pv',
   },
 ]
 

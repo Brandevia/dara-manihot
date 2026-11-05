@@ -17,11 +17,10 @@ export const LEADER = {
   company: 'Dara-Manihot Industries',
   photo: {
     src: '/images/leadership/ceo.jpg',
-    width: 570,
-    height: 779,
+    /** Whole frame, uncropped: the card sizes itself to this aspect ratio. */
+    width: 2077,
+    height: 1139,
     alt: 'Adekunle Olusile speaking into a microphone during a panel session at the ABUAD International Hydrogen Summit 2.0',
-    /** Keeps the face in frame when the card crops the photo. */
-    position: '50% 20%',
   },
 } as const
 

@@ -1,3 +1,16 @@
+# CEO portrait shown whole, and three new projects
+
+The leader card now shows the supplied summit photo uncropped, and the Projects page lists three new projects. Data and layout only: no new dependencies, colours or components.
+
+## To-do (all verified)
+
+- [x] **CEO photo.** `public/images/leadership/ceo.jpg` is now `1.png` converted to JPEG (2077 x 1139, 340 KB, nothing cropped). `LEADER.photo` carries the real size; the old `position` crop hint is gone because nothing is cropped any more.
+- [x] **Leader card (`leader-profile.tsx`).** The frame no longer forces `aspect-[4/5] object-cover`; the image is `h-auto w-full` so it takes its height from its own width and height. The card is bigger to suit a landscape photo: the photo column is now the wider one on large screens (`lg:grid-cols-[7fr_5fr]`, about 672px instead of 440px) and the mobile cap went from `max-w-sm` to `max-w-2xl`. The mint frame and its concentric curves are unchanged.
+- [x] **Projects (`lib/projects.ts`).** Added, in this order after the existing two: ABUAD Green Energy Hub Development Plan, Ekiti Knowledge Zone Green Energy and Industrial Hub, MESMO Africa Ltd Solar PV Integrated Energy Systems. They appear on `/projects` and each has its own statically generated page with the "More projects" list; no component changes were needed.
+- [x] **Photos (`lib/imagery.ts`, `PHOTO-REQUEST.md`).** Three new slots. `2.png` (a real photo) is `public/images/projects/abuad-plant-interior.jpg`. `3.png` and `4.png` are AI concept renders, so they live in `public/images/hero/` (`ekiti-hub-concept.jpg`, `mesmo-solar-concept.jpg`), which keeps `pnpm launch:check` listing them as pending real photos.
+- [x] **Copy needs client sign-off.** Titles are as supplied. Goal, description and detail text are drafted from the titles and the images only; no impact figure, date or partner is claimed. All three are marked "In development".
+- [x] **`tests/new-projects-and-leader.test.tsx`** (19 tests): data, slugs, photo slots and files, real-vs-pending photo status, the `/projects` listing, all three project pages and the 404, and that the CEO photo has its real size, no crop classes and the wider column.
+
 # Header fit fix ("Get in touch" overflowing between 768 and 950px)
 
 The header's "Get in touch" button spilled out of the pill, and off the right edge of the screen, at widths from 768px to 950px (iPad portrait, half-width laptop windows). Cause and fix are one breakpoint; nothing else in the header changed.
