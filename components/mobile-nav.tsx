@@ -12,8 +12,11 @@ import { COMPANY_INFO, NAVIGATION_LINKS } from '@/lib/constants'
 import { EASE_STANDARD } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
-// Matches Tailwind's `md` breakpoint, where the desktop nav takes over.
-const DESKTOP_QUERY = '(min-width: 48rem)'
+// Matches Tailwind's `lg` breakpoint, where the desktop nav takes over. It is
+// `lg`, not `md`: the desktop pill is ~895px wide and nothing in it can shrink,
+// so below ~960px the CTA spills out of the pill. Keep this, the `lg:` classes
+// in site-header.tsx and the `lg:hidden` below in step (tests/header-breakpoint).
+const DESKTOP_QUERY = '(min-width: 64rem)'
 
 /**
  * Timings (seconds). Opening is the slower half so the eye can follow the
@@ -123,7 +126,7 @@ export function MobileNav() {
           ref={triggerRef}
           variant="ghost"
           size="icon"
-          className="size-11 rounded-full transition-[background-color,scale] duration-150 ease-out active:scale-[0.96] md:hidden"
+          className="size-11 rounded-full transition-[background-color,scale] duration-150 ease-out active:scale-[0.96] lg:hidden"
           aria-label={open ? 'Close menu' : 'Open menu'}
         >
           <span

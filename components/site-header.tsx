@@ -29,7 +29,7 @@ export function SiteHeader() {
       <div
         data-scrolled={scrolled}
         // `glass` (globals.css) is the frosted surface; data-scrolled firms it up.
-        className="glass pointer-events-auto mx-auto flex w-full items-center justify-between gap-6 rounded-full p-2 pl-5 transition-[background-color] duration-300 md:w-fit md:gap-16 md:pl-6"
+        className="glass pointer-events-auto mx-auto flex w-full items-center justify-between gap-6 rounded-full p-2 pl-5 transition-[background-color] duration-300 lg:w-fit lg:gap-16 lg:pl-6"
       >
         <Link
           href="/"
@@ -42,7 +42,7 @@ export function SiteHeader() {
         </Link>
 
         {/* `contents`: links and CTA become direct children of the pill, so one even gap spaces all three groups. */}
-        <div className="hidden md:contents">
+        <div className="hidden lg:contents">
           <NavigationMenu className="flex-none">
             <NavigationMenuList>
               {NAVIGATION_LINKS.map((link) => (

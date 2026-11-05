@@ -1,3 +1,19 @@
+# Header fit fix ("Get in touch" overflowing between 768 and 950px)
+
+The header's "Get in touch" button spilled out of the pill, and off the right edge of the screen, at widths from 768px to 950px (iPad portrait, half-width laptop windows). Cause and fix are one breakpoint; nothing else in the header changed.
+
+## Root cause
+
+The header swapped from hamburger to the full desktop pill at `md` (768px), a device preset. That pill is about 895px wide (24 pad + 159 logo + 64 gap + 443 nav + 64 gap + 134 button + 8 pad) and the page gives it only `viewport - 64px`. The pill is `w-fit`, which stops growing at the available width, and its logo, nav and button are all non-shrinking flex items, so the surplus had nowhere to go but out of the right edge. The `fixed` header never produces a horizontal scrollbar, so no existing test noticed. A sweep of every width from 320 to 1920px found 183 failing widths, all in 768 to 950px.
+
+## To-do (all verified)
+
+- [x] **Move the swap from `md` to `lg` (1024px)** in `site-header.tsx` (pill `lg:w-fit lg:gap-16 lg:pl-6`, wrapper `hidden lg:contents`) and `mobile-nav.tsx` (`lg:hidden`, and `DESKTOP_QUERY` is now `(min-width: 64rem)`). At 1024px the pill has 65px to spare. Tightening the spacing instead cannot work: at 768px only about 706px is available and the text alone needs about 560px plus padding, which would leave links 20px apart.
+- [x] **`tests/header-breakpoint.test.tsx`** (5 tests): the pill, the desktop wrapper, the hamburger and `DESKTOP_QUERY` must use one breakpoint, it may not be lower than the 959px the desktop header needs, and the open menu closes when the `64rem` query matches.
+- [x] **`e2e/header-fit.spec.ts`** (24 tests): measures the real header at 22 widths (including 768, 820, 834, 884, 950, 959, 1023, 1024) and checks that exactly one navigation mode is shown, the pill is on screen, and the button sits inside the pill with its padding. Also checks the swap happens once at 1024px and that an open menu closes when the window grows. It failed on 10 of 24 before the fix and passes after, twice in a row.
+- [x] **Verified at larger text sizes.** With the browser default font size at 20px and 24px the swap moves to 1280px and 1536px (it is a `rem` query, like every header dimension), and no width from 700px up fails.
+- [x] **Behaviour change to know about:** tablets in portrait (768 to 1023px) now get the hamburger menu, the same one phones get. They previously got a desktop header that did not fit.
+
 # Industry-first repositioning (website enhancement review)
 
 The site now leads with industry. Sustainable energy is the pathway, and it serves two areas: green industries and sustainable agriculture. This is copy, ordering and one new pillar and service; no redesign, no new colours, no new dependencies.
@@ -38,7 +54,7 @@ The site now leads with industry. Sustainable energy is the pathway, and it serv
 
 ## To-do (all verified)
 
-- [x] **Mobile menu.** `MobileNav` is now a dropdown that hangs from the header pill: two-line toggle that rotates into an X, a glass panel as wide as the pill that grows down while the links feed in (reverse on close), centred text links and one green "Explore Our Services" button. No icons, phone line or legal links. Closes on backdrop press, Escape, route change, or growing past `md`. Reduced motion cross-fades only. The old `--menu-w` and `--menu-origin` tokens are removed; `--ease-standard` is added.
+- [x] **Mobile menu.** `MobileNav` is now a dropdown that hangs from the header pill: two-line toggle that rotates into an X, a glass panel as wide as the pill that grows down while the links feed in (reverse on close), centred text links and one green "Explore Our Services" button. No icons, phone line or legal links. Closes on backdrop press, Escape, route change, or growing past `lg` (was `md` until the header fit fix). Reduced motion cross-fades only. The old `--menu-w` and `--menu-origin` tokens are removed; `--ease-standard` is added.
 - [x] **Stats band.** One column on phones, mist background, labels as in the supplied screenshot ("Years of Experience" keeps its "of"), and `5` is now `5+`. `CountUp` draws the plus in purple and uses tabular digits.
 - [x] **Project feature.** Date chip and "Ask about project" link are purple.
 - [x] **Icons removed.** Core impact areas, the Sustainable Agriculture / Energy cards, the services page and About vision and mission. Text is larger and the card padding is generous. The unused `icon` fields in `lib/services.ts` are gone.
