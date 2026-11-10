@@ -11,7 +11,7 @@ export const COMPANY_INFO = {
     { display: '+234 802 340 0557', tel: '+2348023400557' },
     { display: '+234 706 141 2439', tel: '+2347061412439' },
   ],
-  address: 'Ikosi, Lagos, Nigeria',
+  address: '40, Aladelola Street, Ikosi, Lagos, Nigeria',
   hours: 'Mon - Fri: 8:00 AM - 6:00 PM',
 } as const
 

@@ -395,14 +395,14 @@ describe('footer', () => {
 
   it('shows the Ikosi address and links it to the map', () => {
     render(<Footer />)
-    const link = screen.getByRole('link', { name: 'Ikosi, Lagos, Nigeria' })
+    const link = screen.getByRole('link', { name: '40, Aladelola Street, Ikosi, Lagos, Nigeria' })
     expect(link).toHaveAttribute('href', '/contact#map')
   })
 })
 
 describe('address: Ikosi, Lagos', () => {
   it('is the one published address, with the city kept so the map search is specific', () => {
-    expect(COMPANY_INFO.address).toBe('Ikosi, Lagos, Nigeria')
+    expect(COMPANY_INFO.address).toBe('40, Aladelola Street, Ikosi, Lagos, Nigeria')
   })
 
   it('leaves no stale "Ketu" in the site source or the photo request', () => {

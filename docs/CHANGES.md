@@ -41,7 +41,7 @@ The site now leads with industry. Sustainable energy is the pathway, and it serv
 - [x] **Home pillars section.** New heading and description; three cards (`lg:grid-cols-3`) with a new photo slot `home-industry` (reuses `image6.png`, listed in `PHOTO-REQUEST.md`). The review's "Two connected solution areas" sentence is kept word for word.
 - [x] **Core impact areas.** Five areas in the new order, with Green Industrial Value Chains added, the Hydrogen text updated and "& Valorization" on biomass.
 - [x] **Who we are**, **closing CTA** (home and About) and the **footer description** use the review's wording.
-- [x] **Address** is now "Ikosi, Lagos, Nigeria" everywhere (constants, contact metadata, photo briefs, `PHOTO-REQUEST.md`).
+- [x] **Address** is now "40, Aladelola Street, Ikosi, Lagos, Nigeria" everywhere (constants, contact metadata, photo briefs, `PHOTO-REQUEST.md`).
 - [x] **Consistency pass (wording the review did not cover).** Only places that led with agriculture were reordered; each is pinned by a test:
   - Default page title, description and `COMPANY_INFO.tagline` (search results and link previews).
   - Services: page description and intro, "factories and farms" in the hydrogen value-chain text, "plant, farm or project" on service pages.
@@ -56,7 +56,7 @@ The site now leads with industry. Sustainable energy is the pathway, and it serv
 - **Capacity Building** is no longer one of the five core impact areas on the home page (the review lists five). It remains in the footer, on `/services` and in Training & Research.
 - **Circular Economy** stays under Sustainable Agriculture, so Green Industries has one service card for now. Moving it is a one-line change to its `pillar`.
 - **"DaraManihot"** in the review's footer sentence is written "Dara-Manihot" to match the brand.
-- **Map pin.** The map searches the address text, so "Ikosi, Lagos, Nigeria" may land loosely. A full street address would fix it (`COMPANY_INFO.address`).
+- **Map pin.** The map searches the address text, so "40, Aladelola Street, Ikosi, Lagos, Nigeria" may land loosely. A full street address would fix it (`COMPANY_INFO.address`).
 - **Deliberately left alone in the consistency pass:** the legal pages (`lib/legal.ts`: "We are a Nigerian enterprise working in sustainable agriculture…" is the data controller's description, so it needs a lawyer, not a copy edit; if it changes, bump `LEGAL_LAST_UPDATED`); the client's own vision and mission statements ("farms and factories thrive…"); company history and milestones; the 2030 impact goals; the SDG contribution lines; the real project write-ups; and the company name, which is a fact.
 - **e2e fix.** The positioning test looked for a "what we do" list that `HomeHero` no longer renders. It now checks the pillar heading and card order instead.
 - **Verification.** Run in a scratch rebuild of the repo from the pack (the pack has no images or fonts): the Playwright suite was not run.
