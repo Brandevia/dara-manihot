@@ -75,7 +75,7 @@ The site now leads with industry. Sustainable energy is the pathway, and it serv
   - Default page title, description and `COMPANY_INFO.tagline` (search results and link previews).
   - Services: page description and intro, "factories and farms" in the hydrogen value-chain text, "plant, farm or project" on service pages.
   - Contact: page description, intro, "Why get in touch?" paragraph and bullets (energy first, "industries, agro-processors and farmers").
-  - About: headline "Pioneering clean energy for industry and agriculture in Nigeria". The agricultural history is kept and the industrial present is added.
+  - About: headline "Pioneering clean energy for industry and agriculture in Africa". The agricultural history is kept and the industrial present is added.
   - Projects intro and closing CTA, the home core-areas intro, the SDG intro, the second slide caption and the Energy pillar summary ("industries and farms").
   - `README.md` project line and pillar ids; `PHOTO-REQUEST.md` home rows reordered to Energy, Industry, Agriculture.
 - [x] **Tests.** New `tests/industrial-repositioning.test.tsx` (44 tests: 34 for the repositioning, 10 for the consistency pass). Old assertions that pinned the previous copy were updated in `tests/site-changes.test.tsx`, `tests/wireframe-layout.test.tsx` and `e2e/enquiry.spec.ts`.

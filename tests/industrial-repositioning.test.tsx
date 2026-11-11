@@ -462,7 +462,7 @@ describe('consistency pass: page copy', () => {
   it('about: the headline leads with clean energy for industry and agriculture, and keeps its history', () => {
     const { container } = render(<AboutPage />)
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
-      'Pioneering clean energy for industry and agriculture in Nigeria',
+      'Pioneering clean energy for industry and agriculture in Africa',
     )
     expect(container.textContent).toContain(
       'today we bring the same innovative clean technologies and sustainable practices to industry',

@@ -83,7 +83,7 @@ export default function AboutPage() {
     <>
       <PageHero
         image={PAGE_HERO_IMAGES.about}
-        title="Pioneering clean energy for industry and agriculture in Nigeria"
+        title="Pioneering clean energy for industry and agriculture in Africa"
         description="For over a decade, we’ve been at the forefront of transforming Africa’s agricultural landscape, and today we bring the same innovative clean technologies and sustainable practices to industry."
       />
 
