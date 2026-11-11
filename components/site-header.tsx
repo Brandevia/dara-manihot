@@ -38,7 +38,10 @@ export function SiteHeader() {
           className="flex shrink-0 items-center rounded-md outline-none transition-opacity duration-150 hover:opacity-80 focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
           {/* The wordmark is part of the image, so there is no text label. */}
-          <Logo priority className="h-11 lg:h-12" />
+          <Logo
+            priority
+            className="h-[52px] sm:h-[56px] md:h-[60px] lg:h-[60px] xl:h-16 w-auto"
+          />
         </Link>
 
         {/* Desktop navigation. Must stay in step with the hamburger below and
