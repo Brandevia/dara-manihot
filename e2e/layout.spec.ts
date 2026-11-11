@@ -38,14 +38,16 @@ for (const path of PAGES) {
       expect(scrollW).toBeLessThanOrEqual(clientW)
     })
 
-    test('content starts directly under the header (regression: 160px header over 64px offset)', async ({
+    test('the first heading clears the fixed header (nothing is covered by it)', async ({
       page,
     }) => {
       await page.goto(path)
       const header = await page.locator('header').boundingBox()
-      const main = await page.locator('main').boundingBox()
+      const h1 = await page.locator('h1').boundingBox()
+      // 4.5rem at the default 16px root font size.
       expect(header?.height).toBe(72)
-      expect(Math.round(main?.y ?? -1)).toBe(72)
+      expect(header?.y).toBe(0)
+      expect(h1?.y ?? -1).toBeGreaterThanOrEqual(72)
     })
   })
 }
@@ -58,6 +60,25 @@ test('header height is unchanged by scrolling (no layout shift)', async ({
   await page.mouse.wheel(0, 1200)
   await expect(page.locator('header')).toHaveAttribute('data-scrolled', 'true')
   expect((await page.locator('header').boundingBox())?.height).toBe(before)
+})
+
+test('the bar is solid at rest and gains a shadow once scrolled', async ({
+  page,
+}) => {
+  await page.goto('/about')
+  const style = () =>
+    page.locator('header').evaluate((el) => {
+      const cs = getComputedStyle(el)
+      return { bg: cs.backgroundColor, shadow: cs.boxShadow }
+    })
+  const rest = await style()
+  // Opaque: no alpha channel, no translucent glass.
+  expect(rest.bg).toMatch(/^rgb\(/)
+  expect(rest.shadow).toBe('none')
+  await page.mouse.wheel(0, 1200)
+  await expect(page.locator('header')).toHaveAttribute('data-scrolled', 'true')
+  await expect.poll(async () => (await style()).shadow).not.toBe('none')
+  expect((await style()).bg).toBe(rest.bg)
 })
 
 test('every CTA button uses the secondary colour token', async ({ page }) => {

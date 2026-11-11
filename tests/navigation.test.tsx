@@ -50,6 +50,21 @@ describe('SiteHeader: desktop navigation', () => {
     )
   })
 
+  it('reads in visual order: logo, then links, then the call to action, then the hamburger', () => {
+    render(<SiteHeader />)
+    const home = screen.getByRole('link', { name: 'Dara-Manihot home' })
+    const nav = screen.getByRole('navigation', { name: 'Main' })
+    const cta = screen
+      .getAllByRole('link', { name: /get in touch/i })
+      .find((l) => l.getAttribute('data-slot') === 'button') as Element
+    const burger = screen.getByRole('button', { name: /open menu/i })
+    const follows = (a: Element, b: Element) =>
+      Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(follows(home, nav)).toBe(true)
+    expect(follows(nav, cta)).toBe(true)
+    expect(follows(cta, burger)).toBe(true)
+  })
+
   it('has a Get in touch call-to-action that is a real link, not a button inside a link', () => {
     render(<SiteHeader />)
     const cta = screen
@@ -60,7 +75,7 @@ describe('SiteHeader: desktop navigation', () => {
   })
 })
 
-describe('SiteHeader: mobile menu (dropdown from the header pill)', () => {
+describe('SiteHeader: mobile menu (panel under the header bar)', () => {
   beforeEach(() => {
     pathname.value = '/about'
     window.__reduceMotion = false
@@ -125,11 +140,15 @@ describe('SiteHeader: mobile menu (dropdown from the header pill)', () => {
     expect(within(dialog).queryByRole('link', { name: /terms/i })).toBeNull()
   })
 
-  it('centres the links and gives each a 48px touch target', async () => {
+  it('left-aligns the links on the logo edge and gives each a 48px touch target', async () => {
     const dialog = await open()
     const nav = within(dialog).getByRole('navigation', { name: 'Mobile' })
-    for (const link of within(nav).getAllByRole('link'))
-      expect(link).toHaveClass('justify-center', 'min-h-12', 'text-lg')
+    for (const link of within(nav).getAllByRole('link')) {
+      expect(link).toHaveClass('min-h-12', 'text-lg')
+      expect(link).not.toHaveClass('justify-center')
+    }
+    // Rows reach 12px past the content edge so their text meets the logo's.
+    expect(nav.querySelector('ul')).toHaveClass('-mx-3')
   })
 
   it('ends with one green "Explore Our Services" button after the links', async () => {
@@ -138,7 +157,9 @@ describe('SiteHeader: mobile menu (dropdown from the header pill)', () => {
       name: 'Explore Our Services',
     })
     expect(cta).toHaveAttribute('href', '/services')
-    expect(cta).toHaveClass('bg-leaf', 'rounded-full', 'w-full')
+    // Full width on a phone; sized to its content from `sm` up, so it does
+    // not stretch across a tablet.
+    expect(cta).toHaveClass('bg-leaf', 'rounded-full', 'w-full', 'sm:w-auto')
     expect(cta.querySelector('svg')).toBeNull()
     const nav = within(dialog).getByRole('navigation', { name: 'Mobile' })
     expect(
@@ -157,20 +178,33 @@ describe('SiteHeader: mobile menu (dropdown from the header pill)', () => {
     ).not.toHaveAttribute('aria-current')
   })
 
-  it('hangs from the header pill: same side margins, one gap below it', async () => {
+  it('hangs from the bottom of the header bar: full width, flush under it', async () => {
     const dialog = await open()
     expect(dialog).toHaveAttribute('data-slot', 'menu-panel')
     expect(dialog).toHaveClass(
-      'glass',
       'fixed',
+      'inset-x-0',
       'overflow-hidden',
-      'rounded-3xl',
+      'rounded-b-2xl',
+      'border-b',
+      'bg-background',
     )
     expect(dialog.className).toMatch(/top-\(--header-h\)/)
-    expect(dialog.className).toMatch(/inset-x-\(--container-pad\)/)
-    // The old grow-out-of-the-button panel is gone.
-    expect(dialog.className).not.toMatch(/w-\(--menu-w\)/)
+    // The floating glass panel, with its inset side margins, is gone.
+    expect(dialog.className).not.toMatch(
+      /glass|rounded-3xl|inset-x-\(--container-pad\)|w-\(--menu-w\)/,
+    )
+    expect(dialog).not.toHaveAttribute('data-scrolled')
     expect(dialog.style.transformOrigin).toBe('')
+  })
+
+  it('lines its content up with the header: same container, same side padding', async () => {
+    const dialog = await open()
+    const inner = dialog.querySelector('.page-container')
+    expect(inner).not.toBeNull()
+    expect(
+      within(inner as HTMLElement).getByRole('navigation', { name: 'Mobile' }),
+    ).toBeInTheDocument()
   })
 
   it('scrolls inside itself on a short screen, without scrolling the page behind', async () => {
@@ -182,14 +216,24 @@ describe('SiteHeader: mobile menu (dropdown from the header pill)', () => {
     )
   })
 
-  it('expands by height on a normal device, and only fades under reduced motion', async () => {
+  it('reveals with clip-path on a normal device, and only fades under reduced motion', async () => {
     const normal = await open()
-    expect(normal.style.height).not.toBe('')
+    // The folded state is applied on mount; it never animates layout.
+    expect(normal.style.clipPath).toContain('inset(')
+    expect(normal.style.height).toBe('')
     cleanup()
 
     window.__reduceMotion = true
     const reduced = await open()
+    expect(reduced.style.clipPath).toBe('')
     expect(reduced.style.height).toBe('')
+  })
+
+  it('does not move the links under reduced motion', async () => {
+    window.__reduceMotion = true
+    const dialog = await open()
+    for (const li of dialog.querySelectorAll('li'))
+      expect((li as HTMLElement).style.transform).toBe('')
   })
 
   it('closes when a link is chosen', async () => {

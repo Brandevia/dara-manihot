@@ -21,11 +21,49 @@ vi.mock('next/navigation', () => ({
 }))
 
 describe('navbar', () => {
-  it('uses the frosted-glass surface, firmed up once scrolled', () => {
+  it('is a solid, full-width bar fixed to the top: no pill, no glass', () => {
     const { container } = render(<SiteHeader />)
-    const pill = container.querySelector('header > div')
-    expect(pill).toHaveClass('glass')
-    expect(pill).toHaveAttribute('data-scrolled')
+    const header = container.querySelector('header')
+    expect(header).toHaveClass(
+      'fixed',
+      'inset-x-0',
+      'top-0',
+      'border-b',
+      'bg-background',
+    )
+    expect(header?.className).not.toMatch(
+      /glass|rounded-full|backdrop-blur|top-\(--header-top\)/,
+    )
+    // data-scrolled lifts the bar with a shadow once the page moves.
+    expect(header).toHaveAttribute('data-scrolled')
+    expect(header?.className).toMatch(/data-\[scrolled=true\]:shadow-lift/)
+  })
+
+  it('shows the logo image in the bar, not the old icon and text', () => {
+    const { container } = render(<SiteHeader />)
+    const header = container.querySelector('header') as HTMLElement
+    const logo = within(header).getByRole('img', {
+      name: `${COMPANY_INFO.name} logo`,
+    })
+    expect(logo.getAttribute('src')).toMatch(/logo\.png/)
+    expect(header.querySelector('img[src*="icon.png"]')).toBeNull()
+    // The wordmark is in the image: no duplicate text label next to it.
+    const home = within(header).getByRole('link', {
+      name: `${COMPANY_INFO.shortName} home`,
+    })
+    expect(home).toHaveAttribute('href', '/')
+    expect(home.textContent).toBe('')
+  })
+
+  it('aligns the bar to the page container so the logo meets the content edge', () => {
+    const { container } = render(<SiteHeader />)
+    expect(container.querySelector('header > div')).toHaveClass(
+      'page-container',
+      'flex',
+      'h-full',
+      'items-center',
+      'justify-between',
+    )
   })
 
   it('marks the active link with an outline, never an underline', () => {
@@ -37,7 +75,7 @@ describe('navbar', () => {
     expect(cls).toMatch(/ring-1/)
     expect(cls).toMatch(/data-\[active\]:ring-primary/)
     expect(cls).not.toMatch(/after:|underline/)
-    // Idle links are fully opaque: translucent text fails AA on the glass.
+    // Idle links are fully opaque: translucent text is a contrast risk.
     expect(cls).not.toMatch(/text-foreground\/\d+/)
   })
 

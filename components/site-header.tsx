@@ -1,8 +1,8 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { Logo } from '@/components/logo'
 import { MobileNav } from '@/components/mobile-nav'
 import { isActivePath } from '@/components/nav-utils'
 import { Button } from '@/components/ui/button'
@@ -20,29 +20,30 @@ export function SiteHeader() {
   const scrolled = useScrolledPast(8)
 
   return (
-    // Floating pill, fixed to the top. The <header> is a click-through strip;
-    // only the pill takes pointer events. Pages clear it with `--header-h`.
+    // A conventional bar: full width, solid, fixed to the top. Logo on the
+    // leading edge, links and the call to action on the trailing edge. Pages
+    // clear it with `--header-h`; the mobile menu hangs from its bottom edge.
+    // `pointer-events-auto`: Radix sets `pointer-events: none` on <body> while
+    // the menu is open, and the toggle in this bar must stay pressable.
     <header
       data-scrolled={scrolled}
-      className="group pointer-events-none fixed inset-x-0 top-0 z-40 h-(--header-h) px-(--container-pad) pt-(--header-top)"
+      className="pointer-events-auto fixed inset-x-0 top-0 z-40 h-(--header-h) border-b border-border bg-background transition-shadow duration-200 data-[scrolled=true]:shadow-lift"
     >
-      <div
-        data-scrolled={scrolled}
-        // `glass` (globals.css) is the frosted surface; data-scrolled firms it up.
-        className="glass pointer-events-auto mx-auto flex w-full items-center justify-between gap-6 rounded-full p-2 pl-5 transition-[background-color] duration-300 lg:w-fit lg:gap-16 lg:pl-6"
-      >
+      {/* Same width and side padding as every page section, so the logo's
+          edge lines up with the content below it at any viewport. */}
+      <div className="page-container flex h-full items-center justify-between gap-6">
         <Link
           href="/"
           aria-label="Dara-Manihot home"
-          className="flex shrink-0 items-center gap-2 rounded-full outline-none transition-transform duration-300 ease-bounce hover:scale-[1.03] focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="flex shrink-0 items-center rounded-md outline-none transition-opacity duration-150 hover:opacity-80 focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
-          {/* app/icon.png is served at /icon.png by Next's metadata routes. */}
-          <Image src="/icon.png" alt="" width={24} height={24} priority className="size-6 object-contain" />
-          <span className="font-bold text-foreground text-xl">Dara-Manihot</span>
+          {/* The wordmark is part of the image, so there is no text label. */}
+          <Logo priority className="h-11 lg:h-12" />
         </Link>
 
-        {/* `contents`: links and CTA become direct children of the pill, so one even gap spaces all three groups. */}
-        <div className="hidden lg:contents">
+        {/* Desktop navigation. Must stay in step with the hamburger below and
+            DESKTOP_QUERY in mobile-nav.tsx (tests/header-breakpoint). */}
+        <div className="hidden items-center gap-6 lg:flex xl:gap-8">
           <NavigationMenu className="flex-none">
             <NavigationMenuList>
               {NAVIGATION_LINKS.map((link) => (
@@ -54,7 +55,9 @@ export function SiteHeader() {
                   >
                     <Link
                       href={link.href}
-                      aria-current={isActivePath(pathname, link.href) ? 'page' : undefined}
+                      aria-current={
+                        isActivePath(pathname, link.href) ? 'page' : undefined
+                      }
                     >
                       {link.name}
                     </Link>
@@ -64,7 +67,11 @@ export function SiteHeader() {
             </NavigationMenuList>
           </NavigationMenu>
 
-          <Button asChild variant="leaf" className="h-13 rounded-full px-5.5 font-semibold text-base">
+          <Button
+            asChild
+            variant="leaf"
+            className="h-12 rounded-full px-5.5 font-semibold text-base"
+          >
             <Link href="/contact">Get in touch</Link>
           </Button>
         </div>
