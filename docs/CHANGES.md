@@ -13,12 +13,6 @@ The floating glass pill header is now a conventional full-width bar, and the mob
 - [x] **Tests.** Unit: the pill and glass assertions were replaced (bar shape, logo image, reading order, left-aligned rows, flush full-width panel, clip-path vs height, reduced motion, header tokens, no double scroll offset). E2E: `header-fit` measures the bar, logo and overlap at 22 widths; `navigation` samples the `clip-path` reveal frame by frame; `layout` checks the bar is opaque and gains a shadow.
 - [x] **Docs.** DESIGN.md, README.md and this file.
 
-## Notes for review
-
-- **The real `logo.png` was not available to the person who built this**, so layout was verified with a placeholder of the same 560 x 330 size. Please look at the real logo on the bar once. If it has a white or non-transparent background, or very little padding, adjust the height in `site-header.tsx` (`h-11 lg:h-12`).
-- **Three existing e2e tests were stale and are fixed** because they test the navigation: the toggle test read `transform`, but Tailwind v4 sets `rotate` instead; the "closes on navigation" test counted every `role="dialog"`, which includes the cookie banner; and the three motion recorders sampled for a fixed 1.1 to 1.5s from when they were called, so a slow click made them miss the animation. They now start when the panel first appears.
-- **Cookie banner over the header (not changed).** On very short phones (for example 320 x 640) the first-visit cookie banner is nearly full height and sits above the header (z-50 vs z-40), so it covers the hamburger until dismissed. The old pill had the same order. Worth a look separately.
-- **`layout.spec.ts` expected `<main>` to start at 72px.** The header is fixed, so it never did; the spec now asserts what matters: the header is 72px and the first heading clears it.
 
 ## Verification
 
