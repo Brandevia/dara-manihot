@@ -143,18 +143,6 @@
     color-mix(in srgb, var(--brand-green-900) 80%, transparent) 100%
   );
 
-  /* Frosted glass (navbar). A white tint that lets the page show through,
-     with a brighter top edge like light catching real glass. */
-  --glass-tint: color-mix(in srgb, var(--brand-white) 54%, transparent);
-  --glass-tint-scrolled: color-mix(
-    in srgb,
-    var(--brand-white) 72%,
-    transparent
-  );
-  --glass-highlight: color-mix(in srgb, var(--brand-white) 85%, transparent);
-  --glass-edge: color-mix(in srgb, var(--brand-ink) 14%, transparent);
-  --glass-blur: 22px;
-
   /* Shape + depth */
   --radius: 0.75rem;
   --shadow-lift: 0 18px 36px -18px
@@ -163,15 +151,14 @@
     color-mix(in srgb, var(--brand-green-950) 55%, transparent);
 
   /* Layout */
-  --header-top: 1rem;
-  --header-h: 5.25rem;
+  /* Height of the fixed header bar. Pages clear it with this token, the mobile
+     menu hangs from its bottom edge, and `html` scroll-padding keeps focused
+     elements and in-page anchors from landing under it. */
+  --header-h: 4.5rem;
   --hero-pad: clamp(1rem, 4vw, 6rem);
   --container-max: 76rem;
   --container-pad: clamp(1rem, 4vw, 2rem);
   --section-y: clamp(4rem, 8vw, 7rem);
-  /* Mobile menu: a glass panel that drops down from the header pill. It is as
-     wide as the pill (the container padding on both sides) and starts at
-     --header-h, so it sits one gap below the pill it belongs to. */
 
   /* Motion */
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -329,6 +316,9 @@
   }
   html {
     -webkit-text-size-adjust: 100%;
+    /* The header is fixed: keep focused elements (WCAG 2.4.11) and anchor
+       targets clear of it. `scroll-mt-header` adds the breathing room. */
+    scroll-padding-top: var(--header-h);
   }
   body {
     @apply bg-background font-sans text-foreground antialiased;
@@ -368,8 +358,10 @@
   padding-block: var(--section-y);
 }
 
+/* Space between the header and an anchor target. The header's own height
+   comes from `html { scroll-padding-top }`; the two add up. */
 @utility scroll-mt-header {
-  scroll-margin-top: calc(var(--header-h) + 1.25rem);
+  scroll-margin-top: 1.25rem;
 }
 
 @utility bg-hero-gradient {
@@ -401,30 +393,6 @@
 /* Legibility shadow for text set directly on a bare photograph. */
 @utility text-on-photo {
   text-shadow: var(--text-on-photo-shadow);
-}
-
-/* Frosted glass surface: blur + saturation lift over a translucent tint, a
-   bright inner top edge and a hairline outline. `data-scrolled="true"` on the
-   element firms the tint up so text stays legible over busy photography.
-   Browsers without backdrop-filter get a near-opaque tint instead of an
-   unreadable see-through bar. */
-@utility glass {
-  background-color: var(--glass-tint);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.6);
-  backdrop-filter: blur(var(--glass-blur)) saturate(1.6);
-  box-shadow:
-    inset 0 1px 0 var(--glass-highlight),
-    inset 0 0 0 1px var(--glass-edge),
-    var(--shadow-float);
-  &[data-scrolled="true"] {
-    background-color: var(--glass-tint-scrolled);
-  }
-  @supports not (
-      (backdrop-filter: blur(1px)) or
-      (-webkit-backdrop-filter: blur(1px))
-    ) {
-    background-color: color-mix(in srgb, var(--brand-white) 94%, transparent);
-  }
 }
 
 /* A dark (canopy) surface that hosts the normal light-theme form controls.

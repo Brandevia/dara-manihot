@@ -49,8 +49,8 @@ app/
 components/
   ui/                   shadcn/ui primitives (button, badge, card, sheet, navigation-menu, separator)
   sections/             page-level building blocks (home-hero, page-hero, section-heading, cta-band, legal-document)
-  site-header.tsx       sticky header + desktop navigation
-  mobile-nav.tsx        right-hand app drawer (bounce in/out)
+  site-header.tsx       fixed header bar: logo, desktop links, call to action
+  mobile-nav.tsx        mobile menu: panel under the header bar (clip-path reveal)
   hero-carousel.tsx     background image carousel
   back-to-top.tsx, copy-button.tsx, animations.tsx, footer.tsx, logo.tsx
 lib/
@@ -82,7 +82,7 @@ component uses a Tailwind palette class (`bg-green-600`) or a hex/rgb value.
   Fluid sizes: `text-display`, `text-title`, `text-lead`.
 * **Layout**: `--header-h`, `--container-max`, `--section-y`; utilities
   `page-container`, `section-y`, `scroll-mt-header`.
-* **Motion**: `--ease-bounce`, drawer and hero durations, keyframes. Contrast
+* **Motion**: `--ease-bounce`, menu and hero durations, keyframes. Contrast
   of the key colour pairs is asserted at WCAG AA in the token test.
 
 ## Common tasks
@@ -121,9 +121,10 @@ starts to cover more.
 `lib/constants.ts`.
 
 **Add a page.** Create `app/(pages)/<name>/page.tsx` with a `metadata` export,
-add it to `NAVIGATION_LINKS`, and (for the mobile drawer) an icon in
-`components/mobile-nav.tsx`. TypeScript flags the missing icon, and
-`typedRoutes` flags any link to a route that doesn't exist.
+add it to `NAVIGATION_LINKS`; the desktop bar and the mobile menu both read
+it, and `typedRoutes` flags any link to a route that doesn't exist. A longer
+link or label widens the desktop bar: `tests/header-breakpoint.test.tsx` and
+`e2e/header-fit.spec.ts` fail if it no longer fits where it is shown.
 
 ## Accessibility and motion
 

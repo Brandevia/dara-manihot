@@ -10,7 +10,7 @@ vi.mock('next/navigation', () => ({ usePathname: () => '/' }))
 /**
  * The header swaps hamburger -> desktop nav at ONE breakpoint, expressed in
  * three places that jsdom cannot cross-check through layout:
- *   1. the Tailwind prefix on the pill and the desktop wrapper (site-header)
+ *   1. the Tailwind prefix on the desktop wrapper and the logo size (site-header)
  *   2. the Tailwind prefix that hides the hamburger (mobile-nav)
  *   3. DESKTOP_QUERY, which closes the open mobile menu (mobile-nav)
  * If they drift, tablets get both navs, or none, or a menu stuck open.
@@ -29,9 +29,11 @@ const BREAKPOINT_REM: Record<string, number> = {
   '2xl': 96,
 }
 
-// Measured: the desktop header needs a 895px pill + 2 * 32px container
-// padding = 959px. The swap must not happen below that (1rem = 16px).
-const DESKTOP_HEADER_NEEDS_PX = 959
+// Estimated width the desktop bar needs: 2 * 32px container padding + 81px
+// logo + 24px gap + 443px links + 24px gap + 134px button = 770px (1rem =
+// 16px). The swap must not happen below that. The real, measured fit is
+// asserted by e2e/header-fit.spec.ts.
+const DESKTOP_HEADER_NEEDS_PX = 770
 
 describe('header breakpoint stays in sync', () => {
   const header = read('components/site-header.tsx')
@@ -43,28 +45,25 @@ describe('header breakpoint stays in sync', () => {
     return m[1]
   }
 
-  const pillPrefix = prefix(header, /(\w+):w-fit/)
-  const wrapperPrefix = prefix(header, /hidden (\w+):contents/)
+  const wrapperPrefix = prefix(header, /hidden[^"]*?\b(\w+):flex/)
   const burgerPrefix = prefix(mobileNav, /(\w+):hidden/)
 
-  it('uses one Tailwind breakpoint for the pill, the wrapper and the hamburger', () => {
-    expect(wrapperPrefix).toBe(pillPrefix)
-    expect(burgerPrefix).toBe(pillPrefix)
+  it('uses one Tailwind breakpoint for the desktop wrapper and the hamburger', () => {
+    expect(burgerPrefix).toBe(wrapperPrefix)
   })
 
-  it('moves the pill spacing with the same breakpoint', () => {
-    expect(header).toContain(`${pillPrefix}:gap-16`)
-    expect(header).toContain(`${pillPrefix}:pl-6`)
+  it('moves the logo size with the same breakpoint', () => {
+    expect(header).toContain(`${wrapperPrefix}:h-12`)
   })
 
   it('DESKTOP_QUERY is that same breakpoint', () => {
     const q = mobileNav.match(/DESKTOP_QUERY = '\(min-width: ([\d.]+)rem\)'/)
     expect(q, 'DESKTOP_QUERY not found').not.toBeNull()
-    expect(Number(q?.[1])).toBe(BREAKPOINT_REM[pillPrefix])
+    expect(Number(q?.[1])).toBe(BREAKPOINT_REM[wrapperPrefix])
   })
 
   it('swaps no lower than the desktop header can fit (no md regression)', () => {
-    expect(BREAKPOINT_REM[pillPrefix] * 16).toBeGreaterThanOrEqual(
+    expect(BREAKPOINT_REM[wrapperPrefix] * 16).toBeGreaterThanOrEqual(
       DESKTOP_HEADER_NEEDS_PX,
     )
   })

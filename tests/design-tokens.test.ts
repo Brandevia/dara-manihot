@@ -111,7 +111,7 @@ describe('mint (pale green section tint)', () => {
 })
 
 describe('menu tokens', () => {
-  it('has no width or origin tokens: the panel is as wide as the header pill', () => {
+  it('has no width or origin tokens: the panel spans the viewport under the header bar', () => {
     expect(css).not.toMatch(/--menu-w:|--menu-origin:/)
     expect(css).toMatch(/--header-h:/)
     expect(css).toMatch(/--container-pad:/)
@@ -195,57 +195,28 @@ describe('dark form surface (surface-canopy)', () => {
   })
 })
 
-describe('frosted glass', () => {
-  const block = css.match(/@utility glass \{([\s\S]*?)\n\}\n/)?.[1] ?? ''
-
-  it('blurs and saturates what is behind it, with the -webkit- prefix for Safari', () => {
-    // Anchored to a declaration at the start of a line, so the @supports
-    // fallback's feature query cannot satisfy it by accident.
-    expect(block).toMatch(
-      /\n {2}backdrop-filter:\s*blur\(var\(--glass-blur\)\)\s+saturate\(/,
-    )
-    expect(block).toMatch(
-      /\n {2}-webkit-backdrop-filter:\s*blur\(var\(--glass-blur\)\)\s+saturate\(/,
-    )
+describe('header bar tokens', () => {
+  it('has one header height, which pages and the mobile menu clear', () => {
+    expect(css.match(/--header-h:\s*([\d.]+rem);/)?.[1]).toBe('4.5rem')
   })
 
-  it('firms up when scrolled', () => {
-    expect(block).toMatch(/\[data-scrolled="true"\]/)
+  it('left the floating-pill tokens and the glass utility behind', () => {
+    expect(css).not.toMatch(/--glass-|@utility glass|--header-top/)
   })
 
-  it('falls back to a near-opaque tint where backdrop-filter is unsupported', () => {
-    expect(block).toMatch(/@supports not/)
-    expect(block).toMatch(/9\d%/)
+  it('offsets focus and anchors by the header height exactly once', () => {
+    // html scroll-padding carries the header's height...
+    expect(css).toMatch(/html \{[^}]*scroll-padding-top:\s*var\(--header-h\)/)
+    // ...so scroll-mt-header must not add it again (that doubled the offset).
+    const utility = css.match(/@utility scroll-mt-header \{([\s\S]*?)\n\}/)?.[1]
+    expect(utility).toMatch(/scroll-margin-top:\s*1\.25rem/)
+    expect(utility).not.toMatch(/--header-h/)
   })
 
-  it('is tinted by tokens, and is more opaque once scrolled than at rest', () => {
-    const pct = (name: string) =>
-      Number(css.match(new RegExp(`--${name}:[^;]*?(\\d+)%`))?.[1])
-    expect(pct('glass-tint-scrolled')).toBeGreaterThan(pct('glass-tint'))
-  })
-
-  it('keeps nav text AA even over the darkest hero colour at rest', () => {
-    // Worst case: the resting tint composited over the deepest green the hero
-    // veil reaches. Nav link text is fully opaque ink, so this is the floor.
-    const tint = Number(css.match(/--glass-tint:[^;]*?(\d+)%/)?.[1]) / 100
-    const mix = (fg: string, bg: string, a: number) =>
-      '#' +
-      [1, 3, 5]
-        .map((i) =>
-          Math.round(
-            Number.parseInt(fg.slice(i, i + 2), 16) * a +
-              Number.parseInt(bg.slice(i, i + 2), 16) * (1 - a),
-          )
-            .toString(16)
-            .padStart(2, '0'),
-        )
-        .join('')
-    const glass = mix(
-      tokenHex('brand-white'),
-      tokenHex('brand-green-950'),
-      tint,
-    )
-    expect(contrast(tokenHex('foreground'), glass)).toBeGreaterThanOrEqual(4.5)
+  it('keeps nav text AA on the solid bar background', () => {
+    expect(
+      contrast(tokenHex('foreground'), tokenHex('background')),
+    ).toBeGreaterThanOrEqual(4.5)
   })
 })
 

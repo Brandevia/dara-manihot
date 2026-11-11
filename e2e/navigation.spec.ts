@@ -1,5 +1,10 @@
 import { expect, test } from '@playwright/test'
-import { recordedRects, startRectRecording } from './helpers'
+import {
+  recordedClips,
+  recordedRects,
+  startClipRecording,
+  startRectRecording,
+} from './helpers'
 
 test.describe('desktop navigation', () => {
   test.skip(({ isMobile }) => isMobile, 'desktop only')
@@ -16,6 +21,42 @@ test.describe('desktop navigation', () => {
       'page',
     )
     await expect(page.getByRole('button', { name: 'Open menu' })).toBeHidden()
+  })
+
+  test('shows the logo image, linking home', async ({ page }) => {
+    await page.goto('/about')
+    const home = page
+      .locator('header')
+      .getByRole('link', { name: 'Dara-Manihot home' })
+    await expect(home).toHaveAttribute('href', '/')
+    const logo = home.locator('img')
+    await expect(logo).toBeVisible()
+    await expect(logo).toHaveAttribute('src', /logo\.png/)
+    // Pressing it goes home.
+    await home.click()
+    await expect(page).toHaveURL(/\/$/)
+  })
+
+  test('puts links and the call to action on the trailing edge, after the logo', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    const logo = await page
+      .locator('header a[aria-label$="home"]')
+      .boundingBox()
+    const nav = await page
+      .getByRole('navigation', { name: 'Main' })
+      .boundingBox()
+    const cta = await page
+      .locator('header a[data-slot="button"][href="/contact"]')
+      .boundingBox()
+    const vw = page.viewportSize()?.width ?? 0
+    if (!(logo && nav && cta)) throw new Error('header parts missing')
+    expect(logo.x + logo.width).toBeLessThan(nav.x)
+    expect(nav.x + nav.width).toBeLessThan(cta.x)
+    // The button is in the right half; the logo in the left half.
+    expect(cta.x).toBeGreaterThan(vw / 2)
+    expect(logo.x).toBeLessThan(vw / 2)
   })
 
   test('navigates between pages', async ({ page }) => {
@@ -47,29 +88,82 @@ test.describe('mobile drawer', () => {
     await expect(page.getByRole('navigation', { name: 'Main' })).toBeHidden()
   })
 
-  test('drops down from the header pill into a glass panel as wide as it', async ({
+  test('unrolls from the bottom edge of the header bar, full width, without reflowing', async ({
     page,
   }) => {
     await page.goto('/')
     await page.waitForLoadState('networkidle')
-    const pill = await page.locator('header > div').first().boundingBox()
+    const bar = await page.locator('header').boundingBox()
     await startRectRecording(page, '[data-slot="menu-panel"]')
+    await startClipRecording(page, '[data-slot="menu-panel"]')
     await page.getByRole('button', { name: 'Open menu' }).click()
     await page.waitForTimeout(1200)
     const rects = await recordedRects(page)
+    const clips = await recordedClips(page)
     const first = rects[0]
-    const rest = rects.at(-1)
-    if (!(first && rest && pill)) throw new Error('no samples')
-    // Starts flat, directly under the pill, and grows downward to full height.
-    expect(first.height).toBeLessThan(rest.height * 0.25)
-    expect(rest.height).toBeGreaterThan(200)
-    expect(first.top).toBeGreaterThanOrEqual(pill.y + pill.height)
-    // The top edge never moves: it expands down, it does not slide.
-    expect(Math.abs(rest.top - first.top)).toBeLessThan(2)
-    // Same side margins as the pill, so the two read as one unit.
-    expect(Math.abs(rest.left - pill.x)).toBeLessThan(2)
-    expect(Math.abs(rest.width - pill.width)).toBeLessThan(2)
-    await expect(page.locator('[data-slot="menu-panel"]')).toHaveClass(/glass/)
+    const last = rects.at(-1)
+    if (!(first && last && bar)) throw new Error('no samples')
+    const vw = page.viewportSize()?.width ?? 0
+
+    // Flush under the bar, edge to edge: no floating gap, no side margins.
+    expect(Math.abs(first.top - (bar.y + bar.height))).toBeLessThan(1)
+    expect(Math.abs(last.left)).toBeLessThan(1)
+    expect(Math.abs(last.width - vw)).toBeLessThan(1)
+    expect(last.height).toBeGreaterThan(200)
+    // The box itself never moves or resizes: only the clip reveals it, so
+    // nothing reflows (GPU-only, no `height` animation).
+    expect(Math.abs(last.top - first.top)).toBeLessThan(1)
+    expect(Math.abs(last.height - first.height)).toBeLessThan(1)
+    // The reveal: starts folded away, ends fully shown, never goes backwards.
+    expect(clips[0]).toBeGreaterThan(80)
+    expect(clips.at(-1)).toBeLessThan(1)
+    expect(clips).toEqual([...clips].sort((a, b) => b - a))
+    await expect(page.locator('[data-slot="menu-panel"]')).not.toHaveClass(
+      /glass/,
+    )
+  })
+
+  test('the links start on the logo edge', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Open menu' }).click()
+    const dialog = page.getByRole('dialog', { name: 'Site navigation' })
+    await expect(dialog).toBeVisible()
+    await page.waitForTimeout(700)
+    const logo = await page
+      .locator('header a[aria-label$="home"]')
+      .boundingBox()
+    const link = dialog.getByRole('link', { name: 'About' })
+    const box = await link.boundingBox()
+    const pad = await link.evaluate((el) =>
+      Number.parseFloat(getComputedStyle(el).paddingLeft),
+    )
+    if (!(logo && box)) throw new Error('no boxes')
+    // Text (link box + its own padding) meets the logo's leading edge.
+    expect(Math.abs(box.x + pad - logo.x)).toBeLessThan(2)
+  })
+
+  test('the bar stays put and pressable while the menu is open', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    const before = await page.locator('header').boundingBox()
+    await page.getByRole('button', { name: 'Open menu' }).click()
+    await expect(
+      page.getByRole('dialog', { name: 'Site navigation' }),
+    ).toBeVisible()
+    const during = await page.locator('header').boundingBox()
+    expect(during).toEqual(before)
+    // Nothing from the page scrim sits over the bar.
+    const hit = await page.evaluate(() => {
+      const t = document.querySelector('header button[aria-expanded="true"]')
+      if (!t) return null
+      const r = t.getBoundingClientRect()
+      return document
+        .elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)
+        ?.closest('button')
+        ?.getAttribute('aria-expanded')
+    })
+    expect(hit).toBe('true')
   })
 
   test('the toggle is two lines that turn into an X', async ({ page }) => {
@@ -86,8 +180,10 @@ test.describe('mobile drawer', () => {
       .locator('span[aria-hidden] > span')
       .evaluateAll((els) =>
         els.map((el) => {
-          const m = new DOMMatrix(getComputedStyle(el).transform)
-          return Math.round(Math.atan2(m.b, m.a) * (180 / Math.PI))
+          // Tailwind v4 sets the standalone `rotate` property, which leaves
+          // `transform` as "none".
+          const rotate = getComputedStyle(el).rotate
+          return rotate === 'none' ? 0 : Math.round(Number.parseFloat(rotate))
         }),
       )
     expect(angles.map(Math.abs)).toEqual([45, 45])
@@ -115,17 +211,27 @@ test.describe('mobile drawer', () => {
     await page.evaluate(() => {
       const w = window as Window & { __seen?: Record<string, number> }
       w.__seen = {}
-      const t0 = performance.now()
+      const called = performance.now()
+      // The clock starts when the panel first appears, so a slow click on a
+      // busy machine cannot make the recording miss the animation.
+      let t0: number | null = null
       const tick = () => {
-        for (const li of document.querySelectorAll(
-          '[data-slot="menu-panel"] li',
-        ))
-          if (Number(getComputedStyle(li).opacity) > 0.5) {
-            const key = li.textContent ?? ''
-            w.__seen ??= {}
-            w.__seen[key] ??= performance.now() - t0
-          }
-        if (performance.now() - t0 < 1500) requestAnimationFrame(tick)
+        if (t0 === null && document.querySelector('[data-slot="menu-panel"]'))
+          t0 = performance.now()
+        if (t0 !== null)
+          for (const li of document.querySelectorAll(
+            '[data-slot="menu-panel"] li',
+          ))
+            if (Number(getComputedStyle(li).opacity) > 0.5) {
+              const key = li.textContent ?? ''
+              w.__seen ??= {}
+              w.__seen[key] ??= performance.now() - (t0 as number)
+            }
+        const done =
+          t0 === null
+            ? performance.now() - called > 10_000
+            : performance.now() - t0 > 1500
+        if (!done) requestAnimationFrame(tick)
       }
       tick()
     })
@@ -151,7 +257,7 @@ test.describe('mobile drawer', () => {
     await expect(dialog).toHaveCount(0)
   })
 
-  test('closes by folding up under the pill, then unmounts', async ({
+  test('closes by folding up under the bar, then unmounts', async ({
     page,
   }) => {
     await page.goto('/')
@@ -159,14 +265,18 @@ test.describe('mobile drawer', () => {
     await page.getByRole('button', { name: 'Open menu' }).click()
     await page.waitForTimeout(1000)
     await startRectRecording(page, '[data-slot="menu-panel"]')
+    await startClipRecording(page, '[data-slot="menu-panel"]')
     await page.keyboard.press('Escape')
     await page.waitForTimeout(1200)
     const rects = await recordedRects(page)
+    const clips = await recordedClips(page)
     const start = rects[0]
-    const end = rects.at(-1)
-    if (!(start && end)) throw new Error('no samples')
-    expect(end.height).toBeLessThan(start.height * 0.25) // collapsed upward
-    expect(Math.abs(end.top - start.top)).toBeLessThan(2) // top edge fixed
+    if (!start) throw new Error('no samples')
+    // Folds up toward the bar: the clip closes from the bottom...
+    expect(clips[0]).toBeLessThan(5)
+    expect(Math.max(...clips)).toBeGreaterThan(60)
+    // ...while the box and its top edge stay where they were.
+    for (const r of rects) expect(Math.abs(r.top - start.top)).toBeLessThan(1)
     await expect(page.locator('[data-slot="menu-panel"]')).toHaveCount(0)
   })
 
@@ -213,11 +323,10 @@ test.describe('mobile drawer', () => {
   test('choosing a page navigates and closes the drawer', async ({ page }) => {
     await page.goto('/')
     await page.getByRole('button', { name: 'Open menu' }).click()
-    await page
-      .getByRole('dialog')
-      .getByRole('link', { name: 'Projects' })
-      .click()
+    // Name the drawer: the cookie banner is also a role="dialog".
+    const drawer = page.getByRole('dialog', { name: 'Site navigation' })
+    await drawer.getByRole('link', { name: 'Projects' }).click()
     await expect(page).toHaveURL(/\/projects$/)
-    await expect(page.getByRole('dialog')).toHaveCount(0)
+    await expect(drawer).toHaveCount(0)
   })
 })

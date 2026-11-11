@@ -1,3 +1,38 @@
+# Traditional navbar (full-width bar, logo image, flush mobile menu)
+
+The floating glass pill header is now a conventional full-width bar, and the mobile menu was rebuilt to hang from it. Header and menu only: no page, colour or content changed.
+
+## To-do (all verified)
+
+- [x] **Header (`site-header.tsx`).** A solid, full-width bar fixed to the top: 4.5rem tall, hairline bottom border, a soft shadow once scrolled. Logo on the leading edge, links and "Get in touch" on the trailing edge, inside the same `page-container` as every section so the logo meets the content edge at any width.
+- [x] **Logo.** `/images/logo.png` through the existing `<Logo>` component replaces the icon and "Dara-Manihot" text (the wordmark is in the image). 44px tall on mobile, 48px from `lg`.
+- [x] **Mobile menu (`mobile-nav.tsx`).** A full-width panel flush under the bar (square top, rounded bottom), left-aligned 48px rows that start on the logo's edge, the CTA full width on phones and sized to content from `sm`. Radix focus trap, Escape, scroll lock and focus return are unchanged.
+- [x] **Motion.** The panel reveals with `clip-path` (280ms open, 200ms close, `--ease-standard`) instead of animating `height`; links stagger 40ms. Under reduced motion nothing moves, it only fades. This removes the one documented `height` exception in DESIGN.md.
+- [x] **Tokens (`globals.css`).** `--header-h` is now one value (4.5rem). Removed `--header-top`, the `--glass-*` tokens and the `glass` utility, which only the pill used. Added `html { scroll-padding-top: var(--header-h) }` so focused elements are not hidden under the fixed bar; `scroll-mt-header` now adds only the 1.25rem of breathing room, so anchor positions are unchanged.
+- [x] **Breakpoint stays at `lg` (1024px).** The new bar needs about 770px; `md` (768px) misses by a hair. Measured at 22 widths from 320 to 1920px.
+- [x] **Tests.** Unit: the pill and glass assertions were replaced (bar shape, logo image, reading order, left-aligned rows, flush full-width panel, clip-path vs height, reduced motion, header tokens, no double scroll offset). E2E: `header-fit` measures the bar, logo and overlap at 22 widths; `navigation` samples the `clip-path` reveal frame by frame; `layout` checks the bar is opaque and gains a shadow.
+- [x] **Docs.** DESIGN.md, README.md and this file.
+
+## Notes for review
+
+- **The real `logo.png` was not available to the person who built this**, so layout was verified with a placeholder of the same 560 x 330 size. Please look at the real logo on the bar once. If it has a white or non-transparent background, or very little padding, adjust the height in `site-header.tsx` (`h-11 lg:h-12`).
+- **Three existing e2e tests were stale and are fixed** because they test the navigation: the toggle test read `transform`, but Tailwind v4 sets `rotate` instead; the "closes on navigation" test counted every `role="dialog"`, which includes the cookie banner; and the three motion recorders sampled for a fixed 1.1 to 1.5s from when they were called, so a slow click made them miss the animation. They now start when the panel first appears.
+- **Cookie banner over the header (not changed).** On very short phones (for example 320 x 640) the first-visit cookie banner is nearly full height and sits above the header (z-50 vs z-40), so it covers the hamburger until dismissed. The old pill had the same order. Worth a look separately.
+- **`layout.spec.ts` expected `<main>` to start at 72px.** The header is fixed, so it never did; the spec now asserts what matters: the header is 72px and the first heading clears it.
+
+## Verification
+
+| Check                                                  | Result                                                                                                                                                                                |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit and component tests (Vitest)                      | 750 tests, **0 new failures**. The same 26 fail as before this change (23 need photos and portraits that are not in the repo, 3 are service-name text mismatches), none in navigation |
+| New tests fail on the old code                         | the new and rewritten tests fail against the original components, pass against the new ones                                                                                           |
+| `tsc`, production `next build`                         | 0 errors, build succeeds                                                                                                                                                              |
+| ESLint                                                 | 6 errors, all in `app/(pages)/projects/page.tsx` (unused imports), which this change does not touch                                                                                   |
+| Browser (Chromium 153): header fit, navigation, layout | 88 pass on desktop and mobile projects; the stagger-timing test is the only one that can fail under heavy CPU load and passes 3 of 3 on its own                                       |
+| Other e2e specs                                        | the mobile Back to top and footer-link tests fail identically on the original code (cookie banner overlap in a phone-sized window), so they are not caused by this change             |
+
+---
+
 # CEO portrait shown whole, and three new projects
 
 The leader card now shows the supplied summit photo uncropped, and the Projects page lists three new projects. Data and layout only: no new dependencies, colours or components.
